@@ -1,0 +1,24 @@
+{
+    "name": "axytos/kaufaufrechnung-shopware5",
+    "version": "1.0.0",
+    "description": "axytos Kauf auf Rechnung for Shopware5",
+    "type": "shopware-plugin",
+    "license": "proprietary",
+    "require": {
+        "axytos/ecommerce-sdk": "^1.0.0"
+    },
+    "scripts": {
+        "sw5-clear-cache": "../../../bin/console sw:cache:clear",
+        "sw5-reinstall":  "../../../bin/console sw:plugin:reinstall AxytosKaufAufRechnung"
+    },
+    "repositories": {
+        "ecommerce-sdk": {
+            "type": "path",
+            "url": "/axp/packages/ecommerce-sdk"
+        },
+        "financial-services-api-sdk": {
+            "type": "path",
+            "url": "/axp/packages/financial-services-api-sdk"
+        }
+    }
+}
