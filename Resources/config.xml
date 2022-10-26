@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.7/engine/Shopware/Components/Plugin/schema/config.xsd">
+      <elements>
+        <element type="text">
+            <name>apiHost</name>
+            <label>API Host</label>
+        </element>
+        <element type="password">
+            <name>apiKey</name>
+            <label>API Key</label>
+        </element>
+        <element type="password">
+            <name>clientSecret</name>
+            <label>Client Secret</label>
+        </element>
+        <element type="button">
+            <name>buttonTest</name>
+            <label lang="de">API-Verbindung testen</label>
+            <label>Test API connection</label>
+            <options>
+                <handler>
+                    <![CDATA[
+                    function() {
+                      Ext.Ajax.request({
+                        url: 'AxytosKaufAufRechnungApiTestController/validate',
+                        success: function (response) {
+                          var respObj = Ext.JSON.decode(response.responseText)
+                          Shopware.Msg.createGrowlMessage(respObj.title, respObj.text)
+                        },
+                        failure: function (response) {
+                          var respObj = Ext.JSON.decode(response.responseText)
+                          Shopware.Msg.createGrowlMessage(respObj.title, respObj.text)
+                        }
+                      });
+                    }
+                    ]]>
+                </handler>
+            </options>
+        </element>
+    </elements>
+</config>

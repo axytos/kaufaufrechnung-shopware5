@@ -1,0 +1,23 @@
+parameters:
+    level: 0
+
+    bootstrapFiles:
+        - ../../../autoload.php
+
+    paths:
+        - ./
+    excludePaths:
+        - packages
+        - vendor
+        - coverage
+
+    ignoreErrors:
+        - '#apcu_#'
+        - '#ioncube_#'
+        - '#opcache_#'
+        - '#imagettftext#'
+        - '#class Redis#'
+        - '#Constant STARTTIME#'
+
+    reportUnmatchedIgnoredErrors: false
+    tipsOfTheDay: false
