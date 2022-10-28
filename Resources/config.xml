@@ -5,14 +5,20 @@
         <element type="text">
             <name>apiHost</name>
             <label>API Host</label>
+            <description lang="de">Notwendig für den API-Verbindungstest. Siehe Installationsanleitung.</description>
+            <description>Required for API connectivity test. See installation guide.</description>
         </element>
         <element type="password">
             <name>apiKey</name>
             <label>API Key</label>
+            <description lang="de">Notwendig für den API-Verbindungstest. Siehe Installationsanleitung.</description>
+            <description>Required for API connectivity test. See installation guide.</description>
         </element>
         <element type="password">
             <name>clientSecret</name>
             <label>Client Secret</label>
+            <description lang="de">Optional für den API-Verbindungstest. Notwendig für die Bezahlstatussynchronisation. Siehe Installationsanleitung.</description>
+            <description>Optional for API connectivity test. Required for payment state synchronization. See installation guide.</description>
         </element>
         <element type="button">
             <name>buttonTest</name>

@@ -17,13 +17,13 @@ class Shopware_Controllers_Backend_AxytosKaufAufRechnungApiTestController extend
             if ($isValid) {
                 $this->View()->assign('text', 'API-Verbindung wurde erfolgreich getestet.');
             } else {
-                $this->View()->assign('text', 'API-Verbindung konnte nicht hergestellt werden. Bitte prüfe die Zugangsdaten.');
+                $this->View()->assign('text', 'API-Verbindung konnte nicht hergestellt werden. Bitte prüfe die Konfiguration von API Host und API Key.');
             }
         } catch (Throwable $th) {
             /** @var ErrorHandler */
             $errorHandler = Shopware()->Container()->get(ErrorHandler::class);
             $errorHandler->handle($th);
-            $this->View()->assign('text', 'API-Verbindung konnte nicht hergestellt werden. Bitte prüfe die Zugangsdaten.');
+            $this->View()->assign('text', 'API-Verbindung konnte nicht hergestellt werden. Bitte prüfe die Konfiguration von API Host und API Key.');
         }
     }
 }
