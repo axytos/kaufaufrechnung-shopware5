@@ -11,7 +11,7 @@
     "type": "shopware-plugin",
     "license": "proprietary",
     "require": {
-        "axytos/ecommerce-sdk": "^1.1.0"
+        "axytos/ecommerce-sdk": "^1.2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

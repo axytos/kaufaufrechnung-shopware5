@@ -2,9 +2,9 @@
 <plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.3/engine/Shopware/Components/Plugin/schema/plugin.xsd">
 
-    <label>axytos BNPL</label>
+    <label>Buy Now Pay Later</label>
 
-    <label lang="de">axytos Kauf auf Rechnung</label>
+    <label lang="de">Kauf auf Rechnung</label>
     
     <version>1.1.0</version>
 
@@ -46,9 +46,9 @@
 
         <![CDATA[
 
-            <b>axytos Kauf auf Rechnung</b>
+            <b>Buy Now Pay Later</b>
 
-            <p>axytos Kauf auf Rechnung for Shopware5.</p>
+            <p>You conveniently pay the invoice as soon as you receive the goods, within the payment period</p>
 
         ]]>
 
@@ -58,9 +58,9 @@
 
         <![CDATA[
 
-            <b>axytos Kauf auf Rechnung</b>
+            <b>Kauf auf Rechnung</b>
 
-            <p>axytos Kauf auf Rechnung für Shopware5.</p>
+            <p>Sie zahlen bequem die Rechnung, sobald Sie die Ware erhalten haben, innerhalb der Zahlfrist</p>
 
         ]]>
 
