@@ -20,6 +20,167 @@
             <description lang="de">Optional für den API-Verbindungstest. Notwendig für die Bezahlstatussynchronisation. Siehe Installationsanleitung.</description>
             <description>Optional for API connectivity test. Required for payment state synchronization. See installation guide.</description>
         </element>
+        <element type="select">
+            <name>afterCheckoutOrderStatus</name>
+            <label lang="de">Bestellstatus nach Checkout</label>
+            <label>Order State after Checkout</label>
+            <value>ORDER_STATE_OPEN</value>
+            <store>
+                <option>
+                    <value>ORDER_STATE_CANCELLED</value>
+                    <label lang="de">Storniert</label>
+                    <label>Cancelled</label>
+                </option>
+                <option>
+                    <value>ORDER_STATE_OPEN</value>
+                    <label lang="de">Offen</label>
+                    <label>Open</label>
+                </option>
+                <option>
+                    <value>ORDER_STATE_IN_PROCESS</value>
+                    <label lang="de">In Bearbeitung (Wartet)</label>
+                    <label>In process</label>
+                </option>
+                <option>
+                    <value>ORDER_STATE_COMPLETED</value>
+                    <label lang="de">Komplett abgeschlossen</label>
+                    <label>Completed</label>
+                </option>
+                <option>
+                    <value>ORDER_STATE_PARTIALLY_COMPLETED</value>
+                    <label lang="de">Teilweise abgeschlossen</label>
+                    <label>Partially completed</label>
+                </option>
+                <option>
+                    <value>ORDER_STATE_CANCELLED_REJECTED</value>
+                    <label lang="de">Storniert / Abgelehnt</label>
+                    <label>Cancelled / Rejected</label>
+                </option>
+                <option>
+                    <value>ORDER_STATE_READY_FOR_DELIVERY</value>
+                    <label lang="de">Zur Lieferung bereit</label>
+                    <label>Ready for delvery</label>
+                </option>
+                <option>
+                    <value>ORDER_STATE_PARTIALLY_DELIVERED</value>
+                    <label lang="de">Teilweise ausgeliefert</label>
+                    <label>Partially delivered</label>
+                </option>
+                <option>
+                    <value>ORDER_STATE_COMPLETELY_DELIVERED</value>
+                    <label lang="de">Komplett ausgeliefert</label>
+                    <label>Completely delivered</label>
+                </option>
+                <option>
+                    <value>ORDER_STATE_CLARIFICATION_REQUIRED</value>
+                    <label lang="de">Klärung notwendig</label>
+                    <label>Clarification required</label>
+                </option>
+            </store>
+        </element>
+        <element type="select">
+            <name>afterCheckoutPaymentStatus</name>
+            <label lang="de">Zahlungstatus nach Checkout</label>
+            <label>Payment State after Checkout</label>
+            <value>PAYMENT_STATE_OPEN</value>
+            <store>
+                <option>
+                    <value>PAYMENT_STATE_OPEN</value>
+                    <label lang="de">Offen</label>
+                    <label>Open</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_PARTIALLY_INVOICED</value>
+                    <label lang="de">Teilweise in Rechnung gestellt</label>
+                    <label>Partially invoiced</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_COMPLETELY_INVOICED</value>
+                    <label lang="de">Komplett in Rechnung gestellt</label>
+                    <label>Completely invoiced</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_PARTIALLY_PAID</value>
+                    <label lang="de">Teilweise bezahlt</label>
+                    <label>Partially paid</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_COMPLETELY_PAID</value>
+                    <label lang="de">Komplett bezahlt</label>
+                    <label>Completely paid</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_1ST_REMINDER</value>
+                    <label lang="de">1. Mahnung</label>
+                    <label>1st Reminder</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_2ND_REMINDER</value>
+                    <label lang="de">2. Mahnung</label>
+                    <label>2nd Reminder</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_3RD_REMINDER</value>
+                    <label lang="de">3. Mahnung</label>
+                    <label>3rd Reminder</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_ENCASHMENT</value>
+                    <label lang="de">Inkasso</label>
+                    <label>Encashment</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_RESERVED</value>
+                    <label lang="de">Reserviert</label>
+                    <label>Rserved</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_DELAYED</value>
+                    <label lang="de">Verzögert</label>
+                    <label>Delayed</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_RE_CREDITING</value>
+                    <label lang="de">Wiedergutschrift</label>
+                    <label>Re-Crediting</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_REVIEW_NECESSARY</value>
+                    <label lang="de">Überprüfung notwendig</label>
+                    <label>Review necessary</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_NO_CREDIT_APPROVED</value>
+                    <label lang="de">Es wurde keine Kredit genehmigt</label>
+                    <label>No credit approved</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_THE_CREDIT_HAS_BEEN_PRELIMINARILY_ACCEPTED</value>
+                    <label lang="de">Der Kredit wurde vorlaeufig akzeptiert</label>
+                    <label>The credit has been preliminarily accepted</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_THE_CREDIT_HAS_BEEN_ACCEPTED</value>
+                    <label lang="de">Der Kredit wurde genehmigt</label>
+                    <label>The credit has been accepted</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_THE_PAYMENT_HAS_BEEN_ORDERED</value>
+                    <label lang="de">Die Zahlung wurde angewiesen</label>
+                    <label>The payment has been ordered</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_A_TIME_EXTENSION_HAS_BEEN_REGISTERED</value>
+                    <label lang="de">Es wurde eine Zeitverlaengerung eingetragen</label>
+                    <label>A time extension has been registered</label>
+                </option>
+                <option>
+                    <value>PAYMENT_STATE_THE_PROCESS_HAS_BEEN_CANCELLED</value>
+                    <label lang="de">Der Vorgang wurde abgebrochen</label>
+                    <label>The Process has been cancelled</label>
+                </option>
+            </store>
+        </element>
         <element type="button">
             <name>buttonTest</name>
             <label lang="de">API-Verbindung testen</label>

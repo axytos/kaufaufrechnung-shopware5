@@ -91,7 +91,8 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
 
             $this->invoiceClient->confirmOrder($confirmOrderContext);
             $this->orderCheckProcessStateMachine->setConfirmed($actualOrder);
-            $this->orderStateMachine->setPendingPayment($actualOrder);
+            $this->orderStateMachine->setConfiguredAfterCheckoutOrderStatus($actualOrder);
+            $this->orderStateMachine->setConfiguredAfterCheckoutPaymentStatus($actualOrder);
 
             $this->redirectToFinishCheckout($actualOrder);
         } catch (\Throwable $th) {

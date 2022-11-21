@@ -4,59 +4,59 @@ declare(strict_types=1);
 
 namespace AxytosKaufAufRechnungShopware5\Core;
 
-use Shopware\Components\Model\ModelManager;
+use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
 use Shopware\Models\Order\Order;
 use Shopware\Models\Order\Status;
 
 class OrderStateMachine
 {
-    /** @var ModelManager */
-    private $modelManager;
+    private OrderRepository $orderRepository;
+    private PluginConfiguration $pluginConfiguration;
 
     public function __construct(
-        ModelManager $modelManager
+        OrderRepository $orderRepository,
+        PluginConfiguration $pluginConfiguration
     ) {
-        $this->modelManager = $modelManager;
+        $this->orderRepository = $orderRepository;
+        $this->pluginConfiguration = $pluginConfiguration;
     }
 
     public function setCanceled(Order $order): void
     {
-        $this->setState($order, Status::ORDER_STATE_CANCELLED);
+        $this->orderRepository->saveOrderStatus($order, Status::ORDER_STATE_CANCELLED);
     }
 
     public function setPaymentReview(Order $order): void
     {
-        $this->setState($order, Status::PAYMENT_STATE_REVIEW_NECESSARY);
+        $this->orderRepository->savePaymentStatus($order, Status::PAYMENT_STATE_REVIEW_NECESSARY);
     }
 
     public function setPendingPayment(Order $order): void
     {
-        $this->setState($order, Status::PAYMENT_STATE_OPEN);
+        $this->orderRepository->savePaymentStatus($order, Status::PAYMENT_STATE_OPEN);
     }
 
     public function setTechnicalError(Order $order): void
     {
-        $this->setState($order, Status::PAYMENT_STATE_THE_PROCESS_HAS_BEEN_CANCELLED);
+        $this->orderRepository->savePaymentStatus($order, Status::PAYMENT_STATE_THE_PROCESS_HAS_BEEN_CANCELLED);
     }
 
     public function setComplete(Order $order): void
     {
-        $this->setState($order, Status::ORDER_STATE_COMPLETED);
+        $this->orderRepository->saveOrderStatus($order, Status::ORDER_STATE_COMPLETED);
     }
 
-    private function setState(Order $order, int $status): void
+    public function setConfiguredAfterCheckoutOrderStatus(Order $order): void
     {
-        $statusRepo = $this->modelManager->getRepository(Status::class);
-        /** @var Status */
-        $status = $statusRepo->find($status);
+        $afterCheckoutOrderStatus = $this->pluginConfiguration->getAfterCheckoutOrderStatus();
 
-        if ($status->getGroup() == Status::GROUP_PAYMENT) {
-            $order->setPaymentStatus($status);
-        } elseif ($status == Status::GROUP_STATE) {
-            $order->setOrderStatus($status);
-        }
+        $this->orderRepository->saveAfterCheckoutOrderStatus($order, $afterCheckoutOrderStatus);
+    }
 
-        $this->modelManager->persist($order);
-        $this->modelManager->flush();
+    public function setConfiguredAfterCheckoutPaymentStatus(Order $order): void
+    {
+        $afterCheckoutPaymentStatus = $this->pluginConfiguration->getAfterCheckoutPaymentStatus();
+
+        $this->orderRepository->saveAfterCheckoutPaymentStatus($order, $afterCheckoutPaymentStatus);
     }
 }

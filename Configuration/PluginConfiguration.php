@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AxytosKaufAufRechnungShopware5\Configuration;
 
 use Shopware\Components\Plugin\Configuration\ReaderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class PluginConfiguration
 {
@@ -22,6 +21,20 @@ class PluginConfiguration
     public function getClientSecret(): ?string
     {
         return $this->getSettingsValue(PluginConfigurationValueNames::CLIENT_SECRET);
+    }
+
+    public function getAfterCheckoutOrderStatus(): AfterCheckoutOrderStatus
+    {
+        $value = $this->getSettingsValue(PluginConfigurationValueNames::AFTER_CHECKOUT_ORDER_STATUS);
+
+        return new AfterCheckoutOrderStatus($value);
+    }
+
+    public function getAfterCheckoutPaymentStatus(): AfterCheckoutPaymentStatus
+    {
+        $value = $this->getSettingsValue(PluginConfigurationValueNames::AFTER_CHECKOUT_PAYMENT_STATUS);
+
+        return new AfterCheckoutPaymentStatus($value);
     }
 
     /**
