@@ -6,7 +6,7 @@
 
     <label lang="de">Kauf auf Rechnung</label>
     
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
     <copyright>axytos GmbH</copyright>
 
@@ -19,27 +19,37 @@
     <compatibility minVersion="5.7.0" />
 
     <changelog version="1.1.0">
+        <changes>
+            <![CDATA[
 
-    <changes>
+                First release Shopware Community Store
 
-        <![CDATA[
+            ]]>
+        </changes>
+        <changes lang="de">
+            <![CDATA[
 
-            First release Shopware Community Store
+                Erstveröffentlichung Shopware Community Store
 
-        ]]>
+            ]]>
+        </changes>
+    </changelog>
 
-    </changes>
+    <changelog version="1.2.0">
+        <changes>
+            <![CDATA[
 
-    <changes lang="de">
+                Configurable order and payment status after checkout.
 
-        <![CDATA[
+            ]]>
+        </changes>
+        <changes lang="de">
+            <![CDATA[
 
-            Erstveröffentlichung Shopware Community Store
+                Konfigurierbarer Bestell- und Zahlungsstatus nach Checkout.
 
-        ]]>
-
-    </changes>
-
+            ]]>
+        </changes>
     </changelog>
 
     <description>
