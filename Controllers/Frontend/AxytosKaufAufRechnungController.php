@@ -18,14 +18,35 @@ use Shopware\Models\Order\Shipping;
 
 class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Shopware_Controllers_Frontend_Payment implements CSRFWhitelistAware
 {
-    private PluginConfigurationValidator $pluginConfigurationValidator;
-    private InvoiceClientInterface $invoiceClient;
-    private ErrorHandler $errorHandler;
-    private InvoiceOrderContextFactory $invoiceOrderContextFactory;
-    private OrderStateMachine $orderStateMachine;
-    private OrderCheckProcessStateMachine $orderCheckProcessStateMachine;
+    /**
+     * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator
+     */
+    private $pluginConfigurationValidator;
+    /**
+     * @var \Axytos\ECommerce\Clients\Invoice\InvoiceClientInterface
+     */
+    private $invoiceClient;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler
+     */
+    private $errorHandler;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\Core\InvoiceOrderContextFactory
+     */
+    private $invoiceOrderContextFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\Core\OrderStateMachine
+     */
+    private $orderStateMachine;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\Core\OrderCheckProcessStateMachine
+     */
+    private $orderCheckProcessStateMachine;
 
-    public function setContainer(?Container $container = null): void
+    /**
+     * @return void
+     */
+    public function setContainer(Container $container = null)
     {
         if (is_null($container)) {
             return;
@@ -47,7 +68,10 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
         $this->orderCheckProcessStateMachine = $container->get(OrderCheckProcessStateMachine::class);
     }
 
-    public function indexAction(): void
+    /**
+     * @return void
+     */
+    public function indexAction()
     {
         try {
             if ($this->pluginConfigurationValidator->isInvalid()) {
@@ -57,17 +81,25 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
             $this->executeAxytosInvoice();
         } catch (\Throwable $th) {
             $this->errorHandler->handle($th);
+        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
+            $this->errorHandler->handle($th);
         }
     }
 
-    public function getWhitelistedCSRFActions(): array
+    /**
+     * @return mixed[]
+     */
+    public function getWhitelistedCSRFActions()
     {
         return [
             'index'
         ];
     }
 
-    private function executeAxytosInvoice(): void
+    /**
+     * @return void
+     */
+    private function executeAxytosInvoice()
     {
         try {
             $temporaryOrder = $this->loadTemporaryOrder();
@@ -101,22 +133,37 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
             }
             $this->errorHandler->handle($th);
             $this->redirectToChangePaymentMethod();
+        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
+            if (isset($actualOrder)) {
+                $this->orderCheckProcessStateMachine->setFailed($actualOrder);
+            }
+            $this->errorHandler->handle($th);
+            $this->redirectToChangePaymentMethod();
         }
     }
 
-    private function createPrecheckOrderContext(Order $temporaryOrder): InvoiceOrderContextInterface
+    /**
+     * @return \Axytos\ECommerce\Clients\Invoice\InvoiceOrderContextInterface
+     */
+    private function createPrecheckOrderContext(Order $temporaryOrder)
     {
         return $this->invoiceOrderContextFactory->create($temporaryOrder);
     }
 
-    private function createConfirmOrderContext(Order $actualOrder, array $preCheckResponseData): InvoiceOrderContextInterface
+    /**
+     * @return \Axytos\ECommerce\Clients\Invoice\InvoiceOrderContextInterface
+     */
+    private function createConfirmOrderContext(Order $actualOrder, array $preCheckResponseData)
     {
         $invoiceOrderContext = $this->invoiceOrderContextFactory->create($actualOrder);
         $invoiceOrderContext->setPreCheckResponseData($preCheckResponseData);
         return $invoiceOrderContext;
     }
 
-    private function redirectToChangePaymentMethod(): void
+    /**
+     * @return void
+     */
+    private function redirectToChangePaymentMethod()
     {
         $this->redirect([
             'controller' => 'checkout',
@@ -126,7 +173,10 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
         ]);
     }
 
-    private function redirectToFinishCheckout(Order $order): void
+    /**
+     * @return void
+     */
+    private function redirectToFinishCheckout(Order $order)
     {
         $this->redirect([
             'controller' => 'checkout',
@@ -136,7 +186,10 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
         ]);
     }
 
-    private function saveActualOrder(): Order
+    /**
+     * @return \Shopware\Models\Order\Order
+     */
+    private function saveActualOrder()
     {
         $orderRepository = $this->getModelManager()->getRepository(Order::class);
 
@@ -148,7 +201,10 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
         return $orderRepository->findOneBy(['number' => $orderNumber]);
     }
 
-    private function loadTemporaryOrder(): Order
+    /**
+     * @return \Shopware\Models\Order\Order
+     */
+    private function loadTemporaryOrder()
     {
         $modelManager = $this->getModelManager();
 

@@ -2,6 +2,22 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <!-- set log level to INFO
+             possible values:
+                DEBUG = 100
+                INFO = 200
+                NOTICE = 250
+                WARNING = 300
+                ERROR = 400
+                CRITICAL = 500
+                ALERT = 550
+                EMERGENCY = 600 
+        -->
+        <parameter key="axytos_kauf_auf_rechnung_shopware5.logger.level">200</parameter>
+    </parameters>
+
     <services>
         <!-- Logger Integration ========================================================================================================= -->
 
@@ -48,16 +64,22 @@
         <service autowire="true" id="Axytos\ECommerce\DataMapping\DtoToDtoMapper"/>
 
         <!-- Core Integration =========================================================================================================== -->
-
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Core\OrderRepository" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Core\OrderAttributesRepository" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Core\OrderDocumentsRepository" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\Core\InvoiceOrderContextFactory" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\Core\OrderStateMachine" public="true"/>
         <service id="AxytosKaufAufRechnungShopware5\Core\OrderCheckProcessStateMachine" public="true"/>
 
+        <!-- DataAbstractionLayer Integration =========================================================================================== -->
+
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\ArticleDetailRepository" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderDocumentsRepository" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\LegacyOrderAttributesRepository" public="true"/>
+
         <!-- DataMapping Integration ==================================================================================================== -->
 
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\DeliveryWeightCalculator" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\LogisticianCalculator" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPriceCalculator" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPricePerUnitCalculator" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionNetPriceCalculator" public="true"/>
@@ -67,6 +89,7 @@
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionQuantityCalculator" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxCalculator" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxPercentCalculator" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\TrackingIdCalculator" public="true"/>
 
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\BasketDtoFactory" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\BasketPositionDtoCollectionFactory" public="true"/>
@@ -89,25 +112,7 @@
 
         <!-- Event Subscribers ========================================================================================================== -->
 
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Subscriber\CustomEventDispatcher" public="true"/>
-
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\Subscriber\CheckoutSubscriber" public="true">
-            <tag name="shopware.event_subscriber"/>
-        </service>
-
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Subscriber\BackendOrderCreateDocumentSubscriber" public="true">
-            <tag name="shopware.event_subscriber"/>
-        </service>
-
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Subscriber\CreateInvoiceSubscriber" public="true">
-            <tag name="shopware.event_subscriber"/>
-        </service>
-        
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Subscriber\CancelOrderSubscriber" public="true">
-            <tag name="doctrine.event_subscriber"/>
-        </service>
-        
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Subscriber\RefundOrderSubscriber" public="true">
             <tag name="shopware.event_subscriber"/>
         </service>
 
@@ -119,8 +124,15 @@
             <tag name="doctrine.event_subscriber"/>
         </service>
 
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Subscriber\ShipOrderSubscriber" public="true">
-            <tag name="doctrine.event_subscriber"/>
+        <!-- Cron Job ========================================================================================================== -->
+
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderFactory" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderRepository" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncItemFactory" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncItemRepository" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncWorker" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncCronJobSubscriber" public="true">
+            <tag name="shopware.event_subscriber"/>
         </service>
 
     </services>

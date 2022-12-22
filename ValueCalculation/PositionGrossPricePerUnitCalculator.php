@@ -1,15 +1,19 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\ValueCalculation;
 
 use Shopware\Models\Order\Detail;
 
 class PositionGrossPricePerUnitCalculator
 {
-    private PositionGrossPriceCalculator $positionGrossPriceCalculator;
-    private PositionQuantityCalculator $positionQuantityCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPriceCalculator
+     */
+    private $positionGrossPriceCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionQuantityCalculator
+     */
+    private $positionQuantityCalculator;
 
     public function __construct(PositionGrossPriceCalculator $positionGrossPriceCalculator, PositionQuantityCalculator $positionQuantityCalculator)
     {
@@ -17,7 +21,11 @@ class PositionGrossPricePerUnitCalculator
         $this->positionQuantityCalculator = $positionQuantityCalculator;
     }
 
-    public function calculate(Detail $detail): float
+    /**
+     * @param \Shopware\Models\Order\Detail $detail
+     * @return float
+     */
+    public function calculate($detail)
     {
         $grossPrice = $this->positionGrossPriceCalculator->calculate($detail);
         $quantity = $this->positionQuantityCalculator->calculate($detail);

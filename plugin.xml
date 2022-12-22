@@ -1,78 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.3/engine/Shopware/Components/Plugin/schema/plugin.xsd">
+<plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.3/engine/Shopware/Components/Plugin/schema/plugin.xsd">
+  <label>Buy Now Pay Later</label>
+  <label lang="de">Kauf auf Rechnung</label>
+  <version>1.3.0</version>
+  <copyright>axytos GmbH</copyright>
+  <license>proprietary</license>
+  <link>https://www.axytos.com </link>
+  <author>axytos GmbH</author>
+  <compatibility minVersion="5.7.0"/>
+  <description><![CDATA[
 
-    <label>Buy Now Pay Later</label>
+        <b>Buy Now Pay Later</b>
 
-    <label lang="de">Kauf auf Rechnung</label>
-    
-    <version>1.2.0</version>
+        <p>You conveniently pay the invoice as soon as you receive the goods, within the payment period</p>
 
-    <copyright>axytos GmbH</copyright>
+    ]]></description>
+  <description lang="de"><![CDATA[
 
-    <license>proprietary</license>
+        <b>Kauf auf Rechnung</b>
 
-    <link>https://www.axytos.com </link>
+        <p>Sie zahlen bequem die Rechnung, sobald Sie die Ware erhalten haben, innerhalb der Zahlfrist</p>
 
-    <author>axytos GmbH</author>
+    ]]></description>
+  <changelog version="1.1.0">
+    <changes><![CDATA[
 
-    <compatibility minVersion="5.7.0" />
+        First release Shopware Community Store
 
-    <changelog version="1.1.0">
-        <changes>
-            <![CDATA[
+    ]]></changes>
+    <changes lang="de"><![CDATA[
 
-                First release Shopware Community Store
+        Erstveröffentlichung Shopware Community Store
 
-            ]]>
-        </changes>
-        <changes lang="de">
-            <![CDATA[
+    ]]></changes>
+  </changelog>
+  <changelog version="1.2.0">
+    <changes><![CDATA[
 
-                Erstveröffentlichung Shopware Community Store
+        Configurable order and payment status after checkout.
 
-            ]]>
-        </changes>
-    </changelog>
+    ]]></changes>
+    <changes lang="de"><![CDATA[
 
-    <changelog version="1.2.0">
-        <changes>
-            <![CDATA[
+        Konfigurierbarer Bestell- und Zahlungsstatus nach Checkout.
 
-                Configurable order and payment status after checkout.
+    ]]></changes>
+  </changelog>
+  <changelog version="1.3.0">
+    <changes><![CDATA[
 
-            ]]>
-        </changes>
-        <changes lang="de">
-            <![CDATA[
+        Cron Job for monitoring and reporting order information
 
-                Konfigurierbarer Bestell- und Zahlungsstatus nach Checkout.
+	  ]]></changes>
+    <changes lang="de"><![CDATA[
 
-            ]]>
-        </changes>
-    </changelog>
+        Cron Job zur Ueberwachung und Meldung von Bestellungen
 
-    <description>
-
-        <![CDATA[
-
-            <b>Buy Now Pay Later</b>
-
-            <p>You conveniently pay the invoice as soon as you receive the goods, within the payment period</p>
-
-        ]]>
-
-    </description>
-
-    <description lang="de">
-
-        <![CDATA[
-
-            <b>Kauf auf Rechnung</b>
-
-            <p>Sie zahlen bequem die Rechnung, sobald Sie die Ware erhalten haben, innerhalb der Zahlfrist</p>
-
-        ]]>
-
-    </description>
+	  ]]></changes>
+  </changelog>
 </plugin>

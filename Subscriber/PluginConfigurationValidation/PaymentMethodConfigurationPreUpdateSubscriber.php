@@ -11,7 +11,10 @@ use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 
 class PaymentMethodConfigurationPreUpdateSubscriber implements EventSubscriber
 {
-    public function getSubscribedEvents(): array
+    /**
+     * @return mixed[]
+     */
+    public function getSubscribedEvents()
     {
         return [
             Events::preUpdate
@@ -20,8 +23,9 @@ class PaymentMethodConfigurationPreUpdateSubscriber implements EventSubscriber
 
      /**
      * @param LifecycleEventArgs  $eventArgs
+     * @return void
      */
-    public function preUpdate(LifecycleEventArgs $eventArgs): void
+    public function preUpdate($eventArgs)
     {
         try {
             $model = $eventArgs->getEntity();
@@ -41,6 +45,10 @@ class PaymentMethodConfigurationPreUpdateSubscriber implements EventSubscriber
             $model->setEsdActive($model->getEsdActive() && !$pluginConfigurationValidator->isInvalid());
             $model->setMobileInactive($model->getMobileInactive() && !$pluginConfigurationValidator->isInvalid());
         } catch (\Throwable $th) {
+            /** @var ErrorHandler */
+            $errorHandler = Shopware()->Container()->get(ErrorHandler::class);
+            $errorHandler->handle($th);
+        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
             /** @var ErrorHandler */
             $errorHandler = Shopware()->Container()->get(ErrorHandler::class);
             $errorHandler->handle($th);

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDto;
@@ -11,14 +9,21 @@ use Shopware\Models\Order\Document\Document;
 
 class CreateInvoiceTaxGroupDtoCollectionFactory
 {
-    private CreateInvoiceTaxGroupDtoFactory $createInvoiceTaxGroupDtoFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceTaxGroupDtoFactory
+     */
+    private $createInvoiceTaxGroupDtoFactory;
 
     public function __construct(CreateInvoiceTaxGroupDtoFactory $createInvoiceTaxGroupDtoFactory)
     {
         $this->createInvoiceTaxGroupDtoFactory = $createInvoiceTaxGroupDtoFactory;
     }
 
-    public function create(Document $invoice): CreateInvoiceTaxGroupDtoCollection
+    /**
+     * @param \Shopware\Models\Order\Document\Document $invoice
+     * @return \Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDtoCollection
+     */
+    public function create($invoice)
     {
         $order = $invoice->getOrder();
         $details = $order->getDetails()->getValues();

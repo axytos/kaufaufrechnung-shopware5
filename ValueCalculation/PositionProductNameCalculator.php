@@ -1,14 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\ValueCalculation;
 
 use Shopware\Models\Order\Detail;
 
 class PositionProductNameCalculator
 {
-    public function calculate(Detail $detail): string
+    /**
+     * @param \Shopware\Models\Order\Detail $detail
+     * @return string
+     */
+    public function calculate($detail)
     {
         return $detail->getArticleName();
     }

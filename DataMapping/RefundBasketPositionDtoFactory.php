@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\RefundBasketPositionDto;
@@ -13,9 +11,18 @@ use Shopware\Models\Order\Order;
 
 class RefundBasketPositionDtoFactory
 {
-    private PositionProductIdCalculator $positionProductIdCalculator;
-    private PositionGrossPriceCalculator $positionGrossPriceCalculator;
-    private PositionNetPriceCalculator $positionNetPriceCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionProductIdCalculator
+     */
+    private $positionProductIdCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPriceCalculator
+     */
+    private $positionGrossPriceCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionNetPriceCalculator
+     */
+    private $positionNetPriceCalculator;
 
     public function __construct(
         PositionProductIdCalculator $positionProductIdCalculator,
@@ -27,7 +34,11 @@ class RefundBasketPositionDtoFactory
         $this->positionNetPriceCalculator = $positionNetPriceCalculator;
     }
 
-    public function create(Detail $orderDetail): RefundBasketPositionDto
+    /**
+     * @param \Shopware\Models\Order\Detail $orderDetail
+     * @return \Axytos\ECommerce\DataTransferObjects\RefundBasketPositionDto
+     */
+    public function create($orderDetail)
     {
         $position = new RefundBasketPositionDto();
         $position->productId = $this->positionProductIdCalculator->calculate($orderDetail);
@@ -36,7 +47,11 @@ class RefundBasketPositionDtoFactory
         return $position;
     }
 
-    public function createShippingPosition(Order $order): RefundBasketPositionDto
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\RefundBasketPositionDto
+     */
+    public function createShippingPosition($order)
     {
         $position = new RefundBasketPositionDto();
         $position->productId = '0';

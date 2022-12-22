@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\Core;
 
 use Axytos\ECommerce\Clients\Invoice\InvoiceOrderContextInterface;
@@ -13,6 +11,7 @@ use Axytos\ECommerce\DataTransferObjects\InvoiceAddressDto;
 use Axytos\ECommerce\DataTransferObjects\RefundBasketDto;
 use Axytos\ECommerce\DataTransferObjects\ReturnPositionModelDtoCollection;
 use Axytos\ECommerce\DataTransferObjects\ShippingBasketPositionDtoCollection;
+use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository;
 use AxytosKaufAufRechnungShopware5\DataMapping\BasketDtoFactory;
 use AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceBasketDtoFactory;
 use AxytosKaufAufRechnungShopware5\DataMapping\CustomerDataDtoFactory;
@@ -20,6 +19,8 @@ use AxytosKaufAufRechnungShopware5\DataMapping\DeliveryAddressDtoFactory;
 use AxytosKaufAufRechnungShopware5\DataMapping\InvoiceAddressDtoFactory;
 use AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketDtoFactory;
 use AxytosKaufAufRechnungShopware5\DataMapping\ShippingBasketPositionDtoCollectionFactory;
+use AxytosKaufAufRechnungShopware5\ValueCalculation\LogisticianCalculator;
+use AxytosKaufAufRechnungShopware5\ValueCalculation\TrackingIdCalculator;
 use DateTime;
 use DateTimeInterface;
 use Shopware\Models\Order\Document\Document;
@@ -27,24 +28,72 @@ use Shopware\Models\Order\Order;
 
 class InvoiceOrderContext implements InvoiceOrderContextInterface
 {
-    private Order $order;
-    private ?Document $invoice;
-    private ?Document $creditDocument;
-    private OrderAttributesRepository $orderAttributesRepository;
-    private CustomerDataDtoFactory $customerDataDtoFactory;
-    private InvoiceAddressDtoFactory $invoiceAddressDtoFactory;
-    private DeliveryAddressDtoFactory $deliveryAddressDtoFactory;
-    private BasketDtoFactory $basketDtoFactory;
-    private CreateInvoiceBasketDtoFactory $createInvoiceBasketDtoFactory;
-    private RefundBasketDtoFactory $refundBasketDtoFactory;
-    private ShippingBasketPositionDtoCollectionFactory $shippingBasketPositionDtoCollectionFactory;
+    /**
+     * @var \Shopware\Models\Order\Order
+     */
+    private $order;
+    /**
+     * @var \Shopware\Models\Order\Document\Document|null
+     */
+    private $invoice;
+    /**
+     * @var \Shopware\Models\Order\Document\Document|null
+     */
+    private $creditDocument;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository
+     */
+    private $orderAttributesRepository;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\CustomerDataDtoFactory
+     */
+    private $customerDataDtoFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\InvoiceAddressDtoFactory
+     */
+    private $invoiceAddressDtoFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\DeliveryAddressDtoFactory
+     */
+    private $deliveryAddressDtoFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\BasketDtoFactory
+     */
+    private $basketDtoFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceBasketDtoFactory
+     */
+    private $createInvoiceBasketDtoFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketDtoFactory
+     */
+    private $refundBasketDtoFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\ShippingBasketPositionDtoCollectionFactory
+     */
+    private $shippingBasketPositionDtoCollectionFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\TrackingIdCalculator
+     */
+    private $trackingIdCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\LogisticianCalculator
+     */
+    private $logisticianCalculator;
 
-    private string $invoiceNumber;
+    /**
+     * @var string
+     */
+    private $invoiceNumber;
 
+    /**
+     * @param \Shopware\Models\Order\Document\Document|null $invoice
+     * @param \Shopware\Models\Order\Document\Document|null $creditDocument
+     */
     public function __construct(
         Order $order,
-        ?Document $invoice,
-        ?Document $creditDocument,
+        $invoice,
+        $creditDocument,
         OrderAttributesRepository $orderAttributesRepository,
         CustomerDataDtoFactory $customerDataDtoFactory,
         InvoiceAddressDtoFactory $invoiceAddressDtoFactory,
@@ -52,7 +101,9 @@ class InvoiceOrderContext implements InvoiceOrderContextInterface
         BasketDtoFactory $basketDtoFactory,
         CreateInvoiceBasketDtoFactory $createInvoiceBasketDtoFactory,
         RefundBasketDtoFactory $refundBasketDtoFactory,
-        ShippingBasketPositionDtoCollectionFactory $shippingBasketPositionDtoCollectionFactory
+        ShippingBasketPositionDtoCollectionFactory $shippingBasketPositionDtoCollectionFactory,
+        TrackingIdCalculator $trackingIdCalculator,
+        LogisticianCalculator $logisticianCalculator
     ) {
         $this->order = $order;
         $this->invoice = $invoice;
@@ -65,14 +116,22 @@ class InvoiceOrderContext implements InvoiceOrderContextInterface
         $this->createInvoiceBasketDtoFactory = $createInvoiceBasketDtoFactory;
         $this->refundBasketDtoFactory = $refundBasketDtoFactory;
         $this->shippingBasketPositionDtoCollectionFactory = $shippingBasketPositionDtoCollectionFactory;
+        $this->trackingIdCalculator = $trackingIdCalculator;
+        $this->logisticianCalculator = $logisticianCalculator;
     }
 
-    public function getOrderNumber(): string
+    /**
+     * @return string
+     */
+    public function getOrderNumber()
     {
         return strval($this->order->getNumber());
     }
 
-    public function getOrderInvoiceNumber(): string
+    /**
+     * @return string
+     */
+    public function getOrderInvoiceNumber()
     {
         if (!is_null($this->invoice)) {
             /** @phpstan-ignore-next-line */
@@ -81,43 +140,68 @@ class InvoiceOrderContext implements InvoiceOrderContextInterface
         return $this->invoiceNumber;
     }
 
-    public function setOrderInvoiceNumber(string $invoiceNumber): void
+    /**
+     * @param string $invoiceNumber
+     * @return void
+     */
+    public function setOrderInvoiceNumber($invoiceNumber)
     {
         $this->invoiceNumber = $invoiceNumber;
     }
 
-    public function getOrderDateTime(): DateTimeInterface
+    /**
+     * @return \DateTimeInterface
+     */
+    public function getOrderDateTime()
     {
         return new DateTime();
     }
 
-    public function getPersonalData(): CustomerDataDto
+    /**
+     * @return \Axytos\ECommerce\DataTransferObjects\CustomerDataDto
+     */
+    public function getPersonalData()
     {
         return $this->customerDataDtoFactory->create($this->order);
     }
 
-    public function getInvoiceAddress(): InvoiceAddressDto
+    /**
+     * @return \Axytos\ECommerce\DataTransferObjects\InvoiceAddressDto
+     */
+    public function getInvoiceAddress()
     {
         return $this->invoiceAddressDtoFactory->create($this->order);
     }
 
-    public function getDeliveryAddress(): DeliveryAddressDto
+    /**
+     * @return \Axytos\ECommerce\DataTransferObjects\DeliveryAddressDto
+     */
+    public function getDeliveryAddress()
     {
         return $this->deliveryAddressDtoFactory->create($this->order);
     }
 
-    public function getBasket(): BasketDto
+    /**
+     * @return \Axytos\ECommerce\DataTransferObjects\BasketDto
+     */
+    public function getBasket()
     {
         return $this->basketDtoFactory->create($this->order);
     }
 
-    public function getRefundBasket(): RefundBasketDto
+    /**
+     * @return \Axytos\ECommerce\DataTransferObjects\RefundBasketDto
+     */
+    public function getRefundBasket()
     {
         /** @phpstan-ignore-next-line */
         return $this->refundBasketDtoFactory->create($this->creditDocument);
     }
 
-    public function getCreateInvoiceBasket(): CreateInvoiceBasketDto
+    /**
+     * @return \Axytos\ECommerce\DataTransferObjects\CreateInvoiceBasketDto
+     */
+    public function getCreateInvoiceBasket()
     {
         if (is_null($this->invoice)) {
             return new CreateInvoiceBasketDto();
@@ -126,23 +210,64 @@ class InvoiceOrderContext implements InvoiceOrderContextInterface
         return $this->createInvoiceBasketDtoFactory->create($this->invoice);
     }
 
-    public function getShippingBasketPositions(): ShippingBasketPositionDtoCollection
+    /**
+     * @return \Axytos\ECommerce\DataTransferObjects\ShippingBasketPositionDtoCollection
+     */
+    public function getShippingBasketPositions()
     {
         return $this->shippingBasketPositionDtoCollectionFactory->create($this->order);
     }
 
-    public function getPreCheckResponseData(): array
+    /**
+     * @return mixed[]
+     */
+    public function getPreCheckResponseData()
     {
         return $this->orderAttributesRepository->loadPreCheckResponseData($this->order);
     }
 
-    public function setPreCheckResponseData(array $data): void
+    /**
+     * @param mixed[] $data
+     * @return void
+     */
+    public function setPreCheckResponseData($data)
     {
         $this->orderAttributesRepository->persistPreCheckResponseData($this->order, $data);
     }
 
-    public function getReturnPositions(): ReturnPositionModelDtoCollection
+    /**
+     * @return \Axytos\ECommerce\DataTransferObjects\ReturnPositionModelDtoCollection
+     */
+    public function getReturnPositions()
     {
         return new ReturnPositionModelDtoCollection();
+    }
+
+    /**
+     * @return float
+     */
+    public function getDeliveryWeight()
+    {
+        // for now delivery weight is not important for risk evaluation
+        // because different shop systems don't always provide the necessary
+        // information to accurately the exact delivery weight for each delivery
+        // we decided to return 0 as constant delivery weight
+        return 0;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getTrackingIds()
+    {
+        return $this->trackingIdCalculator->calculate($this->order);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogistician()
+    {
+        return $this->logisticianCalculator->calculate($this->order);
     }
 }

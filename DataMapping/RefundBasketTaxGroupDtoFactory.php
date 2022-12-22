@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\RefundBasketTaxGroupDto;
@@ -13,9 +11,18 @@ use Shopware\Models\Order\Order;
 
 class RefundBasketTaxGroupDtoFactory
 {
-    private PositionNetPriceCalculator $positionNetPriceCalculator;
-    private PositionTaxCalculator $positionTaxCalculator;
-    private PositionTaxPercentCalculator $positionTaxPercentCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionNetPriceCalculator
+     */
+    private $positionNetPriceCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxCalculator
+     */
+    private $positionTaxCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxPercentCalculator
+     */
+    private $positionTaxPercentCalculator;
 
     public function __construct(
         PositionNetPriceCalculator $positionNetPriceCalculator,
@@ -27,7 +34,11 @@ class RefundBasketTaxGroupDtoFactory
         $this->positionTaxPercentCalculator = $positionTaxPercentCalculator;
     }
 
-    public function create(Detail $orderDetail): RefundBasketTaxGroupDto
+    /**
+     * @param \Shopware\Models\Order\Detail $orderDetail
+     * @return \Axytos\ECommerce\DataTransferObjects\RefundBasketTaxGroupDto
+     */
+    public function create($orderDetail)
     {
         $taxGroup = new RefundBasketTaxGroupDto();
         $taxGroup->valueToTax = $this->positionNetPriceCalculator->calculate($orderDetail);
@@ -36,7 +47,11 @@ class RefundBasketTaxGroupDtoFactory
         return $taxGroup;
     }
 
-    public function createShippingTaxGroup(Order $order): RefundBasketTaxGroupDto
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\RefundBasketTaxGroupDto
+     */
+    public function createShippingTaxGroup($order)
     {
         $taxGroup = new RefundBasketTaxGroupDto();
         $taxGroup->valueToTax = $order->getInvoiceShippingNet();

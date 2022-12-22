@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\Client;
 
 use Axytos\ECommerce\Abstractions\UserAgentInfoProviderInterface;
@@ -9,19 +7,28 @@ use Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider;
 
 class UserAgentInfoProvider implements UserAgentInfoProviderInterface
 {
-    private ComposerPackageInfoProvider $composerPackageInfoProvider;
+    /**
+     * @var \Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider
+     */
+    private $composerPackageInfoProvider;
 
     public function __construct(ComposerPackageInfoProvider $composerPackageInfoProvider)
     {
         $this->composerPackageInfoProvider = $composerPackageInfoProvider;
     }
 
-    public function getPluginName(): string
+    /**
+     * @return string
+     */
+    public function getPluginName()
     {
         return "KaufAufRechnung";
     }
 
-    public function getPluginVersion(): string
+    /**
+     * @return string
+     */
+    public function getPluginVersion()
     {
         $packageName = 'axytos/kaufaufrechnung-shopware5';
 
@@ -29,12 +36,18 @@ class UserAgentInfoProvider implements UserAgentInfoProviderInterface
         return $this->composerPackageInfoProvider->getVersion($packageName);
     }
 
-    public function getShopSystemName(): string
+    /**
+     * @return string
+     */
+    public function getShopSystemName()
     {
         return "Shopware";
     }
 
-    public function getShopSystemVersion(): string
+    /**
+     * @return string
+     */
+    public function getShopSystemVersion()
     {
         $packageName = 'shopware/shopware';
 

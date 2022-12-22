@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace AxytosKaufAufRechnungShopware5\Core;
+namespace AxytosKaufAufRechnungShopware5\DataAbstractionLayer;
 
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Order\Document\Document;
@@ -11,7 +9,12 @@ use Exception;
 
 class OrderDocumentsRepository
 {
-    public function findOrderDocumentWithType(Order $order, int $documentType): Document
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @param int $documentType
+     * @return \Shopware\Models\Order\Document\Document
+     */
+    public function findOrderDocumentWithType($order, $documentType)
     {
         /** @var ModelManager */
         $modelManager = Shopware()->Container()->get(ModelManager::class);
@@ -37,7 +40,10 @@ class OrderDocumentsRepository
         throw new Exception('Document not found');
     }
 
-    private function fetchDocID(Document $document): string
+    /**
+     * @return string
+     */
+    private function fetchDocID(Document $document)
     {
         /**
          * Fetch most recent docID because Shopware5 overwrites it

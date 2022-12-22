@@ -1,15 +1,19 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\ValueCalculation;
 
 use Shopware\Models\Order\Detail;
 
 class PositionNetPriceCalculator
 {
-    private PositionGrossPriceCalculator $positionGrossPriceCalculator;
-    private PositionTaxPercentCalculator $positionTaxPercentCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPriceCalculator
+     */
+    private $positionGrossPriceCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxPercentCalculator
+     */
+    private $positionTaxPercentCalculator;
 
     public function __construct(PositionGrossPriceCalculator $positionGrossPriceCalculator, PositionTaxPercentCalculator $positionTaxPercentCalculator)
     {
@@ -17,7 +21,11 @@ class PositionNetPriceCalculator
         $this->positionTaxPercentCalculator = $positionTaxPercentCalculator;
     }
 
-    public function calculate(Detail $detail): float
+    /**
+     * @param \Shopware\Models\Order\Detail $detail
+     * @return float
+     */
+    public function calculate($detail)
     {
         $grossPrice = $this->positionGrossPriceCalculator->calculate($detail);
         $taxPercent = $this->positionTaxPercentCalculator->calculate($detail);

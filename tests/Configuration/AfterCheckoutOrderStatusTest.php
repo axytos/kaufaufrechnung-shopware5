@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\Tests\Configuration;
 
 use AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutOrderStatus;
@@ -12,15 +10,21 @@ class AfterCheckoutOrderStatusTest extends TestCase
 {
     /**
      * @dataProvider getStatusCodeTestCases
+     * @param string $value
+     * @param int $expectedStatusCode
+     * @return void
      */
-    public function test_getStatusCode_returns_correct_value(string $value, int $expectedStatusCode): void
+    public function test_getStatusCode_returns_correct_value($value, $expectedStatusCode)
     {
         $afterCheckoutOrderStatus = new AfterCheckoutOrderStatus($value);
 
         $this->assertEquals($expectedStatusCode, $afterCheckoutOrderStatus->getStatusCode());
     }
 
-    public static function getStatusCodeTestCases(): array
+    /**
+     * @return mixed[]
+     */
+    public static function getStatusCodeTestCases()
     {
         return [
             [AfterCheckoutOrderStatus::ORDER_STATE_CANCELLED, Status::ORDER_STATE_CANCELLED],
@@ -34,5 +38,15 @@ class AfterCheckoutOrderStatusTest extends TestCase
             [AfterCheckoutOrderStatus::ORDER_STATE_COMPLETELY_DELIVERED, Status::ORDER_STATE_COMPLETELY_DELIVERED],
             [AfterCheckoutOrderStatus::ORDER_STATE_CLARIFICATION_REQUIRED, Status::ORDER_STATE_CLARIFICATION_REQUIRED],
         ];
+    }
+
+    /**
+     * @return void
+     */
+    public function test_getStatusCode_returns_ORDER_STATE_OPEN_as_default()
+    {
+        $afterCheckoutOrderStatus = new AfterCheckoutOrderStatus('');
+
+        $this->assertEquals(Status::ORDER_STATE_OPEN, $afterCheckoutOrderStatus->getStatusCode());
     }
 }

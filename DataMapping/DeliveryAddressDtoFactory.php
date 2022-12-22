@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\DeliveryAddressDto;
@@ -12,7 +10,11 @@ use Shopware\Models\Order\Shipping;
 
 class DeliveryAddressDtoFactory
 {
-    public function create(Order $order): DeliveryAddressDto
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\DeliveryAddressDto
+     */
+    public function create($order)
     {
         /** @var Shipping */
         $shipping = $order->getShipping();
@@ -31,7 +33,10 @@ class DeliveryAddressDtoFactory
         return $deliveryAddressDto;
     }
 
-    private function getRegion(Shipping $shipping): ?string
+    /**
+     * @return string|null
+     */
+    private function getRegion(Shipping $shipping)
     {
         /** @var ?State */
         $state = $shipping->getState();
@@ -43,7 +48,10 @@ class DeliveryAddressDtoFactory
         return $state->getName();
     }
 
-    private function getCountry(Shipping $shipping): ?string
+    /**
+     * @return string|null
+     */
+    private function getCountry(Shipping $shipping)
     {
         /** @var Country */
         $country = $shipping->getCountry();

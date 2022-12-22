@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDto;
@@ -13,9 +11,18 @@ use Shopware\Models\Order\Order;
 
 class CreateInvoiceTaxGroupDtoFactory
 {
-    private PositionNetPriceCalculator $positionNetPriceCalculator;
-    private PositionTaxCalculator $positionTaxCalculator;
-    private PositionTaxPercentCalculator $positionTaxPercentCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionNetPriceCalculator
+     */
+    private $positionNetPriceCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxCalculator
+     */
+    private $positionTaxCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxPercentCalculator
+     */
+    private $positionTaxPercentCalculator;
 
     public function __construct(
         PositionNetPriceCalculator $positionNetPriceCalculator,
@@ -27,7 +34,11 @@ class CreateInvoiceTaxGroupDtoFactory
         $this->positionTaxPercentCalculator = $positionTaxPercentCalculator;
     }
 
-    public function create(Detail $invoiceItem): CreateInvoiceTaxGroupDto
+    /**
+     * @param \Shopware\Models\Order\Detail $invoiceItem
+     * @return \Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDto
+     */
+    public function create($invoiceItem)
     {
         $taxGroup = new CreateInvoiceTaxGroupDto();
         $taxGroup->valueToTax = $this->positionNetPriceCalculator->calculate($invoiceItem);
@@ -37,7 +48,11 @@ class CreateInvoiceTaxGroupDtoFactory
         return $taxGroup;
     }
 
-    public function createShippingTaxGroup(Order $order): CreateInvoiceTaxGroupDto
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDto
+     */
+    public function createShippingTaxGroup($order)
     {
         $taxGroup = new CreateInvoiceTaxGroupDto();
         $taxGroup->valueToTax = $order->getInvoiceShippingNet();

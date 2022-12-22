@@ -5,7 +5,10 @@ use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 
 class Shopware_Controllers_Backend_AxytosKaufAufRechnungApiTestController extends \Shopware_Controllers_Backend_ExtJs
 {
-    public function validateAction(): void
+    /**
+     * @return void
+     */
+    public function validateAction()
     {
         try {
             /** @var CredentialValidationClientInterface */
@@ -20,6 +23,11 @@ class Shopware_Controllers_Backend_AxytosKaufAufRechnungApiTestController extend
                 $this->View()->assign('text', 'API-Verbindung konnte nicht hergestellt werden. Bitte prüfe die Konfiguration von API Host und API Key.');
             }
         } catch (Throwable $th) {
+            /** @var ErrorHandler */
+            $errorHandler = Shopware()->Container()->get(ErrorHandler::class);
+            $errorHandler->handle($th);
+            $this->View()->assign('text', 'API-Verbindung konnte nicht hergestellt werden. Bitte prüfe die Konfiguration von API Host und API Key.');
+        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
             /** @var ErrorHandler */
             $errorHandler = Shopware()->Container()->get(ErrorHandler::class);
             $errorHandler->handle($th);

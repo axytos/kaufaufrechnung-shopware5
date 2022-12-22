@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\CreateInvoiceBasketPositionDto;
@@ -18,14 +16,38 @@ use Shopware\Models\Order\Order;
 
 class CreateInvoiceBasketPositionDtoFactory
 {
-    private PositionProductIdCalculator $positionProductIdCalculator;
-    private PositionProductNameCalculator $positionProductNameCalculator;
-    private PositionQuantityCalculator $positionQuantityCalculator;
-    private PositionTaxPercentCalculator $positionTaxPercentCalculator;
-    private PositionGrossPriceCalculator $positionGrossPriceCalculator;
-    private PositionGrossPricePerUnitCalculator $positionGrossPricePerUnitCalculator;
-    private PositionNetPriceCalculator $positionNetPriceCalculator;
-    private PositionNetPricePerUnitCalculator $positionNetPricePerUnitCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionProductIdCalculator
+     */
+    private $positionProductIdCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionProductNameCalculator
+     */
+    private $positionProductNameCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionQuantityCalculator
+     */
+    private $positionQuantityCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxPercentCalculator
+     */
+    private $positionTaxPercentCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPriceCalculator
+     */
+    private $positionGrossPriceCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPricePerUnitCalculator
+     */
+    private $positionGrossPricePerUnitCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionNetPriceCalculator
+     */
+    private $positionNetPriceCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionNetPricePerUnitCalculator
+     */
+    private $positionNetPricePerUnitCalculator;
 
     public function __construct(
         PositionProductIdCalculator $positionProductIdCalculator,
@@ -47,7 +69,11 @@ class CreateInvoiceBasketPositionDtoFactory
         $this->positionNetPricePerUnitCalculator = $positionNetPricePerUnitCalculator;
     }
 
-    public function create(Detail $invoiceItem): CreateInvoiceBasketPositionDto
+    /**
+     * @param \Shopware\Models\Order\Detail $invoiceItem
+     * @return \Axytos\ECommerce\DataTransferObjects\CreateInvoiceBasketPositionDto
+     */
+    public function create($invoiceItem)
     {
         $position = new CreateInvoiceBasketPositionDto();
         $position->productId = $this->positionProductIdCalculator->calculate($invoiceItem);
@@ -61,7 +87,11 @@ class CreateInvoiceBasketPositionDtoFactory
         return $position;
     }
 
-    public function createShippingPosition(Order $order): CreateInvoiceBasketPositionDto
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\CreateInvoiceBasketPositionDto
+     */
+    public function createShippingPosition($order)
     {
         $position = new CreateInvoiceBasketPositionDto();
         $position->productId = '0';

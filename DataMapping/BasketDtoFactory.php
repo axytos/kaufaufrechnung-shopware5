@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\BasketDto;
@@ -9,14 +7,21 @@ use Shopware\Models\Order\Order;
 
 class BasketDtoFactory
 {
-    private BasketPositionDtoCollectionFactory $basketPositionDtoCollectionFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\BasketPositionDtoCollectionFactory
+     */
+    private $basketPositionDtoCollectionFactory;
 
     public function __construct(BasketPositionDtoCollectionFactory $basketPositionDtoCollectionFactory)
     {
         $this->basketPositionDtoCollectionFactory = $basketPositionDtoCollectionFactory;
     }
 
-    public function create(Order $order): BasketDto
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\BasketDto
+     */
+    public function create($order)
     {
         $basketDto = new BasketDto();
         $basketDto->netTotal = $order->getInvoiceAmountNet();

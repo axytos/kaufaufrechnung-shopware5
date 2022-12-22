@@ -2,7 +2,7 @@
 
 namespace AxytosKaufAufRechnungShopware5;
 
-use AxytosKaufAufRechnungShopware5\Core\OrderAttributesRepository;
+use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Plugin;
@@ -12,9 +12,7 @@ use Shopware\Components\Plugin\Context\DeactivateContext;
 use Shopware\Components\Plugin\Context\ActivateContext;
 use Shopware\Models\Payment\Payment;
 use AxytosKaufAufRechnungShopware5\Paymentmethod\PaymentMethodOptions;
-use Shopware\Bundle\AttributeBundle\Service\CrudServiceInterface;
-use Shopware\Bundle\AttributeBundle\Service\DataLoaderInterface;
-use Shopware\Bundle\AttributeBundle\Service\DataPersisterInterface;
+use Shopware\Components\Plugin\Context\UpdateContext;
 use Shopware\Components\Plugin\PaymentInstaller;
 
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
@@ -31,32 +29,39 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
         ];
     }
 
-    public function install(InstallContext $context): void
+    /**
+     * @param InstallContext $context
+     * @return void
+     */
+    public function install(InstallContext $context)
     {
         /** @var PaymentInstaller */
         $installer = $this->container->get('shopware.plugin_payment_installer');
         $installer->createOrUpdate($context->getPlugin()->getName(), PaymentMethodOptions::OPTIONS);
 
-
-        /** @var CrudServiceInterface */
-        $crudService = $this->container->get(CrudServiceInterface::class);
-
-        /** @var DataLoaderInterface */
-        $dataLoader = $this->container->get(DataLoaderInterface::class);
-
-        /** @var DataPersisterInterface */
-        $dataPersister = $this->container->get(DataPersisterInterface::class);
-
-        $orderAttributesRepository = new OrderAttributesRepository($crudService, $dataLoader, $dataPersister);
+        $orderAttributesRepository = OrderAttributesRepository::create();
         $orderAttributesRepository->install();
 
         $context->scheduleClearCache(InstallContext::CACHE_LIST_DEFAULT);
     }
 
     /**
-     * @param UninstallContext $context
+     * @param UpdateContext $context
+     * @return void
      */
-    public function uninstall(UninstallContext $context): void
+    public function update(UpdateContext $context)
+    {
+        $orderAttributesRepository = OrderAttributesRepository::create();
+        $orderAttributesRepository->update();
+
+        $context->scheduleClearCache(InstallContext::CACHE_LIST_DEFAULT);
+    }
+
+    /**
+     * @param UninstallContext $context
+     * @return void
+     */
+    public function uninstall(UninstallContext $context)
     {
         $this->setActiveFlag($context->getPlugin()->getPayments(), false);
         $context->scheduleClearCache(UninstallContext::CACHE_LIST_DEFAULT);
@@ -64,8 +69,9 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
 
     /**
      * @param DeactivateContext $context
+     * @return void
      */
-    public function deactivate(DeactivateContext $context): void
+    public function deactivate(DeactivateContext $context)
     {
         $this->setActiveFlag($context->getPlugin()->getPayments(), false);
         $context->scheduleClearCache(DeactivateContext::CACHE_LIST_DEFAULT);
@@ -73,8 +79,9 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
 
     /**
      * @param ActivateContext $context
+     * @return void
      */
-    public function activate(ActivateContext $context): void
+    public function activate(ActivateContext $context)
     {
         $this->setActiveFlag($context->getPlugin()->getPayments(), true);
         $context->scheduleClearCache(ActivateContext::CACHE_LIST_DEFAULT);
@@ -83,8 +90,9 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
     /**
      * @param ArrayCollection<Payment> $payments
      * @param bool $active
+     * @return void
      */
-    private function setActiveFlag($payments, $active): void
+    private function setActiveFlag($payments, $active)
     {
         /** @var ModelManager */
         $em = $this->container->get('models');
@@ -95,7 +103,10 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
         $em->flush();
     }
 
-    public function onFrontend(\Enlight_Event_EventArgs $args): void
+    /**
+     * @return void
+     */
+    public function onFrontend(\Enlight_Event_EventArgs $args)
     {
         // @phpstan-ignore-next-line
         $this->container->get('Template')->addTemplateDir(

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_SHOPWARE5\Tests\Client;
 
 use Axytos\ECommerce\Abstractions\UserAgentInfoProviderInterface;
@@ -13,28 +11,44 @@ use PHPUnit\Framework\TestCase;
 class UserAgentInfoProviderTest extends TestCase
 {
     /** @var ComposerPackageInfoProvider&MockObject $composerPackageInfoProvider */
-    private ComposerPackageInfoProvider $composerPackageInfoProvider;
-    private UserAgentInfoProvider $sut;
+    private $composerPackageInfoProvider;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\Client\UserAgentInfoProvider
+     */
+    private $sut;
 
-    public function setUp(): void
+    /**
+     * @return void
+     * @before
+     */
+    public function beforeEach()
     {
         $this->composerPackageInfoProvider = $this->createMock(ComposerPackageInfoProvider::class);
         $this->sut = new UserAgentInfoProvider($this->composerPackageInfoProvider);
     }
 
-    public function test_implements_UserAgentInfoProviderInterface(): void
+    /**
+     * @return void
+     */
+    public function test_implements_UserAgentInfoProviderInterface()
     {
         $this->assertInstanceOf(UserAgentInfoProviderInterface::class, $this->sut);
     }
 
-    public function test_getPluginName_returns_PaymentControl(): void
+    /**
+     * @return void
+     */
+    public function test_getPluginName_returns_PaymentControl()
     {
         $pluginName = $this->sut->getPluginName();
 
         $this->assertEquals("KaufAufRechnung", $pluginName);
     }
 
-    public function getComposerPackageName(): string
+    /**
+     * @return string
+     */
+    public function getComposerPackageName()
     {
         /** @var string */
         $composerJson = file_get_contents(__DIR__ . '/../../composer.json');
@@ -44,7 +58,10 @@ class UserAgentInfoProviderTest extends TestCase
         return $config["name"];
     }
 
-    public function test_getPluginVersion_returns_version_from_composer(): void
+    /**
+     * @return void
+     */
+    public function test_getPluginVersion_returns_version_from_composer()
     {
         $expected = "version";
 
@@ -60,14 +77,20 @@ class UserAgentInfoProviderTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function test_getShopSystemName_returns_Shopware(): void
+    /**
+     * @return void
+     */
+    public function test_getShopSystemName_returns_Shopware()
     {
         $shopSystemName = $this->sut->getShopSystemName();
 
         $this->assertEquals("Shopware", $shopSystemName);
     }
 
-    public function test_getShopSystemVersion_returns_version_from_composer(): void
+    /**
+     * @return void
+     */
+    public function test_getShopSystemVersion_returns_version_from_composer()
     {
         $expected = "version";
         $this->composerPackageInfoProvider

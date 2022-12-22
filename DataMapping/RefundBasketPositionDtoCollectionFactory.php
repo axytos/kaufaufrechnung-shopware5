@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\RefundBasketPositionDtoCollection;
@@ -9,14 +7,21 @@ use Shopware\Models\Order\Document\Document;
 
 class RefundBasketPositionDtoCollectionFactory
 {
-    private RefundBasketPositionDtoFactory $positionFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketPositionDtoFactory
+     */
+    private $positionFactory;
 
     public function __construct(RefundBasketPositionDtoFactory $positionFactory)
     {
         $this->positionFactory = $positionFactory;
     }
 
-    public function create(Document $creditDocument): RefundBasketPositionDtoCollection
+    /**
+     * @param \Shopware\Models\Order\Document\Document $creditDocument
+     * @return \Axytos\ECommerce\DataTransferObjects\RefundBasketPositionDtoCollection
+     */
+    public function create($creditDocument)
     {
         $order = $creditDocument->getOrder();
         $details = $order->getDetails();

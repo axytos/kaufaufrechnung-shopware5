@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\ShippingBasketPositionDtoCollection;
@@ -9,14 +7,21 @@ use Shopware\Models\Order\Order;
 
 class ShippingBasketPositionDtoCollectionFactory
 {
-    private ShippingBasketPositionDtoFactory $shippingBasketPositionDtoFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\ShippingBasketPositionDtoFactory
+     */
+    private $shippingBasketPositionDtoFactory;
 
     public function __construct(ShippingBasketPositionDtoFactory $shippingBasketPositionDtoFactory)
     {
         $this->shippingBasketPositionDtoFactory = $shippingBasketPositionDtoFactory;
     }
 
-    public function create(Order $order): ShippingBasketPositionDtoCollection
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\ShippingBasketPositionDtoCollection
+     */
+    public function create($order)
     {
         $positions = array_map([$this->shippingBasketPositionDtoFactory, 'create'], $order->getDetails()->getValues());
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\ShippingBasketPositionDto;
@@ -11,8 +9,14 @@ use Shopware\Models\Order\Detail;
 
 class ShippingBasketPositionDtoFactory
 {
-    private PositionProductIdCalculator $positionProductIdCalculator;
-    private PositionQuantityCalculator $positionQuantityCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionProductIdCalculator
+     */
+    private $positionProductIdCalculator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionQuantityCalculator
+     */
+    private $positionQuantityCalculator;
 
     public function __construct(
         PositionProductIdCalculator $positionProductIdCalculator,
@@ -22,7 +26,11 @@ class ShippingBasketPositionDtoFactory
         $this->positionQuantityCalculator = $positionQuantityCalculator;
     }
 
-    public function create(Detail $shippingItem): ShippingBasketPositionDto
+    /**
+     * @param \Shopware\Models\Order\Detail $shippingItem
+     * @return \Axytos\ECommerce\DataTransferObjects\ShippingBasketPositionDto
+     */
+    public function create($shippingItem)
     {
         $position = new ShippingBasketPositionDto();
         $position->productId = $this->positionProductIdCalculator->calculate($shippingItem);
@@ -30,7 +38,10 @@ class ShippingBasketPositionDtoFactory
         return $position;
     }
 
-    public function createShippingPosition(): ShippingBasketPositionDto
+    /**
+     * @return \Axytos\ECommerce\DataTransferObjects\ShippingBasketPositionDto
+     */
+    public function createShippingPosition()
     {
         $position = new ShippingBasketPositionDto();
         $position->productId = '0';

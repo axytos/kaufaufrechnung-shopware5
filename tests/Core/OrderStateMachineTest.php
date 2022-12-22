@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\Tests\Core;
 
 use AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutOrderStatus;
 use AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutPaymentStatus;
 use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
-use AxytosKaufAufRechnungShopware5\Core\OrderRepository;
+use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository;
 use AxytosKaufAufRechnungShopware5\Core\OrderStateMachine;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -17,14 +15,21 @@ use Shopware\Models\Order\Status;
 class OrderStateMachineTest extends TestCase
 {
     /** @var OrderRepository&MockObject */
-    private OrderRepository $orderRepository;
+    private $orderRepository;
 
     /** @var PluginConfiguration&MockObject */
-    private PluginConfiguration $pluginConfiguration;
+    private $pluginConfiguration;
 
-    private OrderStateMachine $sut;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\Core\OrderStateMachine
+     */
+    private $sut;
 
-    public function setUp(): void
+    /**
+     * @return void
+     * @before
+     */
+    public function beforeEach()
     {
         $this->orderRepository = $this->createMock(OrderRepository::class);
         $this->pluginConfiguration = $this->createMock(PluginConfiguration::class);
@@ -32,7 +37,10 @@ class OrderStateMachineTest extends TestCase
         $this->sut = new OrderStateMachine($this->orderRepository, $this->pluginConfiguration);
     }
 
-    public function test_setCanceled_calls_saveOrderStatus(): void
+    /**
+     * @return void
+     */
+    public function test_setCanceled_calls_saveOrderStatus()
     {
         /** @var Order&MockObject */
         $order = $this->createMock(Order::class);
@@ -45,7 +53,10 @@ class OrderStateMachineTest extends TestCase
         $this->sut->setCanceled($order);
     }
 
-    public function test_setPaymentReview_calls_savePaymentStatus(): void
+    /**
+     * @return void
+     */
+    public function test_setPaymentReview_calls_savePaymentStatus()
     {
         /** @var Order&MockObject */
         $order = $this->createMock(Order::class);
@@ -58,7 +69,10 @@ class OrderStateMachineTest extends TestCase
         $this->sut->setPaymentReview($order);
     }
 
-    public function test_setPendingPayment_calls_savePaymentStatus(): void
+    /**
+     * @return void
+     */
+    public function test_setPendingPayment_calls_savePaymentStatus()
     {
         /** @var Order&MockObject */
         $order = $this->createMock(Order::class);
@@ -71,7 +85,10 @@ class OrderStateMachineTest extends TestCase
         $this->sut->setPendingPayment($order);
     }
 
-    public function test_setTechnicalError_calls_savePaymentStatus(): void
+    /**
+     * @return void
+     */
+    public function test_setTechnicalError_calls_savePaymentStatus()
     {
         /** @var Order&MockObject */
         $order = $this->createMock(Order::class);
@@ -84,7 +101,10 @@ class OrderStateMachineTest extends TestCase
         $this->sut->setTechnicalError($order);
     }
 
-    public function test_setComplete_calls_saveOrderStatus(): void
+    /**
+     * @return void
+     */
+    public function test_setComplete_calls_saveOrderStatus()
     {
         /** @var Order&MockObject */
         $order = $this->createMock(Order::class);
@@ -97,7 +117,10 @@ class OrderStateMachineTest extends TestCase
         $this->sut->setComplete($order);
     }
 
-    public function test_setConfiguredAfterCheckoutOrderStatus_calls_saveAfterCheckoutOrderStatus(): void
+    /**
+     * @return void
+     */
+    public function test_setConfiguredAfterCheckoutOrderStatus_calls_saveAfterCheckoutOrderStatus()
     {
         /** @var AfterCheckoutOrderStatus&MockObject */
         $afterCheckoutOrderStatus = $this->createMock(AfterCheckoutOrderStatus::class);
@@ -114,7 +137,10 @@ class OrderStateMachineTest extends TestCase
         $this->sut->setConfiguredAfterCheckoutOrderStatus($order);
     }
 
-    public function test_setConfiguredAfterCheckoutOrderStatus_calls_saveAfterCheckoutPaymentStatus(): void
+    /**
+     * @return void
+     */
+    public function test_setConfiguredAfterCheckoutOrderStatus_calls_saveAfterCheckoutPaymentStatus()
     {
         /** @var AfterCheckoutPaymentStatus&MockObject */
         $afterCheckoutPaymentStatus = $this->createMock(AfterCheckoutPaymentStatus::class);

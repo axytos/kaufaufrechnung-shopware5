@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\InvoiceAddressDto;
@@ -12,7 +10,11 @@ use Shopware\Models\Order\Order;
 
 class InvoiceAddressDtoFactory
 {
-    public function create(Order $order): InvoiceAddressDto
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\InvoiceAddressDto
+     */
+    public function create($order)
     {
         /** @var Billing */
         $billing = $order->getBilling();
@@ -32,7 +34,10 @@ class InvoiceAddressDtoFactory
         return $invoiceAddressDto;
     }
 
-    private function getRegion(Billing $billing): ?string
+    /**
+     * @return string|null
+     */
+    private function getRegion(Billing $billing)
     {
         /** @var ?State */
         $state = $billing->getState();
@@ -44,7 +49,10 @@ class InvoiceAddressDtoFactory
         return $state->getName();
     }
 
-    private function getCountry(Billing $billing): ?string
+    /**
+     * @return string|null
+     */
+    private function getCountry(Billing $billing)
     {
         /** @var Country */
         $country = $billing->getCountry();

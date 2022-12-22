@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\CompanyDto;
@@ -11,7 +9,11 @@ use Shopware\Models\Order\Order;
 
 class CustomerDataDtoFactory
 {
-    public function create(Order $order): CustomerDataDto
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\CustomerDataDto
+     */
+    public function create($order)
     {
         /** @var Customer */
         $customer = $order->getCustomer();

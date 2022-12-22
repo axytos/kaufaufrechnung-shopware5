@@ -10,7 +10,10 @@ use Enlight_View_Default;
 
 class CheckoutSubscriber implements SubscriberInterface
 {
-    private CheckoutClientInterface $checkoutClient;
+    /**
+     * @var \Axytos\ECommerce\Clients\Checkout\CheckoutClientInterface
+     */
+    private $checkoutClient;
 
     public function __construct(
         CheckoutClientInterface $checkoutClient
@@ -18,14 +21,21 @@ class CheckoutSubscriber implements SubscriberInterface
         $this->checkoutClient = $checkoutClient;
     }
 
-    public static function getSubscribedEvents(): array
+    /**
+     * @return mixed[]
+     */
+    public static function getSubscribedEvents()
     {
         return [
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Checkout' => 'onPostDispatch',
         ];
     }
 
-    public function onPostDispatch(\Enlight_Controller_ActionEventArgs $args): void
+    /**
+     * @param \Enlight_Controller_ActionEventArgs $args
+     * @return void
+     */
+    public function onPostDispatch($args)
     {
         try {
             /** @var Enlight_View_Default */
@@ -39,6 +49,10 @@ class CheckoutSubscriber implements SubscriberInterface
                 $view->creditCheckAgreementInfo = $creditCheckAgreementInfo;
             }
         } catch (\Throwable $th) {
+            /** @var ErrorHandler */
+            $errorHandler = Shopware()->Container()->get(ErrorHandler::class);
+            $errorHandler->handle($th);
+        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
             /** @var ErrorHandler */
             $errorHandler = Shopware()->Container()->get(ErrorHandler::class);
             $errorHandler->handle($th);

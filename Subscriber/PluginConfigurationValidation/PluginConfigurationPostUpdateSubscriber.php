@@ -14,7 +14,10 @@ use Shopware\Components\Plugin\PaymentInstaller;
 
 class PluginConfigurationPostUpdateSubscriber implements EventSubscriber
 {
-    public function getSubscribedEvents(): array
+    /**
+     * @return mixed[]
+     */
+    public function getSubscribedEvents()
     {
         return [
             Events::postUpdate
@@ -23,8 +26,9 @@ class PluginConfigurationPostUpdateSubscriber implements EventSubscriber
 
          /**
      * @param LifecycleEventArgs $eventArgs
+     * @return void
      */
-    public function postUpdate(LifecycleEventArgs $eventArgs): void
+    public function postUpdate($eventArgs)
     {
         try {
             $model = $eventArgs->getEntity();
@@ -42,6 +46,10 @@ class PluginConfigurationPostUpdateSubscriber implements EventSubscriber
             $installer = Shopware()->Container()->get('shopware.plugin_payment_installer');
             $installer->createOrUpdate(PluginConfigurationValueNames::PLUGIN_NAME, $options);
         } catch (\Throwable $th) {
+            /** @var ErrorHandler */
+            $errorHandler = Shopware()->Container()->get(ErrorHandler::class);
+            $errorHandler->handle($th);
+        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
             /** @var ErrorHandler */
             $errorHandler = Shopware()->Container()->get(ErrorHandler::class);
             $errorHandler->handle($th);

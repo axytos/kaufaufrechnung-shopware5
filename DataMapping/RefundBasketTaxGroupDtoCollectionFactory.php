@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\RefundBasketTaxGroupDto;
@@ -10,14 +8,21 @@ use Shopware\Models\Order\Document\Document;
 
 class RefundBasketTaxGroupDtoCollectionFactory
 {
-    private RefundBasketTaxGroupDtoFactory $taxGroupDtoFactory;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketTaxGroupDtoFactory
+     */
+    private $taxGroupDtoFactory;
 
     public function __construct(RefundBasketTaxGroupDtoFactory $taxGroupDtoFactory)
     {
         $this->taxGroupDtoFactory = $taxGroupDtoFactory;
     }
 
-    public function create(Document $creditDocument): RefundBasketTaxGroupDtoCollection
+    /**
+     * @param \Shopware\Models\Order\Document\Document $creditDocument
+     * @return \Axytos\ECommerce\DataTransferObjects\RefundBasketTaxGroupDtoCollection
+     */
+    public function create($creditDocument)
     {
         $order = $creditDocument->getOrder();
         $details = $order->getDetails();

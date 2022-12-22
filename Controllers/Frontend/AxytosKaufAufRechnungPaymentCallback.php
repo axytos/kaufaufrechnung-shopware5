@@ -12,11 +12,26 @@ use Shopware\Models\Order\Status;
 
 class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends Enlight_Controller_Action implements CSRFWhitelistAware
 {
-    private ErrorHandler $errorHandler;
-    private PluginConfigurationValidator $pluginConfigurationValidator;
-    private PluginConfiguration $pluginConfiguration;
-    private InvoiceClientInterface $invoiceClient;
-    private ModelManager $entityManager;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler
+     */
+    private $errorHandler;
+    /**
+     * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator
+     */
+    private $pluginConfigurationValidator;
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration
+     */
+    private $pluginConfiguration;
+    /**
+     * @var \Axytos\ECommerce\Clients\Invoice\InvoiceClientInterface
+     */
+    private $invoiceClient;
+    /**
+     * @var \Shopware\Components\Model\ModelManager
+     */
+    private $entityManager;
 
     public function preDispatch()
     {
@@ -27,7 +42,10 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
         $this->entityManager = $this->get(ModelManager::class);
     }
 
-    public function paymentAction(): void
+    /**
+     * @return void
+     */
+    public function paymentAction()
     {
         try {
             if ($this->isNotPostRequest()) {
@@ -50,10 +68,16 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
         } catch (\Throwable $th) {
             $this->response->setStatusCode(500);
             $this->errorHandler->handle($th);
+        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
+            $this->response->setStatusCode(500);
+            $this->errorHandler->handle($th);
         }
     }
 
-    private function isClientSecretInvalid(): bool
+    /**
+     * @return bool
+     */
+    private function isClientSecretInvalid()
     {
         $configClientSecret = $this->pluginConfiguration->getClientSecret();
 
@@ -62,8 +86,13 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
         return is_null($configClientSecret) || $configClientSecret !== $headerClientSecret;
     }
 
-    private function setOrderState(string $paymentId): void
+    /**
+     * @return void
+     * @param string $paymentId
+     */
+    private function setOrderState($paymentId)
     {
+        $paymentId = (string) $paymentId;
         $invoiceOrderPaymentUpdate = $this->invoiceClient->getInvoiceOrderPaymentUpdate($paymentId);
 
         switch ($invoiceOrderPaymentUpdate->paymentStatus) {
@@ -76,8 +105,13 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
         }
     }
 
-    private function setOrderStatusPaid(string $orderNumber): void
+    /**
+     * @return void
+     * @param string $orderNumber
+     */
+    private function setOrderStatusPaid($orderNumber)
     {
+        $orderNumber = (string) $orderNumber;
         /** @var Order */
         $order = $this->entityManager->getRepository(Order::class)->findOneBy(['number' => $orderNumber]);
 
@@ -90,19 +124,28 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
         $this->entityManager->flush();
     }
 
-    private function getRequestPaymentId(): string
+    /**
+     * @return string
+     */
+    private function getRequestPaymentId()
     {
         $pathData = explode("/", $this->request->getPathInfo());
         return end($pathData);
     }
 
-    private function isNotPostRequest(): bool
+    /**
+     * @return bool
+     */
+    private function isNotPostRequest()
     {
         $requestMethod = strtolower($this->request->getMethod());
         return $requestMethod !== 'post';
     }
 
-    public function getWhitelistedCSRFActions(): array
+    /**
+     * @return mixed[]
+     */
+    public function getWhitelistedCSRFActions()
     {
         return [
             'payment'

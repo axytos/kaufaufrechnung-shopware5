@@ -1,44 +1,67 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\Core;
 
 use Axytos\ECommerce\Order\OrderCheckProcessStates;
 use Shopware\Models\Order\Order;
-use AxytosKaufAufRechnungShopware5\Core\OrderAttributesRepository;
+use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository;
 
 class OrderCheckProcessStateMachine
 {
-    public function getState(Order $order): ?string
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return string|null
+     */
+    public function getState($order)
     {
         /** @var OrderAttributesRepository $orderAttributesRepository */
         $orderAttributesRepository = Shopware()->Container()->get(OrderAttributesRepository::class);
         return $orderAttributesRepository->loadOrderProcessState($order);
     }
 
-    public function setUnchecked(Order $order): void
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return void
+     */
+    public function setUnchecked($order)
     {
         $this->updateState($order, OrderCheckProcessStates::UNCHECKED);
     }
 
-    public function setChecked(Order $order): void
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return void
+     */
+    public function setChecked($order)
     {
         $this->updateState($order, OrderCheckProcessStates::CHECKED);
     }
 
-    public function setConfirmed(Order $order): void
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return void
+     */
+    public function setConfirmed($order)
     {
         $this->updateState($order, OrderCheckProcessStates::CONFIRMED);
     }
 
-    public function setFailed(Order $order): void
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return void
+     */
+    public function setFailed($order)
     {
         $this->updateState($order, OrderCheckProcessStates::FAILED);
     }
 
-    private function updateState(Order $order, string $orderCheckProcessState): void
+    /**
+     * @return void
+     * @param string $orderCheckProcessState
+     */
+    private function updateState(Order $order, $orderCheckProcessState)
     {
+        $orderCheckProcessState = (string) $orderCheckProcessState;
         /** @var OrderAttributesRepository $orderAttributesRepository */
         $orderAttributesRepository = Shopware()->Container()->get(OrderAttributesRepository::class);
         $orderAttributesRepository->persistOrderProcessState($order, $orderCheckProcessState);

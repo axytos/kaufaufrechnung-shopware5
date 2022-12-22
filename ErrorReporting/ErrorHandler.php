@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\ErrorReporting;
 
 use Axytos\ECommerce\Clients\ErrorReporting\ErrorReportingClientInterface;
@@ -10,8 +8,14 @@ use Throwable;
 
 class ErrorHandler
 {
-    private ErrorReportingClientInterface $errorReportingClient;
-    private KernelInterface $kernel;
+    /**
+     * @var \Axytos\ECommerce\Clients\ErrorReporting\ErrorReportingClientInterface
+     */
+    private $errorReportingClient;
+    /**
+     * @var \Symfony\Component\HttpKernel\KernelInterface
+     */
+    private $kernel;
 
     public function __construct(
         ErrorReportingClientInterface $errorReportingClient,
@@ -21,7 +25,11 @@ class ErrorHandler
         $this->kernel = $kernel;
     }
 
-    public function handle(Throwable $throwable): void
+    /**
+     * @param \Throwable $throwable
+     * @return void
+     */
+    public function handle($throwable)
     {
         $this->errorReportingClient->reportError($throwable);
 

@@ -1,36 +1,49 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\Configuration;
 
 use Shopware\Components\Plugin\Configuration\ReaderInterface;
 
 class PluginConfiguration
 {
-    public function getApiHost(): string
+    /**
+     * @return string
+     */
+    public function getApiHost()
     {
         return strval($this->getSettingsValue(PluginConfigurationValueNames::API_HOST));
     }
 
-    public function getApiKey(): string
+    /**
+     * @return string
+     */
+    public function getApiKey()
     {
         return strval($this->getSettingsValue(PluginConfigurationValueNames::API_KEY));
     }
 
-    public function getClientSecret(): ?string
+    /**
+     * @return string|null
+     */
+    public function getClientSecret()
     {
         return $this->getSettingsValue(PluginConfigurationValueNames::CLIENT_SECRET);
     }
 
-    public function getAfterCheckoutOrderStatus(): AfterCheckoutOrderStatus
+    /**
+     * @return \AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutOrderStatus
+     */
+    public function getAfterCheckoutOrderStatus()
     {
         $value = $this->getSettingsValue(PluginConfigurationValueNames::AFTER_CHECKOUT_ORDER_STATUS);
 
         return new AfterCheckoutOrderStatus($value);
     }
 
-    public function getAfterCheckoutPaymentStatus(): AfterCheckoutPaymentStatus
+    /**
+     * @return \AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutPaymentStatus
+     */
+    public function getAfterCheckoutPaymentStatus()
     {
         $value = $this->getSettingsValue(PluginConfigurationValueNames::AFTER_CHECKOUT_PAYMENT_STATUS);
 
@@ -39,9 +52,11 @@ class PluginConfiguration
 
     /**
      * @return string
+     * @param string $settingName
      */
-    private function getSettingsValue(string $settingName)
+    private function getSettingsValue($settingName)
     {
+        $settingName = (string) $settingName;
         /** @var ReaderInterface */
         $configReader = Shopware()->Container()->get('shopware.plugin.config_reader');
         $config = $configReader->getByPluginName(PluginConfigurationValueNames::PLUGIN_NAME);

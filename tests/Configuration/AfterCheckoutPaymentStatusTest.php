@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AxytosKaufAufRechnungShopware5\Tests\Configuration;
 
 use AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutPaymentStatus;
@@ -12,15 +10,21 @@ class AfterCheckoutPaymentStatusTest extends TestCase
 {
     /**
      * @dataProvider getStatusCodeTestCases
+     * @param string $value
+     * @param int $expectedStatusCode
+     * @return void
      */
-    public function test_getStatusCode_returns_correct_value(string $value, int $expectedStatusCode): void
+    public function test_getStatusCode_returns_correct_value($value, $expectedStatusCode)
     {
         $afterCheckoutOrderStatus = new AfterCheckoutPaymentStatus($value);
 
         $this->assertEquals($expectedStatusCode, $afterCheckoutOrderStatus->getStatusCode());
     }
 
-    public static function getStatusCodeTestCases(): array
+    /**
+     * @return mixed[]
+     */
+    public static function getStatusCodeTestCases()
     {
         return [
             [AfterCheckoutPaymentStatus::PAYMENT_STATE_PARTIALLY_INVOICED, Status::PAYMENT_STATE_PARTIALLY_INVOICED],
@@ -43,5 +47,15 @@ class AfterCheckoutPaymentStatusTest extends TestCase
             [AfterCheckoutPaymentStatus::PAYMENT_STATE_A_TIME_EXTENSION_HAS_BEEN_REGISTERED, Status::PAYMENT_STATE_A_TIME_EXTENSION_HAS_BEEN_REGISTERED],
             [AfterCheckoutPaymentStatus::PAYMENT_STATE_THE_PROCESS_HAS_BEEN_CANCELLED, Status::PAYMENT_STATE_THE_PROCESS_HAS_BEEN_CANCELLED],
         ];
+    }
+
+    /**
+     * @return void
+     */
+    public function test_getStatusCode_returns_ORDER_STATE_OPEN_as_default()
+    {
+        $afterCheckoutOrderStatus = new AfterCheckoutPaymentStatus('');
+
+        $this->assertEquals(Status::ORDER_STATE_OPEN, $afterCheckoutOrderStatus->getStatusCode());
     }
 }
