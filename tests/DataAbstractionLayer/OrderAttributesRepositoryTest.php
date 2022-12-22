@@ -103,7 +103,6 @@ class OrderAttributesRepositoryTest extends TestCase
         $oldAttributeValues = [];
         $expectedNewAttributeValues = [];
         $actualNewAttributeValues = [];
-        $actual = [];
 
         for ($id = 0; $id < 5; $id++) {
             $orderProcessState = "OrderProcessState-$id";
@@ -122,6 +121,68 @@ class OrderAttributesRepositoryTest extends TestCase
                 'axytos_kauf_auf_rechnung_precheck_response' => json_encode($preCheckResponse)
             ];
         }
+
+        $this->tableMapping->method('isTableColumn')->with('s_order_attributes', 'axytos_kauf_auf_rechnung_attributes')->willReturn(true);
+
+        $this->legacyOrderAttributesRepository->method('getOrderIdsWhereLegacyAttributeValuesArePresent')->willReturn(array_keys($oldAttributeValues));
+
+        $this->dataLoader->method('load')->willReturnCallback(function ($table, $orderId) use (&$oldAttributeValues) {
+            if ($table === 's_order_attributes') {
+                return $oldAttributeValues[$orderId];
+            }
+            return null;
+        });
+
+        $this->dataPersister->method('persist')->willReturnCallback(function ($attributes, $table, $orderId) use (&$actualNewAttributeValues) {
+            if ($table === 's_order_attributes') {
+                $actualNewAttributeValues[$orderId] = $attributes;
+            }
+        });
+
+        $this->sut->install();
+
+        foreach ($actualNewAttributeValues as $id => $actualNewAttributeValue) {
+            $this->assertEquals($expectedNewAttributeValues[$id], $actualNewAttributeValue);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function test_install_does_not_overwrite_non_empty_values_during_legacy_attribute_migration()
+    {
+        $oldAttributeValues = [];
+        $expectedNewAttributeValues = [];
+        $actualNewAttributeValues = [];
+
+        // attributes to migrate
+        $oldAttributeValues[0] = [
+            'axytos_kauf_auf_rechnung_attributes' => json_encode([
+                'OrderProcessState' => 'OrderProcessState-0',
+                'PreCheckResponse' => ['SomeKey' => "PreCheckResponse-0"]
+            ])
+        ];
+        $expectedNewAttributeValues[0] = [
+            'axytos_kauf_auf_rechnung_attributes' => $oldAttributeValues[0]['axytos_kauf_auf_rechnung_attributes'],
+            'axytos_kauf_auf_rechnung_check_process_state' => 'OrderProcessState-0',
+            'axytos_kauf_auf_rechnung_precheck_response' => json_encode(['SomeKey' => "PreCheckResponse-0"])
+        ];
+
+        // attributes to not migrate
+        $oldAttributeValues[1] = [
+            'axytos_kauf_auf_rechnung_attributes' => json_encode([
+                'OrderProcessState' => 'OrderProcessState-1',
+                'PreCheckResponse' => ['SomeKey' => "PreCheckResponse-1"]
+            ]),
+            'axytos_kauf_auf_rechnung_check_process_state' => 'Non Empty axytos_kauf_auf_rechnung_check_process_state',
+            'axytos_kauf_auf_rechnung_precheck_response' => 'Non Empty axytos_kauf_auf_rechnung_precheck_response'
+        ];
+        $expectedNewAttributeValues[1] = [
+            'axytos_kauf_auf_rechnung_attributes' => $oldAttributeValues[1]['axytos_kauf_auf_rechnung_attributes'],
+            'axytos_kauf_auf_rechnung_check_process_state' => 'Non Empty axytos_kauf_auf_rechnung_check_process_state',
+            'axytos_kauf_auf_rechnung_precheck_response' => 'Non Empty axytos_kauf_auf_rechnung_precheck_response'
+        ];
+
 
         $this->tableMapping->method('isTableColumn')->with('s_order_attributes', 'axytos_kauf_auf_rechnung_attributes')->willReturn(true);
 
