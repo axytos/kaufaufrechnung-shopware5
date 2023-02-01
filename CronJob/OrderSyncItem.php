@@ -116,6 +116,10 @@ class OrderSyncItem implements OrderSyncItemInterface
             $this->errorReportingClient->reportError($th);
             $this->shopSystemOrder->rollbackPersistenceTransaction();
             $this->logger->error('Order: ' . $this->shopSystemOrder->getOrderNumber() . ' | ' . $th);
+        } catch (\Exception $th) { // @phpstan-ignore-line because of php5.6 compatibility
+            $this->errorReportingClient->reportError($th);
+            $this->shopSystemOrder->rollbackPersistenceTransaction();
+            $this->logger->error('Order: ' . $this->shopSystemOrder->getOrderNumber() . ' | ' . $th);
         }
     }
 }
