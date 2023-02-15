@@ -4,6 +4,7 @@ namespace AxytosKaufAufRechnungShopware5\CronJob;
 
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
 use Axytos\ECommerce\Logging\LoggerAdapterInterface;
+use Axytos\ECommerce\OrderSync\OrderSyncWorker;
 use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 use Enlight\Event\SubscriberInterface;
 use Shopware_Components_Cron_CronJob;
@@ -25,9 +26,9 @@ class OrderSyncCronJobSubscriber implements SubscriberInterface
     private $errorHandler;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\CronJob\OrderSyncWorker
+     * @var \Axytos\ECommerce\OrderSync\OrderSyncWorker
      */
-    private $orderSyncWorkder;
+    private $orderSyncWorker;
 
     /**
      * @var \Axytos\ECommerce\Logging\LoggerAdapterInterface
@@ -37,12 +38,12 @@ class OrderSyncCronJobSubscriber implements SubscriberInterface
     public function __construct(
         PluginConfigurationValidator $pluginConfigurationValidator,
         ErrorHandler $errorHandler,
-        OrderSyncWorker $orderSyncWorkder,
+        OrderSyncWorker $orderSyncWorker,
         LoggerAdapterInterface $logger
     ) {
         $this->pluginConfigurationValidator = $pluginConfigurationValidator;
         $this->errorHandler = $errorHandler;
-        $this->orderSyncWorkder = $orderSyncWorkder;
+        $this->orderSyncWorker = $orderSyncWorker;
         $this->logger = $logger;
     }
 
@@ -70,7 +71,7 @@ class OrderSyncCronJobSubscriber implements SubscriberInterface
                 return self::RESULT_CODE_INVALD_CONFIG;
             }
 
-            $this->orderSyncWorkder->sync();
+            $this->orderSyncWorker->sync();
             $this->logger->info('CronJob Order Sync succeeded');
 
             return self::RESULT_CODE_SUCCESS;

@@ -12,9 +12,9 @@ class ShopSystemOrderFactory
      */
     private $orderRepository;
 
-   /**
-    * @var \AxytosKaufAufRechnungShopware5\Core\InvoiceOrderContextFactory
-    */
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\Core\InvoiceOrderContextFactory
+     */
     private $invoiceOrderContextFactory;
 
     public function __construct(
@@ -27,7 +27,7 @@ class ShopSystemOrderFactory
 
     /**
      * @param \Shopware\Models\Order\Order $order
-     * @return ShopSystemOrderInterface
+     * @return \Axytos\ECommerce\OrderSync\ShopSystemOrderInterface
      */
     public function create($order)
     {
@@ -40,10 +40,10 @@ class ShopSystemOrderFactory
 
     /**
      * @param \Shopware\Models\Order\Order[] $orders
-     * @return ShopSystemOrderInterface[]
+     * @return \Axytos\ECommerce\OrderSync\ShopSystemOrderInterface[]
      */
     public function createMany($orders)
     {
-        return array_map([$this,'create'], $orders);
+        return array_map([$this, 'create'], $orders);
     }
 }

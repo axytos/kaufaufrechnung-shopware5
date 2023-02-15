@@ -3,9 +3,10 @@
 namespace AxytosKaufAufRechnungShopware5\CronJob;
 
 use Axytos\ECommerce\Clients\Invoice\InvoiceOrderContextInterface;
+use Axytos\ECommerce\OrderSync\ShopSystemOrderInterface;
 use AxytosKaufAufRechnungShopware5\Core\InvoiceOrderContextFactory;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository;
-use Shopware\Components\Model\ModelManager;
+use Exception;
 use Shopware\Models\Order\Order;
 
 class ShopSystemOrder implements ShopSystemOrderInterface
@@ -249,6 +250,32 @@ class ShopSystemOrder implements ShopSystemOrderInterface
     public function getNewTrackingInformationReportData()
     {
         return $this->createInvoiceOrderContext();
+    }
+
+    // Order Basket Updates
+
+    /**
+     * @return bool
+     */
+    public function hasBasketUpdates()
+    {
+        return false;
+    }
+
+    /**
+     * @return void
+     */
+    public function saveBasketUpdatesReported()
+    {
+        throw new Exception("Not implemented");
+    }
+
+    /**
+     * @return \Axytos\ECommerce\Clients\Invoice\InvoiceOrderContextInterface
+     */
+    public function getBasketUpdateReportData()
+    {
+        throw new Exception("Not implemented");
     }
 
     // Private Utilities

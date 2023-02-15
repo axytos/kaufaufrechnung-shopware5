@@ -13,7 +13,7 @@
                 ERROR = 400
                 CRITICAL = 500
                 ALERT = 550
-                EMERGENCY = 600 
+                EMERGENCY = 600
         -->
         <parameter key="axytos_kauf_auf_rechnung_shopware5.logger.level">200</parameter>
     </parameters>
@@ -33,11 +33,11 @@
         <!-- Configuration Integration ================================================================================================== -->
 
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration" public="true"/>
-        
+
         <!-- ECommerce Client Integration =============================================================================================== -->
-        
+
         <service autowire="true" id="Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator" public="true"/>
-        
+
         <service autowire="true" id="Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider"/>
 
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\Client\ApiHostProvider"/>
@@ -60,7 +60,7 @@
         <service id="Axytos\ECommerce\Clients\Checkout\CheckoutClientInterface" alias="Axytos\ECommerce\AxytosECommerceClient" public="true"/>
         <service id="Axytos\ECommerce\Clients\CredentialValidation\CredentialValidationClientInterface" alias="Axytos\ECommerce\AxytosECommerceClient" public="true"/>
         <service id="Axytos\ECommerce\Clients\Invoice\InvoiceClientInterface" alias="Axytos\ECommerce\AxytosECommerceClient" public="true"/>
-        
+
         <service autowire="true" id="Axytos\ECommerce\DataMapping\DtoToDtoMapper"/>
 
         <!-- Core Integration =========================================================================================================== -->
@@ -71,6 +71,7 @@
         <!-- DataAbstractionLayer Integration =========================================================================================== -->
 
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\ArticleDetailRepository" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\DispatchRepository" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderDocumentsRepository" public="true"/>
@@ -124,15 +125,34 @@
             <tag name="doctrine.event_subscriber"/>
         </service>
 
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation\DispatchPostUpdateSubscriber" public="true">
+            <tag name="doctrine.event_subscriber"/>
+        </service>
+
         <!-- Cron Job ========================================================================================================== -->
 
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderFactory" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderRepository" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncItemFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncItemRepository" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncWorker" public="true"/>
+        <service id="Axytos\ECommerce\OrderSync\ShopSystemOrderRepositoryInterface" alias="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderRepository" public="true"/>
+
+        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncItemFactory" public="true"/>
+        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncItemRepository" public="true"/>
+        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncWorker" public="true"/>
+
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncCronJobSubscriber" public="true">
             <tag name="shopware.event_subscriber"/>
+        </service>
+
+        <!-- Plugin Validation ================================================================================================= -->
+
+        <service
+            autowire="true"
+            id="AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation\PluginConfigurationValidatorDecorator"
+            decorates="Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator"
+            decoration-inner-name="AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation\PluginConfigurationValidatorDecorator.inner">
+            <argument
+                type="service"
+                id="AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation\PluginConfigurationValidatorDecorator.inner"/>
         </service>
 
     </services>
