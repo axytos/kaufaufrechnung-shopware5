@@ -2,23 +2,23 @@
 
 namespace AxytosKaufAufRechnungShopware5\ValueCalculation;
 
-use Shopware\Models\Order\Detail;
-
 class PositionNetPriceCalculator
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPriceCalculator
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionNetPricePerUnitCalculator
      */
-    private $positionGrossPriceCalculator;
+    private $positionNetPricePerUnitCalculator;
     /**
-     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxPercentCalculator
+     * @var \AxytosKaufAufRechnungShopware5\ValueCalculation\PositionQuantityCalculator
      */
-    private $positionTaxPercentCalculator;
+    private $positionQuantityCalculator;
 
-    public function __construct(PositionGrossPriceCalculator $positionGrossPriceCalculator, PositionTaxPercentCalculator $positionTaxPercentCalculator)
-    {
-        $this->positionGrossPriceCalculator = $positionGrossPriceCalculator;
-        $this->positionTaxPercentCalculator = $positionTaxPercentCalculator;
+    public function __construct(
+        PositionNetPricePerUnitCalculator $positionNetPricePerUnitCalculator,
+        PositionQuantityCalculator $positionQuantityCalculator
+    ) {
+        $this->positionNetPricePerUnitCalculator = $positionNetPricePerUnitCalculator;
+        $this->positionQuantityCalculator = $positionQuantityCalculator;
     }
 
     /**
@@ -27,8 +27,8 @@ class PositionNetPriceCalculator
      */
     public function calculate($detail)
     {
-        $grossPrice = $this->positionGrossPriceCalculator->calculate($detail);
-        $taxPercent = $this->positionTaxPercentCalculator->calculate($detail);
-        return round($grossPrice / (1 + $taxPercent / 100), 2);
+        $netPrice = $this->positionNetPricePerUnitCalculator->calculate($detail);
+        $quantity = $this->positionQuantityCalculator->calculate($detail);
+        return round($netPrice * $quantity, 2);
     }
 }

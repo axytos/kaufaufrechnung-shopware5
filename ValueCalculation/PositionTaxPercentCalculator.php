@@ -12,6 +12,6 @@ class PositionTaxPercentCalculator
      */
     public function calculate($detail)
     {
-        return $detail->getTaxRate();
+        return floatval($detail->getTaxRate());
     }
 }
