@@ -2,7 +2,7 @@
 
 namespace AxytosKaufAufRechnungShopware5\Configuration;
 
-use Shopware\Components\Plugin\Configuration\ReaderInterface;
+use Shopware\Components\Plugin\DBALConfigReader;
 
 class PluginConfiguration
 {
@@ -57,7 +57,7 @@ class PluginConfiguration
     private function getSettingsValue($settingName)
     {
         $settingName = (string) $settingName;
-        /** @var ReaderInterface */
+        /** @var DBALConfigReader  */
         $configReader = Shopware()->Container()->get('shopware.plugin.config_reader');
         $config = $configReader->getByPluginName(PluginConfigurationValueNames::PLUGIN_NAME);
         return $config[$settingName];

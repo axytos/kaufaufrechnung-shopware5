@@ -33,13 +33,21 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
      */
     private $entityManager;
 
+    /**
+     * @return void
+     */
     public function preDispatch()
     {
-        $this->errorHandler = $this->get(ErrorHandler::class);
-        $this->pluginConfigurationValidator = $this->get(PluginConfigurationValidator::class);
-        $this->pluginConfiguration = $this->get(PluginConfiguration::class);
-        $this->invoiceClient = $this->get(InvoiceClientInterface::class);
-        $this->entityManager = $this->get(ModelManager::class);
+        /** @phpstan-ignore-next-line */
+        $this->errorHandler = Shopware()->Container()->get(ErrorHandler::class);
+        /** @phpstan-ignore-next-line */
+        $this->pluginConfigurationValidator = Shopware()->Container()->get(PluginConfigurationValidator::class);
+        /** @phpstan-ignore-next-line */
+        $this->pluginConfiguration = Shopware()->Container()->get(PluginConfiguration::class);
+        /** @phpstan-ignore-next-line */
+        $this->invoiceClient = Shopware()->Container()->get(InvoiceClientInterface::class);
+        /** @phpstan-ignore-next-line */
+        $this->entityManager = Shopware()->Container()->get('models');
     }
 
     /**
@@ -49,29 +57,41 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
     {
         try {
             if ($this->isNotPostRequest()) {
-                $this->response->setStatusCode(401);
+                $this->setResponseStatusCode(401);
                 return;
             }
 
             if ($this->pluginConfigurationValidator->isInvalid()) {
-                $this->response->setStatusCode(500);
+                $this->setResponseStatusCode(500);
                 return;
             }
 
             if ($this->isClientSecretInvalid()) {
-                $this->response->setStatusCode(401);
+                $this->setResponseStatusCode(401);
                 return;
             }
 
             $paymentId = $this->getRequestPaymentId();
             $this->setOrderState($paymentId);
         } catch (\Throwable $th) {
-            $this->response->setStatusCode(500);
+            $this->setResponseStatusCode(500);
             $this->errorHandler->handle($th);
         } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
-            $this->response->setStatusCode(500);
+            $this->setResponseStatusCode(500);
             $this->errorHandler->handle($th);
         }
+    }
+
+    /**
+     * @param int $statusCode
+     * @return void
+     */
+    private function setResponseStatusCode($statusCode)
+    {
+        if (!method_exists($this->response, 'setStatusCode')) {
+            return;
+        }
+        $this->response->setStatusCode($statusCode);
     }
 
     /**
@@ -81,7 +101,7 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
     {
         $configClientSecret = $this->pluginConfiguration->getClientSecret();
 
-        $headerClientSecret = $this->request->headers->get("X-secret");
+        $headerClientSecret = $this->request->getHeader("X-secret");
 
         return is_null($configClientSecret) || $configClientSecret !== $headerClientSecret;
     }

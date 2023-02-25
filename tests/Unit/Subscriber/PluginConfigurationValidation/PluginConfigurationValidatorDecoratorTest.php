@@ -2,6 +2,8 @@
 
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Subscriber\PluginConfigurationValidation;
 
+use Axytos\ECommerce\Abstractions\ApiHostProviderInterface;
+use Axytos\ECommerce\Abstractions\ApiKeyProviderInterface;
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\DispatchRepository;
 use AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation\PluginConfigurationValidatorDecorator;
@@ -12,13 +14,24 @@ use Shopware\Models\Payment\Payment;
 
 class PluginConfigurationValidatorDecoratorTest extends TestCase
 {
-    /** @var PluginConfigurationValidator&MockObject */
-    private $pluginConfigurationValidator;
+    /**
+     * @var \Axytos\ECommerce\Abstractions\ApiHostProviderInterface&MockObject
+     */
+    private $apiHostProvider;
 
-    /** @var DispatchRepository&MockObject */
+    /**
+     * @var \Axytos\ECommerce\Abstractions\ApiKeyProviderInterface&MockObject
+     */
+    private $apiKeyProvider;
+
+    /**
+     * @var DispatchRepository&MockObject
+     */
     private $dispatchRepository;
 
-    /** @var PluginConfigurationValidatorDecorator */
+    /**
+     * @var PluginConfigurationValidatorDecorator
+     */
     private $sut;
 
     /**
@@ -27,12 +40,16 @@ class PluginConfigurationValidatorDecoratorTest extends TestCase
      */
     public function beforeEach()
     {
-        $this->pluginConfigurationValidator = $this->createMock(PluginConfigurationValidator::class);
+        $this->apiHostProvider = $this->createMock(ApiHostProviderInterface::class);
+        $this->apiKeyProvider = $this->createMock(ApiKeyProviderInterface::class);
         $this->dispatchRepository = $this->createMock(DispatchRepository::class);
         $this->sut = new PluginConfigurationValidatorDecorator(
-            $this->pluginConfigurationValidator,
+            $this->apiHostProvider,
+            $this->apiKeyProvider,
             $this->dispatchRepository
         );
+
+        $this->apiHostProvider->method('getApiHost')->willReturn('apiHost');
     }
 
     /**
@@ -40,13 +57,9 @@ class PluginConfigurationValidatorDecoratorTest extends TestCase
      */
     public function test_isInvalid_calls_decorator_isInvalid()
     {
-        $this->pluginConfigurationValidator
-            ->method("isInvalid")
-            ->willReturn(true);
-
-        $this->pluginConfigurationValidator
-            ->expects($this->once())
-            ->method("isInvalid");
+        $this->apiKeyProvider
+            ->method("getApiKey")
+            ->willReturn(null);
 
         $this->dispatchRepository
             ->expects($this->never())
@@ -62,17 +75,13 @@ class PluginConfigurationValidatorDecoratorTest extends TestCase
      */
     public function test_isInvalid_checks_database_and_returns_true_if_no_dispatches_exist()
     {
-        $this->pluginConfigurationValidator
-            ->method("isInvalid")
-            ->willReturn(false);
+        $this->apiKeyProvider
+            ->method("getApiKey")
+            ->willReturn('apiKey');
 
         $this->dispatchRepository
             ->method("findAll")
             ->willReturn([]);
-
-        $this->pluginConfigurationValidator
-            ->expects($this->once())
-            ->method("isInvalid");
 
         $this->dispatchRepository
             ->expects($this->once())
@@ -88,9 +97,9 @@ class PluginConfigurationValidatorDecoratorTest extends TestCase
      */
     public function test_isInvalid_checks_database_and_returns_true_if_no_dispatch_references_the_payment()
     {
-        $this->pluginConfigurationValidator
-            ->method("isInvalid")
-            ->willReturn(false);
+        $this->apiKeyProvider
+            ->method("getApiKey")
+            ->willReturn('apiKey');
 
         /** @var Payment&MockObject */
         $payment1 = $this->createMock(Payment::class);
@@ -142,9 +151,9 @@ class PluginConfigurationValidatorDecoratorTest extends TestCase
      */
     public function test_isInvalid_checks_database_and_returns_false_if_one_dispatch_references_the_payment()
     {
-        $this->pluginConfigurationValidator
-            ->method("isInvalid")
-            ->willReturn(false);
+        $this->apiKeyProvider
+            ->method("getApiKey")
+            ->willReturn('apiKey');
 
         /** @var Payment&MockObject */
         $payment1 = $this->createMock(Payment::class);

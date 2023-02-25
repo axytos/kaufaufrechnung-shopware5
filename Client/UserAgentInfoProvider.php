@@ -3,20 +3,9 @@
 namespace AxytosKaufAufRechnungShopware5\Client;
 
 use Axytos\ECommerce\Abstractions\UserAgentInfoProviderInterface;
-use Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider;
 
 class UserAgentInfoProvider implements UserAgentInfoProviderInterface
 {
-    /**
-     * @var \Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider
-     */
-    private $composerPackageInfoProvider;
-
-    public function __construct(ComposerPackageInfoProvider $composerPackageInfoProvider)
-    {
-        $this->composerPackageInfoProvider = $composerPackageInfoProvider;
-    }
-
     /**
      * @return string
      */
@@ -30,10 +19,7 @@ class UserAgentInfoProvider implements UserAgentInfoProviderInterface
      */
     public function getPluginVersion()
     {
-        $packageName = 'axytos/kaufaufrechnung-shopware5';
-
-        /** @phpstan-ignore-next-line */
-        return $this->composerPackageInfoProvider->getVersion($packageName);
+        return '1.3.0';
     }
 
     /**
@@ -49,9 +35,15 @@ class UserAgentInfoProvider implements UserAgentInfoProviderInterface
      */
     public function getShopSystemVersion()
     {
-        $packageName = 'shopware/shopware';
-
-        /** @phpstan-ignore-next-line */
-        return $this->composerPackageInfoProvider->getVersion($packageName);
+        try {
+            $config = Shopware()->Config();
+            /** @phpstan-ignore-next-line */
+            $version = $config->Version;
+            return $version;
+        } catch (\Throwable $th) {
+            return '5.X.X';
+        } catch (\Exception $th) { /** @phpstan-ignore-line because php5 compatibility */
+            return '5.X.X';
+        }
     }
 }

@@ -57,8 +57,24 @@ class CreateInvoiceTaxGroupDtoFactory
         $taxGroup = new CreateInvoiceTaxGroupDto();
         $taxGroup->valueToTax = $order->getInvoiceShippingNet();
         $taxGroup->total = floatval($order->getInvoiceShipping() - $order->getInvoiceShippingNet());
-        $taxGroup->taxPercent = $order->getInvoiceShippingTaxRate();
+        $taxGroup->taxPercent = $this->getShippingTaxPercent($order);
 
         return $taxGroup;
+    }
+
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return float|null
+     */
+    private function getShippingTaxPercent($order)
+    {
+        // shopware 5.3 compatibility
+        if (method_exists($order, 'getInvoiceShippingTaxRate')) {
+            return $order->getInvoiceShippingTaxRate();
+        }
+
+        $grossTotal = $order->getInvoiceShipping();
+        $netTotal = $order->getInvoiceShippingNet();
+        return (1 - ($netTotal / $grossTotal)) * 100;
     }
 }

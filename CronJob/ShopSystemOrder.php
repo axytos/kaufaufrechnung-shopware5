@@ -285,7 +285,10 @@ class ShopSystemOrder implements ShopSystemOrderInterface
      */
     private function getInvoiceDocument()
     {
-        return $this->findDocumentByType('invoice');
+        return $this->findDocumentByType(
+            'invoice',
+            '/rechnung|invoice/i'
+        );
     }
 
     /**
@@ -293,7 +296,10 @@ class ShopSystemOrder implements ShopSystemOrderInterface
      */
     private function getCreditDocument()
     {
-        return $this->findDocumentByType('credit');
+        return $this->findDocumentByType(
+            'credit',
+            '/gutschrift|credit/i'
+        );
     }
 
     /**
@@ -301,7 +307,10 @@ class ShopSystemOrder implements ShopSystemOrderInterface
      */
     private function getDeliveryNoteDocument()
     {
-        return $this->findDocumentByType('delivery_note');
+        return $this->findDocumentByType(
+            'delivery_note',
+            '/lieferschein|delivery/i'
+        );
     }
 
     /**
@@ -309,20 +318,35 @@ class ShopSystemOrder implements ShopSystemOrderInterface
      */
     private function getCancellationDocument()
     {
-        return $this->findDocumentByType('cancellation');
+        return $this->findDocumentByType(
+            'cancellation',
+            '/stornorechnung|cancellation/i'
+        );
     }
 
     /**
      * @param string $documentTypeKey
+     * @param string $fallbackNamePattern
      * @return \Shopware\Models\Order\Document\Document|null
      */
-    private function findDocumentByType($documentTypeKey)
+    private function findDocumentByType($documentTypeKey, $fallbackNamePattern)
     {
         $documents = $this->order->getDocuments();
 
+        /** @var \Shopware\Models\Order\Document\Document $document */
         foreach ($documents as $document) {
-            if ($document->getType()->getKey() === $documentTypeKey) {
-                return $document;
+            /** @var \Shopware\Models\Document\Document */
+            $type = $document->getType();
+
+            if (method_exists($type, 'getKey')) {
+                if ($type->getKey() === $documentTypeKey) {
+                    return $document;
+                }
+            } else {
+                $name = $type->getName();
+                if (preg_match($fallbackNamePattern, $name) === 1) {
+                    return $document;
+                }
             }
         }
 

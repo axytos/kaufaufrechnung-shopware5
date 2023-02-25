@@ -4,14 +4,10 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Client;
 
 use Axytos\ECommerce\Abstractions\UserAgentInfoProviderInterface;
 use AxytosKaufAufRechnungShopware5\Client\UserAgentInfoProvider;
-use Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class UserAgentInfoProviderTest extends TestCase
 {
-    /** @var ComposerPackageInfoProvider&MockObject $composerPackageInfoProvider */
-    private $composerPackageInfoProvider;
     /**
      * @var \AxytosKaufAufRechnungShopware5\Client\UserAgentInfoProvider
      */
@@ -23,8 +19,7 @@ class UserAgentInfoProviderTest extends TestCase
      */
     public function beforeEach()
     {
-        $this->composerPackageInfoProvider = $this->createMock(ComposerPackageInfoProvider::class);
-        $this->sut = new UserAgentInfoProvider($this->composerPackageInfoProvider);
+        $this->sut = new UserAgentInfoProvider();
     }
 
     /**
@@ -63,14 +58,7 @@ class UserAgentInfoProviderTest extends TestCase
      */
     public function test_getPluginVersion_returns_version_from_composer()
     {
-        $expected = "version";
-
-        $packageName = $this->getComposerPackageName();
-
-        $this->composerPackageInfoProvider
-            ->method('getVersion')
-            ->with($packageName)
-            ->willReturn($expected);
+        $expected = "1.3.0";
 
         $actual = $this->sut->getPluginVersion();
 
@@ -92,11 +80,7 @@ class UserAgentInfoProviderTest extends TestCase
      */
     public function test_getShopSystemVersion_returns_version_from_composer()
     {
-        $expected = "version";
-        $this->composerPackageInfoProvider
-            ->method('getVersion')
-            ->with("shopware/shopware")
-            ->willReturn($expected);
+        $expected = "5.X.X";
 
         $actual = $this->sut->getShopSystemVersion();
 

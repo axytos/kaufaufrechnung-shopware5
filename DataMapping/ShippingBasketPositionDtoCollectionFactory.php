@@ -4,6 +4,7 @@ namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\ShippingBasketPositionDtoCollection;
 use Shopware\Models\Order\Order;
+use Shopware\Models\Order\Detail as OrderDetail;
 
 class ShippingBasketPositionDtoCollectionFactory
 {
@@ -23,7 +24,9 @@ class ShippingBasketPositionDtoCollectionFactory
      */
     public function create($order)
     {
-        $positions = array_map([$this->shippingBasketPositionDtoFactory, 'create'], $order->getDetails()->getValues());
+        /** @var OrderDetail[] */
+        $orderDetails = $order->getDetails()->getValues();
+        $positions = array_map([$this->shippingBasketPositionDtoFactory, 'create'], $orderDetails);
 
         array_push($positions, $this->shippingBasketPositionDtoFactory->createShippingPosition());
 

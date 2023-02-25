@@ -8,6 +8,17 @@ use Shopware\Bundle\AttributeBundle\Service\DataPersister;
 use Shopware\Bundle\AttributeBundle\Service\TableMapping;
 use Shopware\Components\Model\ModelManager;
 
+/**
+ * Typedefs for Attribute Definitions
+ *
+ * @phpstan-type AttributeUnifiedType 'string'|'text'|'html'|'integer'|'float'|'boolean'|'date'|'datetime'|'combobox'|'single_selection'|'multi_selection'
+ * @phpstan-type AttributeDefaultValueType string|int|float|null
+ * @phpstan-type AttributeDefinition array{'name':string,'type':AttributeUnifiedType,'default':AttributeDefaultValueType}
+ *
+ * Default value MUST be a supported database type, i.e. int instead of bool
+ *
+ * see: https://developers.shopware.com/developers-guide/attribute-system/
+ */
 class OrderAttributesRepository
 {
     /**
@@ -16,19 +27,19 @@ class OrderAttributesRepository
     public static function create()
     {
         /** @var \Shopware\Bundle\AttributeBundle\Service\CrudService */
-        $crudService = Shopware()->Container()->get(CrudService::class);
+        $crudService = Shopware()->Container()->get('shopware_attribute.crud_service');
 
         /** @var \Shopware\Bundle\AttributeBundle\Service\DataLoader */
-        $dataLoader = Shopware()->Container()->get(DataLoader::class);
+        $dataLoader = Shopware()->Container()->get('shopware_attribute.data_loader');
 
         /** @var \Shopware\Bundle\AttributeBundle\Service\DataPersister */
-        $dataPersister = Shopware()->Container()->get(DataPersister::class);
+        $dataPersister = Shopware()->Container()->get('shopware_attribute.data_persister');
 
         /** @var \Shopware\Bundle\AttributeBundle\Service\TableMapping */
-        $tableMapping = Shopware()->Container()->get(TableMapping::class);
+        $tableMapping = Shopware()->Container()->get('shopware_attribute.table_mapping');
 
         /** @var \Shopware\Components\Model\ModelManager */
-        $modelManager = Shopware()->Container()->get(ModelManager::class);
+        $modelManager = Shopware()->Container()->get('models');
 
         $legacyOrderAttributesRepository = new LegacyOrderAttributesRepository($crudService, $dataLoader, $dataPersister);
 
@@ -51,9 +62,9 @@ class OrderAttributesRepository
     const ATTRIBUTE_NAME_REPORTED_TRACKING_CODE = 'axytos_kauf_auf_rechnung_reported_tracking_code';
 
     /**
-     * @var array<string,mixed>[]
+     * @var array<AttributeDefinition>
      */
-    private static $attriubteDefinitions = [
+    private static $attributeDefinitions = [
         [
             'name' => self::ATTRIBUTE_NAME_CHECK_PROCESS_STATE,
             'type' => 'string',
@@ -62,22 +73,22 @@ class OrderAttributesRepository
         [
             'name' => self::ATTRIBUTE_NAME_HAS_CANCEL_REPORTED,
             'type' => 'boolean',
-            'default' => false
+            'default' => 0
         ],
         [
             'name' => self::ATTRIBUTE_NAME_HAS_CREATE_INVOICE_REPORTED,
             'type' => 'boolean',
-            'default' => false
+            'default' => 0
         ],
         [
             'name' => self::ATTRIBUTE_NAME_HAS_REFUND_REPORTED,
             'type' => 'boolean',
-            'default' => false
+            'default' => 0
         ],
         [
             'name' => self::ATTRIBUTE_NAME_HAS_SHIPPING_REPORTED,
             'type' => 'boolean',
-            'default' => false
+            'default' => 0
         ],
         [
             'name' => self::ATTRIBUTE_NAME_PRECHECK_RESPONSE,
@@ -140,13 +151,13 @@ class OrderAttributesRepository
      */
     public function install()
     {
-        foreach (self::$attriubteDefinitions as $attriubteDefinition) {
+        foreach (self::$attributeDefinitions as $attributeDefinition) {
             /** @var string */
-            $name = $attriubteDefinition['name'];
+            $name = $attributeDefinition['name'];
             /** @var string */
-            $type = $attriubteDefinition['type'];
+            $type = $attributeDefinition['type'];
             /** @var string|int|float|null */
-            $defaultValue = $attriubteDefinition['default'];
+            $defaultValue = $this->parseDefaultValue($type, $attributeDefinition['default']);
 
             $this->crudService->update('s_order_attributes', $name, $type, [], null, false, $defaultValue);
         }
@@ -154,6 +165,19 @@ class OrderAttributesRepository
         $this->modelManager->generateAttributeModels();
 
         $this->migrateLegacyAttributeValues();
+    }
+
+    /**
+     * @param string $type
+     * @param string|int|float|null|bool $defaultValue
+     * @return string|int|float|null
+     */
+    private function parseDefaultValue($type, $defaultValue)
+    {
+        if (strtolower($type) === 'boolean' || is_bool($defaultValue)) {
+            return ((bool)$defaultValue) === true ? 1 : 0;
+        }
+        return $defaultValue;
     }
 
     /**
@@ -246,8 +270,6 @@ class OrderAttributesRepository
         $ordreIds = $this->legacyOrderAttributesRepository->getOrderIdsWhereLegacyAttributeValuesArePresent();
 
         foreach ($ordreIds as $ordreId) {
-            $ordreId = intval($ordreId);
-
             /** @var array<string,mixed> */
             $attributes = $this->dataLoader->load('s_order_attributes', $ordreId);
 

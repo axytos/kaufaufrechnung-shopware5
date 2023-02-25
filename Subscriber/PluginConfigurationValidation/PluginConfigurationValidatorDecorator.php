@@ -2,6 +2,8 @@
 
 namespace AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation;
 
+use Axytos\ECommerce\Abstractions\ApiHostProviderInterface;
+use Axytos\ECommerce\Abstractions\ApiKeyProviderInterface;
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\DispatchRepository;
 use AxytosKaufAufRechnungShopware5\Paymentmethod\PaymentMethodOptions;
@@ -9,18 +11,16 @@ use AxytosKaufAufRechnungShopware5\Paymentmethod\PaymentMethodOptions;
 class PluginConfigurationValidatorDecorator extends PluginConfigurationValidator
 {
     /**
-     * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator
-     */
-    private $decorated;
-
-    /**
      * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\DispatchRepository
      */
     private $dispatchRepository;
 
-    public function __construct(PluginConfigurationValidator $decorated, DispatchRepository $dispatchRepository)
-    {
-        $this->decorated = $decorated;
+    public function __construct(
+        ApiHostProviderInterface $apiHostProvider,
+        ApiKeyProviderInterface $apiKeyProvider,
+        DispatchRepository $dispatchRepository
+    ) {
+        parent::__construct($apiHostProvider, $apiKeyProvider);
         $this->dispatchRepository = $dispatchRepository;
     }
 
@@ -30,7 +30,7 @@ class PluginConfigurationValidatorDecorator extends PluginConfigurationValidator
     public function isInvalid()
     {
         try {
-            return $this->decorated->isInvalid()
+            return parent::isInvalid()
                 || !$this->isReferencedByDispatch();
         } catch (\Throwable $th) {
             return true;

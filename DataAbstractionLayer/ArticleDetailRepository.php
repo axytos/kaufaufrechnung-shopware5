@@ -30,7 +30,7 @@ class ArticleDetailRepository
     private function findOneForOrderDetail(OrderDetail $orderDetail)
     {
         /** @var ModelManager */
-        $modelManager = Shopware()->Container()->get(ModelManager::class);
+        $modelManager = Shopware()->Container()->get('models');
 
         /** @var ObjectRepository<ArticleDetail> */
         $articleDetailRepository = $modelManager->getRepository(ArticleDetail::class);

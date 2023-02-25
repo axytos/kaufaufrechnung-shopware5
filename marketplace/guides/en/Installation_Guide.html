@@ -68,8 +68,13 @@ If the problem is not solved, please get in touch with your contact
 person at axytos.</p></li>
 <li><p>If the connection test ends successfully, you are done
 here.</p></li>
-<li><p>Map the new payment method to shipping under Configuration &gt;
-Shipping Costs &gt; (Selected Shipping) &gt; Payment methods.</p></li>
+<li><p>Map the new payment method to shipping under <em>Configuration
+&gt; Shipping Costs &gt; (Selected Shipping) &gt; Payment
+methods</em>.</p></li>
+<li><p>Ensure that under <em>Configuration &gt; Basic Settings &gt;
+System &gt; Cronjobs &gt; axytos KaufAufRechnung OrderSync</em> the
+<em>Active</em> checkbox has been checked. You might have to navigate to
+the last page of the Cronjobs Overview.</p></li>
 </ol>
 <p>For configuration, you must save valid connection data to <a
 href="https://portal.axytos.com/">https://portal.axytos.com/</a> (see
@@ -89,6 +94,7 @@ purchase on account for purchases?</h2>
 (API host &amp; API key).</p></li>
 <li><p>The axytos BNPL plugin is associated with at least one dispatch
 method.</p></li>
+<li><p>The Cronjob is active and runs regularly.</p></li>
 <li><p>All caches are cleard.</p></li>
 </ol>
 <p>Check the correctness of the connection data with Test API

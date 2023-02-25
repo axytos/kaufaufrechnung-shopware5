@@ -13,7 +13,7 @@ class DispatchRepository
     public function findAll()
     {
         /** @var ModelManager */
-        $modelManager = Shopware()->Container()->get(ModelManager::class);
+        $modelManager = Shopware()->Container()->get('models');
 
         /** @var \Shopware\Models\Dispatch\Repository */
         $dispatchRepository = $modelManager->getRepository(Dispatch::class);

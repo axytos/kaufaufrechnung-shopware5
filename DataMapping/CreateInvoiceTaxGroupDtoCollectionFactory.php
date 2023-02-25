@@ -6,6 +6,7 @@ use Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDto;
 use Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDtoCollection;
 use AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceTaxGroupDtoFactory;
 use Shopware\Models\Order\Document\Document;
+use Shopware\Models\Order\Detail as OrderDetail;
 
 class CreateInvoiceTaxGroupDtoCollectionFactory
 {
@@ -26,6 +27,7 @@ class CreateInvoiceTaxGroupDtoCollectionFactory
     public function create($invoice)
     {
         $order = $invoice->getOrder();
+        /** @var OrderDetail[] */
         $details = $order->getDetails()->getValues();
 
         $positionTaxValues = array_map([$this->createInvoiceTaxGroupDtoFactory, 'create'], $details);

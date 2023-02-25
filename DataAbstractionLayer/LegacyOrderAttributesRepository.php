@@ -98,7 +98,9 @@ class LegacyOrderAttributesRepository
      */
     private function loadAttributes(Order $order)
     {
-        $allAttributes = $this->dataLoader->load("s_order_attributes", $order->getId());
+        $foreignKey = $order->getId();
+        /** @phpstan-ignore-next-line because type of $foreignKey changes from string to int between shopware versions */
+        $allAttributes = $this->dataLoader->load("s_order_attributes", $foreignKey);
         $orderAttributesData = $allAttributes[self::COLUMN_NAME];
 
         if (!$orderAttributesData) {

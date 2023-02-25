@@ -12,9 +12,16 @@ class LoggerAdapter implements LoggerAdapterInterface
      */
     private $pluginLogger;
 
-    public function __construct(Logger $pluginLogger)
+    public function __construct()
     {
-        $this->pluginLogger = $pluginLogger;
+        $hasPluginSpecificLogger = Shopware()->Container()->has('axytos_kauf_auf_rechnung_shopware5.logger');
+        if ($hasPluginSpecificLogger) {
+            /** @phpstan-ignore-next-line */
+            $this->pluginLogger = Shopware()->Container()->get('axytos_kauf_auf_rechnung_shopware5.logger');
+        } else {
+            /** @phpstan-ignore-next-line */
+            $this->pluginLogger = Shopware()->Container()->get('pluginlogger');
+        }
     }
 
     /**

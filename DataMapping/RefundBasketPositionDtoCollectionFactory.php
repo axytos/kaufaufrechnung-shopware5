@@ -4,6 +4,7 @@ namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\RefundBasketPositionDtoCollection;
 use Shopware\Models\Order\Document\Document;
+use Shopware\Models\Order\Detail as OrderDetail;
 
 class RefundBasketPositionDtoCollectionFactory
 {
@@ -24,9 +25,10 @@ class RefundBasketPositionDtoCollectionFactory
     public function create($creditDocument)
     {
         $order = $creditDocument->getOrder();
-        $details = $order->getDetails();
+        /** @var OrderDetail[] */
+        $details = $order->getDetails()->toArray();
 
-        $positions = array_map([$this->positionFactory, 'create'], $details->toArray());
+        $positions = array_map([$this->positionFactory, 'create'], $details);
 
         $positions[] = $this->positionFactory->createShippingPosition($order);
 

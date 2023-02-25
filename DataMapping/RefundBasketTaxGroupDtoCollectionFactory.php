@@ -5,6 +5,7 @@ namespace AxytosKaufAufRechnungShopware5\DataMapping;
 use Axytos\ECommerce\DataTransferObjects\RefundBasketTaxGroupDto;
 use Axytos\ECommerce\DataTransferObjects\RefundBasketTaxGroupDtoCollection;
 use Shopware\Models\Order\Document\Document;
+use Shopware\Models\Order\Detail as OrderDetail;
 
 class RefundBasketTaxGroupDtoCollectionFactory
 {
@@ -25,9 +26,10 @@ class RefundBasketTaxGroupDtoCollectionFactory
     public function create($creditDocument)
     {
         $order = $creditDocument->getOrder();
-        $details = $order->getDetails();
+        /** @var OrderDetail[] */
+        $details = $order->getDetails()->toArray();
 
-        $positionTaxValues = array_map([$this->taxGroupDtoFactory, 'create'], $details->toArray());
+        $positionTaxValues = array_map([$this->taxGroupDtoFactory, 'create'], $details);
         $positionTaxValues[] = $this->taxGroupDtoFactory->createShippingTaxGroup($order);
 
         $taxGroups = array_reduce(

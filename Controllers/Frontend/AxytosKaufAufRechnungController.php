@@ -237,9 +237,14 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
         $shipping->fromAddress($shippingAddress);
         $order->setShipping($shipping);
 
-        $order->setInvoiceShipping($basket[CheckoutKey::SHIPPING_COSTS_WITH_TAX]);
-        $order->setInvoiceShippingNet($basket[CheckoutKey::SHIPPING_COSTS]);
-        $order->setInvoiceShippingTaxRate($basket[CheckoutKey::SHIPPING_COSTS_TAX]);
+        $order->setInvoiceShipping($basket['sShippingcostsWithTax']);
+        $order->setInvoiceShippingNet($basket['sShippingcosts']);
+
+        // shopware 5.3 compatibility
+        if (method_exists($order, 'setInvoiceShippingTaxRate')) {
+            $order->setInvoiceShippingTaxRate($basket['sShippingcostsTax']);
+        }
+
         return $order;
     }
 }

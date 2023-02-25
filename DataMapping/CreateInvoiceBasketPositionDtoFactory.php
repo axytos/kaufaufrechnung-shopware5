@@ -97,11 +97,27 @@ class CreateInvoiceBasketPositionDtoFactory
         $position->productId = '0';
         $position->productName = 'Shipping';
         $position->quantity = 1;
-        $position->taxPercent = $order->getInvoiceShippingTaxRate();
+        $position->taxPercent = $this->getShippingTaxPercent($order);
         $position->grossPositionTotal = $order->getInvoiceShipping();
         $position->netPositionTotal = $order->getInvoiceShippingNet();
         $position->grossPricePerUnit = $order->getInvoiceShipping();
         $position->netPricePerUnit = $order->getInvoiceShippingNet();
         return $position;
+    }
+
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return float|null
+     */
+    private function getShippingTaxPercent($order)
+    {
+        // shopware 5.3 compatibility
+        if (method_exists($order, 'getInvoiceShippingTaxRate')) {
+            return $order->getInvoiceShippingTaxRate();
+        }
+
+        $grossTotal = $order->getInvoiceShipping();
+        $netTotal = $order->getInvoiceShippingNet();
+        return (1 - ($netTotal / $grossTotal)) * 100;
     }
 }

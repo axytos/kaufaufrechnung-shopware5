@@ -81,6 +81,8 @@ Um das Plugin nutzen zu können, benötigen Sie valide Verbindungsdaten zu [http
 
 10. Die Bezahlmethode einer Versandart unter _Einstellungen > Versandkosten > (Ausgewählte Versandart) > Zahlart Auswahl_ zuordnen.
 
+11. Sicherstellen, dass unter _Einstellungen > Grundeinstellungen > System > Cronjobs > axytos KaufAufRechnung OrderSync_ das Häkchen bei _Aktiv_ gesetzt ist. Ggf. muss hierzu auf die letzte Seite der Cronjob-Übersicht gewechselt werden.
+
 Zur Konfiguration müssen Sie valide Verbindungsdaten zu [https://portal.axytos.com/](https://portal.axytos.com/) (siehe Voraussetzungen), d.h. __API Host__, __API Key__ und __Client Secret__ für das Plugin speichern.
 
 Führen Sie danach __API-Verbindung testen__ aus.
@@ -99,7 +101,9 @@ Falls der Verbindungstest fehlschlägt, wenden Sie sich bitte an Ihren Ansprechp
 
 4. Das Plugin __axytos Kauf auf Rechnung__ ist mit mindestens einer Versandart zugeordnet.
 
-5. Alle Caches sind geleert.
+5. Der Cronjob ist aktiviert und läuft regelmäßig.
+
+6. Alle Caches sind geleert.
 
 Überprüfen Sie die Korrektheit der Verbindungsdaten mit __API-Verbindung Testen__.
 

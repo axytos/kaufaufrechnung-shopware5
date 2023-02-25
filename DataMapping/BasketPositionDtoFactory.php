@@ -97,11 +97,27 @@ class BasketPositionDtoFactory
         $basketPositionDto->productId = '0';
         $basketPositionDto->productName = 'Shipping';
         $basketPositionDto->quantity = 1;
-        $basketPositionDto->taxPercent = $order->getInvoiceShippingTaxRate();
+        $basketPositionDto->taxPercent = $this->getShippingTaxPercent($order);
         $basketPositionDto->grossPositionTotal = $order->getInvoiceShipping();
         $basketPositionDto->netPositionTotal = $order->getInvoiceShippingNet();
         $basketPositionDto->grossPricePerUnit = $order->getInvoiceShipping();
         $basketPositionDto->netPricePerUnit = $order->getInvoiceShippingNet();
         return $basketPositionDto;
+    }
+
+    /**
+     * @param \Shopware\Models\Order\Order $order
+     * @return float|null
+     */
+    private function getShippingTaxPercent($order)
+    {
+        // shopware 5.3 compatibility
+        if (method_exists($order, 'getInvoiceShippingTaxRate')) {
+            return $order->getInvoiceShippingTaxRate();
+        }
+
+        $grossTotal = $order->getInvoiceShipping();
+        $netTotal = $order->getInvoiceShippingNet();
+        return (1 - ($netTotal / $grossTotal)) * 100;
     }
 }

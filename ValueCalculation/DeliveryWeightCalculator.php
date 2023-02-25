@@ -27,6 +27,7 @@ class DeliveryWeightCalculator
         /** @var float */
         $deliveryWeight = 0;
 
+        /** @var OrderDetail $orderDetail */
         foreach ($order->getDetails() as $orderDetail) {
             $deliveryWeight += $this->calculateOrderDetailWeight($orderDetail);
         }

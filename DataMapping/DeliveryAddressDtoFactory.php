@@ -55,6 +55,11 @@ class DeliveryAddressDtoFactory
     {
         /** @var Country */
         $country = $shipping->getCountry();
+
+        if (is_null($country)) {
+            return null;
+        }
+
         return $country->getIso();
     }
 }

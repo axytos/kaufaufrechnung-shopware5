@@ -3,7 +3,6 @@
 namespace AxytosKaufAufRechnungShopware5\ErrorReporting;
 
 use Axytos\ECommerce\Clients\ErrorReporting\ErrorReportingClientInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Throwable;
 
 class ErrorHandler
@@ -12,17 +11,11 @@ class ErrorHandler
      * @var \Axytos\ECommerce\Clients\ErrorReporting\ErrorReportingClientInterface
      */
     private $errorReportingClient;
-    /**
-     * @var \Symfony\Component\HttpKernel\KernelInterface
-     */
-    private $kernel;
 
     public function __construct(
-        ErrorReportingClientInterface $errorReportingClient,
-        KernelInterface $kernel
+        ErrorReportingClientInterface $errorReportingClient
     ) {
         $this->errorReportingClient = $errorReportingClient;
-        $this->kernel = $kernel;
     }
 
     /**
@@ -33,8 +26,23 @@ class ErrorHandler
     {
         $this->errorReportingClient->reportError($throwable);
 
-        if ($this->kernel->isDebug()) {
+        if ($this->isDebug()) {
             throw $throwable;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function isDebug()
+    {
+        try {
+            $environment = getenv('SHOPWARE_ENV') ?: getenv('REDIRECT_SHOPWARE_ENV') ?: 'production';
+            return $environment !== 'production';
+        } catch (\Throwable $th) {
+            return false;
+        } catch (\Exception $th) { /** @phpstan-ignore-line because of php5 compatibility */
+            return false;
         }
     }
 }

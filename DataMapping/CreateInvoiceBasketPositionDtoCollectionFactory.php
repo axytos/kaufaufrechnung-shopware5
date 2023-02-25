@@ -5,6 +5,7 @@ namespace AxytosKaufAufRechnungShopware5\DataMapping;
 use Axytos\ECommerce\DataTransferObjects\CreateInvoiceBasketPositionDtoCollection;
 use AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceBasketPositionDtoFactory;
 use Shopware\Models\Order\Document\Document;
+use Shopware\Models\Order\Detail as OrderDetail;
 
 class CreateInvoiceBasketPositionDtoCollectionFactory
 {
@@ -25,6 +26,7 @@ class CreateInvoiceBasketPositionDtoCollectionFactory
     public function create($invoice)
     {
         $order = $invoice->getOrder();
+        /** @var OrderDetail[] */
         $details = $order->getDetails()->getValues();
 
         $positions = array_map([$this->createInvoiceBasketPositionDtoFactory, 'create'], $details);

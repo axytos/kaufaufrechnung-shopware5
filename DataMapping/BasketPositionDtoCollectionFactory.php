@@ -4,6 +4,7 @@ namespace AxytosKaufAufRechnungShopware5\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\BasketPositionDtoCollection;
 use Shopware\Models\Order\Order;
+use Shopware\Models\Order\Detail as OrderDetail;
 
 class BasketPositionDtoCollectionFactory
 {
@@ -27,6 +28,7 @@ class BasketPositionDtoCollectionFactory
 
         $positions = [];
 
+        /** @var OrderDetail $detail */
         foreach ($details as $detail) {
             $positions[] = $this->basketPositionDtoFactory->create($detail);
         }

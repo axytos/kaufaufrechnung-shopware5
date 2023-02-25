@@ -39,7 +39,7 @@ During onboarding you will receive the necessary connection data to connect the 
 
 1. Buy and add the plugin in the Shopware Store or via Plugin Manager within your Shopware distribution for free.
 
-2. Open the plugin configuration. The plugin axytos BNPL is listed under Configuration > Plugin Manager > Management > Installed 
+2. Open the plugin configuration. The plugin axytos BNPL is listed under Configuration > Plugin Manager > Management > Installed
 
 3. Run Install.
 
@@ -76,9 +76,11 @@ In order to be able to use the plugin, you need valid connection data for [https
 
 8. If the connection test fails, clear all caches and check again. If the problem is not solved, please get in touch with your contact person at axytos.
 
-9. If the connection test ends successfully, you are done here. 
+9. If the connection test ends successfully, you are done here.
 
-10. Map the new payment method to shipping under Configuration > Shipping Costs > (Selected Shipping) > Payment methods.
+10. Map the new payment method to shipping under _Configuration > Shipping Costs > (Selected Shipping) > Payment methods_.
+
+11. Ensure that under _Configuration > Basic Settings > System > Cronjobs > axytos KaufAufRechnung OrderSync_ the _Active_ checkbox has been checked. You might have to navigate to the last page of the Cronjobs Overview.
 
 For configuration, you must save valid connection data to [https://portal.axytos.com/](https://portal.axytos.com/) (see requirements), i.e. API host and API key for the plugin.
 
@@ -101,7 +103,9 @@ Check the following points:
 
 4. The axytos BNPL plugin is associated with at least one dispatch method.
 
-5. All caches are cleard.
+5. The Cronjob is active and runs regularly.
+
+6. All caches are cleard.
 
 Check the correctness of the connection data with Test API connection.
 
