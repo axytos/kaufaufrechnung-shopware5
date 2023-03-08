@@ -32,9 +32,9 @@
 
         <!-- ECommerce Client Integration =============================================================================================== -->
 
-        <service 
-            autowire="true" 
-            id="Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator" 
+        <service
+            autowire="true"
+            id="Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator"
             class="AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation\PluginConfigurationValidatorDecorator" public="true"/>
 
         <service autowire="true" id="Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider" class="Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider"/>
@@ -133,9 +133,9 @@
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderRepository" class="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderRepository" public="true"/>
         <service id="Axytos\ECommerce\OrderSync\ShopSystemOrderRepositoryInterface" alias="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderRepository" public="true"/>
 
-        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncItemFactory" class="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncItemFactory" public="true"/>
-        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncItemRepository" class="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncItemRepository" public="true"/>
-        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncWorker" class="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncWorker" public="true"/>
+        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncItemFactory" class="Axytos\ECommerce\OrderSync\OrderSyncItemFactory" public="true"/>
+        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncItemRepository" class="Axytos\ECommerce\OrderSync\OrderSyncItemRepository" public="true"/>
+        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncWorker" class="Axytos\ECommerce\OrderSync\OrderSyncWorker" public="true"/>
 
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncCronJobSubscriber" class="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncCronJobSubscriber" public="true">
             <tag name="shopware.event_subscriber"/>

@@ -62,17 +62,21 @@ class RefundBasketTaxGroupDtoFactory
 
     /**
      * @param \Shopware\Models\Order\Order $order
-     * @return float|null
+     * @return float
      */
     private function getShippingTaxPercent($order)
     {
         // shopware 5.3 compatibility
         if (method_exists($order, 'getInvoiceShippingTaxRate')) {
-            return $order->getInvoiceShippingTaxRate();
+            return floatval($order->getInvoiceShippingTaxRate());
         }
 
         $grossTotal = $order->getInvoiceShipping();
         $netTotal = $order->getInvoiceShippingNet();
-        return (1 - ($netTotal / $grossTotal)) * 100;
+        if ($grossTotal == 0.0) {
+            return 0.0;
+        } else {
+            return (1 - ($netTotal / $grossTotal)) * 100;
+        }
     }
 }
