@@ -3,6 +3,7 @@
 namespace AxytosKaufAufRechnungShopware5\Client;
 
 use Axytos\ECommerce\Abstractions\UserAgentInfoProviderInterface;
+use AxytosKaufAufRechnungShopware5\PluginVersion;
 
 class UserAgentInfoProvider implements UserAgentInfoProviderInterface
 {
@@ -19,7 +20,7 @@ class UserAgentInfoProvider implements UserAgentInfoProviderInterface
      */
     public function getPluginVersion()
     {
-        return '1.3.0';
+        return PluginVersion::getVersion();
     }
 
     /**

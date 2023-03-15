@@ -41,24 +41,11 @@ class UserAgentInfoProviderTest extends TestCase
     }
 
     /**
-     * @return string
-     */
-    public function getComposerPackageName()
-    {
-        /** @var string */
-        $composerJson = file_get_contents(__DIR__ . '/../../../composer.json');
-        /** @var string[] */
-        $config = json_decode($composerJson, true);
-
-        return $config["name"];
-    }
-
-    /**
      * @return void
      */
     public function test_getPluginVersion_returns_version_from_composer()
     {
-        $expected = "1.3.0";
+        $expected = $this->getComposerPackageVersion();
 
         $actual = $this->sut->getPluginVersion();
 
@@ -85,5 +72,18 @@ class UserAgentInfoProviderTest extends TestCase
         $actual = $this->sut->getShopSystemVersion();
 
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @return string
+     */
+    private function getComposerPackageVersion()
+    {
+        /** @var string */
+        $composerJson = file_get_contents(__DIR__ . '/../../../composer.json');
+        /** @var string[] */
+        $config = json_decode($composerJson, true);
+
+        return $config['version'];
     }
 }
