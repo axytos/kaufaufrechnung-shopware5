@@ -195,7 +195,6 @@ class OrderRepository
     {
         /** @var ModelManager */
         $modelManager = Shopware()->Container()->get('models');
-        $modelManager->close();
         $modelManager->rollback();
     }
 }
