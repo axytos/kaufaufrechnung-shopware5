@@ -2,6 +2,7 @@
 
 namespace AxytosKaufAufRechnungShopware5\CronJob;
 
+use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
 use AxytosKaufAufRechnungShopware5\Core\InvoiceOrderContextFactory;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository;
 
@@ -17,12 +18,19 @@ class ShopSystemOrderFactory
      */
     private $invoiceOrderContextFactory;
 
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration
+     */
+    private $pluginConfiguration;
+
     public function __construct(
         OrderRepository $orderRepository,
-        InvoiceOrderContextFactory $invoiceOrderContextFactory
+        InvoiceOrderContextFactory $invoiceOrderContextFactory,
+        PluginConfiguration $pluginConfiguration
     ) {
         $this->orderRepository = $orderRepository;
         $this->invoiceOrderContextFactory = $invoiceOrderContextFactory;
+        $this->pluginConfiguration = $pluginConfiguration;
     }
 
     /**
@@ -34,7 +42,8 @@ class ShopSystemOrderFactory
         return new ShopSystemOrder(
             $order,
             $this->orderRepository,
-            $this->invoiceOrderContextFactory
+            $this->invoiceOrderContextFactory,
+            $this->pluginConfiguration
         );
     }
 

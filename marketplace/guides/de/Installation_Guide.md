@@ -101,9 +101,13 @@ Falls der Verbindungstest fehlschlägt, wenden Sie sich bitte an Ihren Ansprechp
 
 4. Das Plugin __axytos Kauf auf Rechnung__ ist mit mindestens einer Versandart zugeordnet.
 
-5. Der Cronjob ist aktiviert und läuft regelmäßig.
+5. Der korrekte Technische Name für Rechnungsdokumente ist konfiguriert. Wird eine andere Rechnungsvorlage als der Standard
+von Shopware verwendet, so muss in den Plugin-Einstellungen hinterlegt werden, um welche es sich handelt. Dort muss der
+technische Name dieser Vorlage angegeben werden.
 
-6. Alle Caches sind geleert.
+6. Der Cronjob ist aktiviert und läuft regelmäßig.
+
+7. Alle Caches sind geleert.
 
 Überprüfen Sie die Korrektheit der Verbindungsdaten mit __API-Verbindung Testen__.
 

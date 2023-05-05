@@ -4,6 +4,7 @@ namespace AxytosKaufAufRechnungShopware5\CronJob;
 
 use Axytos\ECommerce\Clients\Invoice\InvoiceOrderContextInterface;
 use Axytos\ECommerce\OrderSync\ShopSystemOrderInterface;
+use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
 use AxytosKaufAufRechnungShopware5\Core\InvoiceOrderContextFactory;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository;
 use Exception;
@@ -26,14 +27,21 @@ class ShopSystemOrder implements ShopSystemOrderInterface
      */
     private $invoiceOrderContextFactory;
 
+    /**
+     * @var \AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration
+     */
+    private $pluginConfiguration;
+
     public function __construct(
         Order $order,
         OrderRepository $orderRepository,
-        InvoiceOrderContextFactory $invoiceOrderContextFactory
+        InvoiceOrderContextFactory $invoiceOrderContextFactory,
+        PluginConfiguration $pluginConfiguration
     ) {
         $this->order = $order;
         $this->orderRepository = $orderRepository;
         $this->invoiceOrderContextFactory = $invoiceOrderContextFactory;
+        $this->pluginConfiguration = $pluginConfiguration;
     }
 
     /**
@@ -285,9 +293,10 @@ class ShopSystemOrder implements ShopSystemOrderInterface
      */
     private function getInvoiceDocument()
     {
+        $invoiceKey = $this->pluginConfiguration->getInvoiceDocumentKey();
         return $this->findDocumentByType(
-            'invoice',
-            '/rechnung|invoice/i'
+            $invoiceKey,
+            "/rechnung|$invoiceKey/i"
         );
     }
 

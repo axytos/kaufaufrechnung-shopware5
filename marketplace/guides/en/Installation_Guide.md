@@ -103,9 +103,13 @@ Check the following points:
 
 4. The axytos BNPL plugin is associated with at least one dispatch method.
 
-5. The Cronjob is active and runs regularly.
+5. The correct technical name for invoice documents is configured. When using a different invoice template than the
+shopware standard, you must configure that in the plugin settings. There you have to reference the technical name of the
+corresponding template.
 
-6. All caches are cleard.
+6. The Cronjob is active and runs regularly.
+
+7. All caches are cleard.
 
 Check the correctness of the connection data with Test API connection.
 

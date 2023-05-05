@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.7/engine/Shopware/Components/Plugin/schema/config.xsd">
-      <elements>
+    xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.7/engine/Shopware/Components/Plugin/schema/config.xsd">
+    <elements>
         <element type="text">
             <name>apiHost</name>
             <label>API Host</label>
@@ -180,6 +180,14 @@
                     <label>The Process has been cancelled</label>
                 </option>
             </store>
+        </element>
+        <element type="text">
+            <name>invoiceDocumentKey</name>
+            <label>Technical name - Invoices</label>
+            <label lang="de">Technischer Name - Rechungen</label>
+            <value>invoice</value>
+            <description lang="de">Der technische Name der PDF-Vorlage für Rechnungsdokumente, welche bei Kauf Auf Rechnungs-Bestellungen verwendet werden. Siehe Installationsanleitung.</description>
+            <description>The technical name of the PDF template for invoice documents used for Buy Now Pay Later orders. See installation guide.</description>
         </element>
         <element type="button">
             <name>buttonTest</name>

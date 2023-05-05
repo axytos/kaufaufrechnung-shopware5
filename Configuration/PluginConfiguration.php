@@ -52,6 +52,19 @@ class PluginConfiguration
 
     /**
      * @return string
+     */
+    public function getInvoiceDocumentKey()
+    {
+        $invoiceDocumentKey = $this->getSettingsValue(PluginConfigurationValueNames::INVOICE_DOCUMENT_KEY);
+        if (!empty($invoiceDocumentKey)) {
+            return $invoiceDocumentKey;
+        } else {
+            return 'invoice';
+        }
+    }
+
+    /**
+     * @return string
      * @param string $settingName
      */
     private function getSettingsValue($settingName)

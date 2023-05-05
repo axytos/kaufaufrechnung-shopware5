@@ -9,5 +9,6 @@ abstract class PluginConfigurationValueNames
     const CLIENT_SECRET = 'clientSecret';
     const AFTER_CHECKOUT_ORDER_STATUS = 'afterCheckoutOrderStatus';
     const AFTER_CHECKOUT_PAYMENT_STATUS = 'afterCheckoutPaymentStatus';
+    const INVOICE_DOCUMENT_KEY = 'invoiceDocumentKey';
     const PLUGIN_NAME = 'AxytosKaufAufRechnungShopware5';
 }

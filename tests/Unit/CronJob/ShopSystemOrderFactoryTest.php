@@ -2,6 +2,7 @@
 
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\CronJob;
 
+use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
 use AxytosKaufAufRechnungShopware5\Core\InvoiceOrderContextFactory;
 use AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrder;
 use AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderFactory;
@@ -25,7 +26,8 @@ class ShopSystemOrderFactoryTest extends TestCase
     {
         $this->sut = new ShopSystemOrderFactory(
             $this->createMock(OrderRepository::class),
-            $this->createMock(InvoiceOrderContextFactory::class)
+            $this->createMock(InvoiceOrderContextFactory::class),
+            $this->createMock(PluginConfiguration::class)
         );
     }
 
