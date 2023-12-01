@@ -2,8 +2,13 @@
 
 {block name='frontend_checkout_payment_headline'}
     {if $baseUrl|substr:-12 === "axytos/error"}
-        <div style="margin-left: 20px; margin-top: 20px; width: calc(100% - 40px); box-sizing: border-box; padding: 10px; background-color: #e83030; color: white; font-weight: bold;">
-            {s name="PaymentRejectedMessage"}A technical issue occured.{/s}
+        <div
+            style="margin-left: 20px; margin-top: 20px; width: calc(100% - 40px); box-sizing: border-box; padding: 10px; background-color: #e83030; color: white; font-weight: bold;">
+            {if !empty($sAxytosErrorMessage)}
+                {$sAxytosErrorMessage}
+            {else}
+                {s name="PaymentRejectedMessage"}A technical issue occured.{/s}
+            {/if}
         </div>
     {/if}
     {$smarty.block.parent}

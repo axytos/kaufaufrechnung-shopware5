@@ -2,6 +2,7 @@
 
 namespace AxytosKaufAufRechnungShopware5;
 
+use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Shopware\Components\Model\ModelManager;
@@ -24,8 +25,10 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-            'Enlight_Controller_Action_PreDispatch_Frontend' => ['onFrontend',-100],
-            'Enlight_Controller_Action_PreDispatch_Widgets' => ['onFrontend',-100]
+            'Enlight_Controller_Action_PreDispatch_Frontend' => ['onFrontend', -100],
+            'Enlight_Controller_Action_PreDispatch_Widgets' => ['onFrontend', -100],
+            'Enlight_Controller_Action_PostDispatchSecure_Frontend' => 'onPostDispatch',
+            'Enlight_Controller_Action_PostDispatchSecure_Widgets' => 'onPostDispatch'
         ];
     }
 
@@ -35,8 +38,10 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
      */
     public function install(InstallContext $context)
     {
+        /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+        $container = $this->container;
         /** @var PaymentInstaller */
-        $installer = $this->container->get('shopware.plugin_payment_installer');
+        $installer = $container->get('shopware.plugin_payment_installer');
         $installer->createOrUpdate($context->getPlugin()->getName(), PaymentMethodOptions::OPTIONS);
 
         $orderAttributesRepository = OrderAttributesRepository::create();
@@ -94,8 +99,10 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
      */
     private function setActiveFlag($payments, $active)
     {
+        /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+        $container = $this->container;
         /** @var ModelManager */
-        $em = $this->container->get('models');
+        $em = $container->get('models');
 
         foreach ($payments as $payment) {
             $payment->setActive($active);
@@ -108,9 +115,28 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
      */
     public function onFrontend(\Enlight_Event_EventArgs $args)
     {
+        /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+        $container = $this->container;
         // @phpstan-ignore-next-line
-        $this->container->get('Template')->addTemplateDir(
+        $container->get('Template')->addTemplateDir(
             $this->getPath() . '/Resources/views/'
         );
+    }
+
+    /**
+     * @param \Enlight_Controller_ActionEventArgs $args
+     * @return void
+     */
+    public function onPostDispatch(\Enlight_Controller_ActionEventArgs $args)
+    {
+        $subject = $args->getSubject();
+        if ($subject instanceof \Shopware_Controllers_Frontend_Checkout) {
+            /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+            $container = $this->container;
+            /** @var PluginConfiguration */
+            $configuration = $container->get(PluginConfiguration::class);
+            $errorMessage = $configuration->getCustomErrorMessage();
+            $subject->View()->assign("sAxytosErrorMessage", $errorMessage);
+        }
     }
 }

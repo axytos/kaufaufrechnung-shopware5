@@ -64,6 +64,20 @@ class PluginConfiguration
     }
 
     /**
+     * @return string|null
+     */
+    public function getCustomErrorMessage()
+    {
+        $errorMessage = $this->getSettingsValue(PluginConfigurationValueNames::ERROR_MESSAGE);
+        /** @phpstan-ignore-next-line */
+        if (empty($errorMessage)) {
+            return null;
+        } else {
+            return $errorMessage;
+        }
+    }
+
+    /**
      * @return string
      * @param string $settingName
      */

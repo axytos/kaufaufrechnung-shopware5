@@ -189,6 +189,13 @@
             <description lang="de">Der technische Name der PDF-Vorlage für Rechnungsdokumente, welche bei Kauf Auf Rechnungs-Bestellungen verwendet werden. Siehe Installationsanleitung.</description>
             <description>The technical name of the PDF template for invoice documents used for Buy Now Pay Later orders. See installation guide.</description>
         </element>
+        <element type="textarea">
+            <name>errorMessage</name>
+            <label>Errormessage on rejection</label>
+            <label lang="de">Fehlermeldung bei Ablehnung</label>
+            <description>Default: The payment option Buy Now Pay Later is currently not available.</description>
+            <description lang="de">Standardtext: Die Bezahlmethode Kauf auf Rechnung steht aktuell nicht zur Verfügung.</description>
+        </element>
         <element type="button">
             <name>buttonTest</name>
             <label lang="de">API-Verbindung testen</label>
