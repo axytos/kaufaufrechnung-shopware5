@@ -89,6 +89,9 @@ Führen Sie danach __API-Verbindung testen__ aus.
 
 Falls der Verbindungstest fehlschlägt, wenden Sie sich bitte an Ihren Ansprechpartner bei axytos, falls nicht sind Sie hier fertig.
 
+> **Hinweis:** Für die automatische Synchronisation von Rechnungsdaten muss für Ihren Shop im Axytos-Portal eine Update-URL hinterlegt werden.
+> Diese URL hat das folgende Format: `https://<your.shop.de>/AxytosKaufAufRechnungActionCallback/execute`
+
 ## Kauf auf Rechnung kann nicht für Einkäufe ausgewählt werden?
 
 Überprüfen Sie folgende Punkte:

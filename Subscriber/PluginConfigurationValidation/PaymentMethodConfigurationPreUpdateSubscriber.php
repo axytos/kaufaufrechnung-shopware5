@@ -12,7 +12,7 @@ use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 class PaymentMethodConfigurationPreUpdateSubscriber implements EventSubscriber
 {
     /**
-     * @return mixed[]
+     * @return array<string>
      */
     public function getSubscribedEvents()
     {
@@ -34,7 +34,7 @@ class PaymentMethodConfigurationPreUpdateSubscriber implements EventSubscriber
                 return;
             }
 
-            if ($model->getName() != "axytos_kauf_auf_rechnung") {
+            if ($model->getName() !== "axytos_kauf_auf_rechnung") {
                 return;
             }
 

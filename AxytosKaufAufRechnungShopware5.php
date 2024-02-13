@@ -15,11 +15,15 @@ use Shopware\Models\Payment\Payment;
 use AxytosKaufAufRechnungShopware5\Paymentmethod\PaymentMethodOptions;
 use Shopware\Components\Plugin\Context\UpdateContext;
 use Shopware\Components\Plugin\PaymentInstaller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 }
 
+/**
+ * @phpstan-property \Symfony\Component\DependencyInjection\ContainerInterface $container
+ */
 class AxytosKaufAufRechnungShopware5 extends Plugin
 {
     public static function getSubscribedEvents()
@@ -38,7 +42,7 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
      */
     public function install(InstallContext $context)
     {
-        /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+        /** @var ContainerInterface  */
         $container = $this->container;
         /** @var PaymentInstaller */
         $installer = $container->get('shopware.plugin_payment_installer');
@@ -93,13 +97,13 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
     }
 
     /**
-     * @param ArrayCollection<Payment> $payments
+     * @param ArrayCollection<int,Payment> $payments
      * @param bool $active
      * @return void
      */
     private function setActiveFlag($payments, $active)
     {
-        /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+        /** @var ContainerInterface  */
         $container = $this->container;
         /** @var ModelManager */
         $em = $container->get('models');
@@ -129,10 +133,10 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
      */
     public function onPostDispatch(\Enlight_Controller_ActionEventArgs $args)
     {
+        /** @var ContainerInterface  */
+        $container = $this->container;
         $subject = $args->getSubject();
         if ($subject instanceof \Shopware_Controllers_Frontend_Checkout) {
-            /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
-            $container = $this->container;
             /** @var PluginConfiguration */
             $configuration = $container->get(PluginConfiguration::class);
             $errorMessage = $configuration->getCustomErrorMessage();

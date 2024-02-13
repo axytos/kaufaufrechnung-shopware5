@@ -3,7 +3,6 @@
 namespace AxytosKaufAufRechnungShopware5\Logging;
 
 use Axytos\ECommerce\Logging\LoggerAdapterInterface;
-use Shopware\Components\Logger;
 
 class LoggerAdapter implements LoggerAdapterInterface
 {

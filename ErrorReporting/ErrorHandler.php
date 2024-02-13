@@ -37,8 +37,8 @@ class ErrorHandler
     private function isDebug()
     {
         try {
-            $environment = getenv('SHOPWARE_ENV') ?: getenv('REDIRECT_SHOPWARE_ENV') ?: 'production';
-            return $environment !== 'production';
+            return getenv('SHOPWARE_ENV') !== 'production'
+                || getenv('REDIRECT_SHOPWARE_ENV') !== 'production';
         } catch (\Throwable $th) {
             return false;
         } catch (\Exception $th) { /** @phpstan-ignore-line because of php5 compatibility */

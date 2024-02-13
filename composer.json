@@ -12,7 +12,10 @@
     "license": "proprietary",
     "require": {
         "php": ">=5.6.0",
-        "axytos/ecommerce-sdk": "1.4.10"
+        "axytos/ecommerce-sdk": "1.4.14",
+        "axytos/kaufaufrechnung-core": "1.4.14",
+        "axytos/kaufaufrechnung-core-abstractions": "1.4.14",
+        "axytos/kaufaufrechnung-core-plugin-abstractions": "1.4.14"
     },
     "autoload": {
         "psr-4": {
@@ -22,6 +25,7 @@
     "scripts": {
         "sw5-clear-cache": "../../../bin/console sw:cache:clear",
         "sw5-install": "../../../bin/console sw:plugin:install AxytosKaufAufRechnungShopware5",
+        "sw5-activate": "../../../bin/console sw:plugin:activate AxytosKaufAufRechnungShopware5",
         "sw5-reinstall": "../../../bin/console sw:plugin:reinstall AxytosKaufAufRechnungShopware5",
         "sw5-list-cronjobs": "../../../bin/console sw:cron:list",
         "sw5-run-cronjobs": "../../../bin/console sw:cron:run",

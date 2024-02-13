@@ -52,7 +52,7 @@ class PluginConfigurationValidatorDecorator extends PluginConfigurationValidator
             $payments = $dispatch->getPayments();
 
             foreach ($payments as $payment) {
-                if ($payment->getName() == $pluginName) {
+                if ($payment->getName() === $pluginName) {
                     return true;
                 }
             }

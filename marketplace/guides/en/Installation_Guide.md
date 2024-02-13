@@ -90,6 +90,8 @@ If the connection test fails, please get in touch with your contact person at ax
 
 Now activate the payment method purchase on account | Axytos purchase on account in the storefront.
 
+> **Note:** For automatic synchronisation of invoice data, your shop must register an update URL in the Axytos Portal.
+> This URL has the following format: `https://<your.shop.com>/AxytosKaufAufRechnungActionCallback/execute`
 
 ## Can't select purchase on account for purchases?
 
@@ -114,4 +116,3 @@ corresponding template.
 Check the correctness of the connection data with Test API connection.
 
 Incorrect connection data means that the plugin cannot be selected for purchases.
-

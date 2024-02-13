@@ -22,7 +22,7 @@ class CheckoutSubscriber implements SubscriberInterface
     }
 
     /**
-     * @return mixed[]
+     * @return array<string, string|array{0:string, 1?: int}|list<array{0: string, 1?: int}>>
      */
     public static function getSubscribedEvents()
     {
@@ -42,7 +42,7 @@ class CheckoutSubscriber implements SubscriberInterface
             $view = $args->getSubject()->View();
 
             /** @phpstan-ignore-next-line because of Enlight_View::__get access */
-            if ($view->sPayment["name"] == PaymentMethodOptions::NAME) {
+            if ($view->sPayment["name"] === PaymentMethodOptions::NAME) {
                 $creditCheckAgreementInfo = $this->checkoutClient->getCreditCheckAgreementInfo();
 
                 /** @phpstan-ignore-next-line because of Enlight_View::__set access */

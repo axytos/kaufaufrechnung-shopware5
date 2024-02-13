@@ -30,51 +30,6 @@ class OrderStateMachine
      * @param \Shopware\Models\Order\Order $order
      * @return void
      */
-    public function setCanceled($order)
-    {
-        $this->orderRepository->saveOrderStatus($order, Status::ORDER_STATE_CANCELLED);
-    }
-
-    /**
-     * @param \Shopware\Models\Order\Order $order
-     * @return void
-     */
-    public function setPaymentReview($order)
-    {
-        $this->orderRepository->savePaymentStatus($order, Status::PAYMENT_STATE_REVIEW_NECESSARY);
-    }
-
-    /**
-     * @param \Shopware\Models\Order\Order $order
-     * @return void
-     */
-    public function setPendingPayment($order)
-    {
-        $this->orderRepository->savePaymentStatus($order, Status::PAYMENT_STATE_OPEN);
-    }
-
-    /**
-     * @param \Shopware\Models\Order\Order $order
-     * @return void
-     */
-    public function setTechnicalError($order)
-    {
-        $this->orderRepository->savePaymentStatus($order, Status::PAYMENT_STATE_THE_PROCESS_HAS_BEEN_CANCELLED);
-    }
-
-    /**
-     * @param \Shopware\Models\Order\Order $order
-     * @return void
-     */
-    public function setComplete($order)
-    {
-        $this->orderRepository->saveOrderStatus($order, Status::ORDER_STATE_COMPLETED);
-    }
-
-    /**
-     * @param \Shopware\Models\Order\Order $order
-     * @return void
-     */
     public function setConfiguredAfterCheckoutOrderStatus($order)
     {
         $afterCheckoutOrderStatus = $this->pluginConfiguration->getAfterCheckoutOrderStatus();

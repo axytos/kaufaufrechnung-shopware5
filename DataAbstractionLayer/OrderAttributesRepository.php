@@ -2,10 +2,10 @@
 
 namespace AxytosKaufAufRechnungShopware5\DataAbstractionLayer;
 
+use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\LegacyOrderAttributesMigration;
+use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\MigrationsRepository;
+use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\OrderStateMigration;
 use Shopware\Bundle\AttributeBundle\Service\CrudService;
-use Shopware\Bundle\AttributeBundle\Service\DataLoader;
-use Shopware\Bundle\AttributeBundle\Service\DataPersister;
-use Shopware\Bundle\AttributeBundle\Service\TableMapping;
 use Shopware\Components\Model\ModelManager;
 
 /**
@@ -41,24 +41,36 @@ class OrderAttributesRepository
         /** @var \Shopware\Components\Model\ModelManager */
         $modelManager = Shopware()->Container()->get('models');
 
-        $legacyOrderAttributesRepository = new LegacyOrderAttributesRepository($crudService, $dataLoader, $dataPersister);
+        $migrationsRepository = new MigrationsRepository();
+        $legacyOrderAttributesMigration = new LegacyOrderAttributesMigration(
+            $tableMapping,
+            $dataLoader,
+            $dataPersister,
+            $crudService,
+            $migrationsRepository
+        );
+        $orderStateMigration = new OrderStateMigration(
+            $tableMapping,
+            $dataLoader,
+            $dataPersister,
+            $crudService,
+            $modelManager,
+            $migrationsRepository
+        );
 
         return new OrderAttributesRepository(
             $crudService,
-            $dataLoader,
-            $dataPersister,
-            $tableMapping,
             $modelManager,
-            $legacyOrderAttributesRepository
+            $legacyOrderAttributesMigration,
+            $orderStateMigration
         );
     }
 
-    const ATTRIBUTE_NAME_CHECK_PROCESS_STATE = 'axytos_kauf_auf_rechnung_check_process_state';
-    const ATTRIBUTE_NAME_HAS_CANCEL_REPORTED = 'axytos_kauf_auf_rechnung_has_cancel_reported';
-    const ATTRIBUTE_NAME_HAS_CREATE_INVOICE_REPORTED = 'axytos_kauf_auf_rechnung_has_create_invoice_reported';
-    const ATTRIBUTE_NAME_HAS_REFUND_REPORTED = 'axytos_kauf_auf_rechnung_has_refund_reported';
-    const ATTRIBUTE_NAME_HAS_SHIPPING_REPORTED = 'axytos_kauf_auf_rechnung_has_shipping_reported';
+    const ATTRIBUTE_NAME_ORDER_STATE = 'axytos_kauf_auf_rechnung_order_state';
+    const ATTRIBUTE_NAME_ORDER_STATE_DATA = 'axytos_kauf_auf_rechnung_order_state_data';
     const ATTRIBUTE_NAME_PRECHECK_RESPONSE = 'axytos_kauf_auf_rechnung_precheck_response';
+    const ATTRIBUTE_NAME_ORDER_BASKET_HASH = 'axytos_kauf_auf_rechnung_order_basket_hash';
+    const ATTRIBUTE_NAME_HAS_SHIPPING_REPORTED = 'axytos_kauf_auf_rechnung_has_shipping_reported';
     const ATTRIBUTE_NAME_REPORTED_TRACKING_CODE = 'axytos_kauf_auf_rechnung_reported_tracking_code';
 
     /**
@@ -66,34 +78,29 @@ class OrderAttributesRepository
      */
     private static $attributeDefinitions = [
         [
-            'name' => self::ATTRIBUTE_NAME_CHECK_PROCESS_STATE,
+            'name' => self::ATTRIBUTE_NAME_ORDER_STATE,
             'type' => 'string',
             'default' => null
         ],
         [
-            'name' => self::ATTRIBUTE_NAME_HAS_CANCEL_REPORTED,
-            'type' => 'boolean',
-            'default' => 0
-        ],
-        [
-            'name' => self::ATTRIBUTE_NAME_HAS_CREATE_INVOICE_REPORTED,
-            'type' => 'boolean',
-            'default' => 0
-        ],
-        [
-            'name' => self::ATTRIBUTE_NAME_HAS_REFUND_REPORTED,
-            'type' => 'boolean',
-            'default' => 0
-        ],
-        [
-            'name' => self::ATTRIBUTE_NAME_HAS_SHIPPING_REPORTED,
-            'type' => 'boolean',
-            'default' => 0
+            'name' => self::ATTRIBUTE_NAME_ORDER_STATE_DATA,
+            'type' => 'string',
+            'default' => null
         ],
         [
             'name' => self::ATTRIBUTE_NAME_PRECHECK_RESPONSE,
             'type' => 'string',
             'default' => null
+        ],
+        [
+            'name' => self::ATTRIBUTE_NAME_ORDER_BASKET_HASH,
+            'type' => 'string',
+            'default' => null
+        ],
+        [
+            'name' => self::ATTRIBUTE_NAME_HAS_SHIPPING_REPORTED,
+            'type' => 'boolean',
+            'default' => 0
         ],
         [
             'name' => self::ATTRIBUTE_NAME_REPORTED_TRACKING_CODE,
@@ -106,19 +113,6 @@ class OrderAttributesRepository
      * @var \Shopware\Bundle\AttributeBundle\Service\CrudService
      */
     private $crudService;
-    /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\DataLoader
-     */
-    private $dataLoader;
-    /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\DataPersister
-     */
-    private $dataPersister;
-
-    /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\TableMapping
-     */
-    private $tableMapping;
 
     /**
      * @var \Shopware\Components\Model\ModelManager
@@ -126,24 +120,22 @@ class OrderAttributesRepository
     private $modelManager;
 
     /**
-     * @var LegacyOrderAttributesRepository
+     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\MigrationInterface[]
      */
-    private $legacyOrderAttributesRepository;
+    private $migrations;
 
     public function __construct(
         CrudService $crudService,
-        DataLoader $dataLoader,
-        DataPersister $dataPersister,
-        TableMapping $tableMapping,
         ModelManager $modelManager,
-        LegacyOrderAttributesRepository $legacyOrderAttributesRepository
+        LegacyOrderAttributesMigration $legacyOrderAttributesMigration,
+        OrderStateMigration $orderStateMigration
     ) {
         $this->crudService = $crudService;
-        $this->dataLoader = $dataLoader;
-        $this->dataPersister = $dataPersister;
-        $this->tableMapping = $tableMapping;
         $this->modelManager = $modelManager;
-        $this->legacyOrderAttributesRepository = $legacyOrderAttributesRepository;
+        $this->migrations = [
+            $legacyOrderAttributesMigration,
+            $orderStateMigration,
+        ];
     }
 
     /**
@@ -162,9 +154,13 @@ class OrderAttributesRepository
             $this->crudService->update('s_order_attributes', $name, $type, [], null, false, $defaultValue);
         }
 
-        $this->modelManager->generateAttributeModels();
+        foreach ($this->migrations as $migration) {
+            if ($migration->isMigrationNeeded()) {
+                $migration->migrate();
+            }
+        }
 
-        $this->migrateLegacyAttributeValues();
+        $this->modelManager->generateAttributeModels();
     }
 
     /**
@@ -186,116 +182,5 @@ class OrderAttributesRepository
     public function update()
     {
         $this->install();
-    }
-
-    /**
-     * @param \Shopware\Models\Order\Order $order
-     * @param array $data
-     * @return void
-     */
-    public function persistPreCheckResponseData($order, $data)
-    {
-        $serialized = json_encode($data);
-        /** @phpstan-ignore-next-line because this method is generated by shopware */
-        $order->getAttribute()->setAxytosKaufAufRechnungPrecheckresponse($serialized);
-
-        $this->modelManager->persist($order);
-        $this->modelManager->flush();
-    }
-
-    /**
-     * @param \Shopware\Models\Order\Order $order
-     * @return array
-     */
-    public function loadPreCheckResponseData($order)
-    {
-        $result = [];
-
-        // load from new model
-        /** @phpstan-ignore-next-line because this method is generated by shopware */
-        $serializedPrecheckRepsonse = $order->getAttribute()->getAxytosKaufAufRechnungPrecheckresponse();
-
-        /** @var array */
-        $result = json_decode($serializedPrecheckRepsonse, true);
-
-        // fallback: read old field
-        if (empty($serializedPrecheckRepsonse) && $this->legacyAttributesPresent()) {
-            $result = $this->legacyOrderAttributesRepository->loadPreCheckResponseData($order);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param \Shopware\Models\Order\Order $order
-     * @param string $state
-     * @return void
-     */
-    public function persistOrderProcessState($order, $state)
-    {
-        /** @phpstan-ignore-next-line because this method is generated by shopware */
-        $order->getAttribute()->setAxytosKaufAufRechnungCheckprocessstate($state);
-
-        $this->modelManager->persist($order);
-        $this->modelManager->flush();
-    }
-
-    /**
-     * @param \Shopware\Models\Order\Order $order
-     * @return string
-     */
-    public function loadOrderProcessState($order)
-    {
-        // load from new model
-        /** @phpstan-ignore-next-line because this method is generated by shopware */
-        $state = $order->getAttribute()->getAxytosKaufAufRechnungCheckprocessstate();
-
-        // fallback: read old field
-        if (empty($state) && $this->legacyAttributesPresent()) {
-            $state = $this->legacyOrderAttributesRepository->loadOrderProcessState($order);
-        }
-
-        return $state;
-    }
-
-    /**
-     * @return void
-     */
-    private function migrateLegacyAttributeValues()
-    {
-        if (!$this->legacyAttributesPresent()) {
-            return;
-        }
-
-        $ordreIds = $this->legacyOrderAttributesRepository->getOrderIdsWhereLegacyAttributeValuesArePresent();
-
-        foreach ($ordreIds as $ordreId) {
-            /** @var array<string,mixed> */
-            $attributes = $this->dataLoader->load('s_order_attributes', $ordreId);
-
-            /** @var string */
-            $oldValue = $attributes[LegacyOrderAttributesRepository::COLUMN_NAME];
-
-            /** @var array */
-            $oldValues = json_decode($oldValue, true);
-
-            if (empty($attributes[self::ATTRIBUTE_NAME_CHECK_PROCESS_STATE])) {
-                $attributes[self::ATTRIBUTE_NAME_CHECK_PROCESS_STATE] = $oldValues[LegacyOrderAttributesRepository::ORDER_PROCESS_STATE_NAME];
-            }
-
-            if (empty($attributes[self::ATTRIBUTE_NAME_PRECHECK_RESPONSE])) {
-                $attributes[self::ATTRIBUTE_NAME_PRECHECK_RESPONSE] = json_encode($oldValues[LegacyOrderAttributesRepository::PRECHECK_DATA_NAME]);
-            }
-
-            $this->dataPersister->persist($attributes, 's_order_attributes', $ordreId);
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    private function legacyAttributesPresent()
-    {
-        return $this->tableMapping->isTableColumn('s_order_attributes', LegacyOrderAttributesRepository::COLUMN_NAME);
     }
 }

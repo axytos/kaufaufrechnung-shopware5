@@ -13,7 +13,7 @@ class DispatchPostUpdateSubscriber implements EventSubscriber
     use PluginUpdateActivatorTrait;
 
     /**
-     * @return mixed[]
+     * @return array<string>
      */
     public function getSubscribedEvents()
     {

@@ -5,7 +5,7 @@
     <cronjob>
         <name>axytos KaufAufRechnung OrderSync</name>
         <action>Shopware_CronJob_Axytos_KaufAufRechnung_OrderSync</action>
-        <active>true</active>
+        <active>false</active>
         <!-- interval in seconds -->
         <interval>86400</interval>
         <disableOnError>false</disableOnError>

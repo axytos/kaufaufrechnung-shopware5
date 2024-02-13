@@ -4,7 +4,7 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\CronJob;
 
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
 use Axytos\ECommerce\Logging\LoggerAdapterInterface;
-use Axytos\ECommerce\OrderSync\OrderSyncWorker;
+use Axytos\KaufAufRechnung\Core\OrderSyncWorker;
 use AxytosKaufAufRechnungShopware5\CronJob\OrderSyncCronJobSubscriber;
 use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -24,7 +24,7 @@ class OrderSyncCronJobSubscriberTest extends TestCase
     private $errorHandler;
 
     /**
-     * @var \Axytos\ECommerce\OrderSync\OrderSyncWorker&MockObject
+     * @var \Axytos\KaufAufRechnung\Core\OrderSyncWorker&MockObject
      */
     private $orderSyncWorker;
 

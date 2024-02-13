@@ -4,7 +4,7 @@ namespace AxytosKaufAufRechnungShopware5\CronJob;
 
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
 use Axytos\ECommerce\Logging\LoggerAdapterInterface;
-use Axytos\ECommerce\OrderSync\OrderSyncWorker;
+use Axytos\KaufAufRechnung\Core\OrderSyncWorker;
 use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 use Enlight\Event\SubscriberInterface;
 use Shopware_Components_Cron_CronJob;
@@ -26,7 +26,7 @@ class OrderSyncCronJobSubscriber implements SubscriberInterface
     private $errorHandler;
 
     /**
-     * @var \Axytos\ECommerce\OrderSync\OrderSyncWorker
+     * @var \Axytos\KaufAufRechnung\Core\OrderSyncWorker
      */
     private $orderSyncWorker;
 
@@ -48,7 +48,7 @@ class OrderSyncCronJobSubscriber implements SubscriberInterface
     }
 
     /**
-     * @return mixed[]
+     * @return array<string, string|array{0:string, 1?: int}|list<array{0: string, 1?: int}>>
      */
     public static function getSubscribedEvents()
     {

@@ -63,51 +63,17 @@
         <service autowire="true" id="Axytos\ECommerce\DataMapping\DtoToDtoMapper" class="Axytos\ECommerce\DataMapping\DtoToDtoMapper"/>
 
         <!-- Core Integration =========================================================================================================== -->
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Core\InvoiceOrderContextFactory" class="AxytosKaufAufRechnungShopware5\Core\InvoiceOrderContextFactory" public="true"/>
+
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\Core\OrderStateMachine" class="AxytosKaufAufRechnungShopware5\Core\OrderStateMachine" public="true"/>
-        <service id="AxytosKaufAufRechnungShopware5\Core\OrderCheckProcessStateMachine" class="AxytosKaufAufRechnungShopware5\Core\OrderCheckProcessStateMachine" public="true"/>
 
         <!-- DataAbstractionLayer Integration =========================================================================================== -->
 
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\ArticleDetailRepository" class="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\ArticleDetailRepository" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\DispatchRepository" class="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\DispatchRepository" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository" class="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository" public="true"/>
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository" class="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\LegacyOrderAttributesRepository" class="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\LegacyOrderAttributesRepository" public="true"/>
-
-        <!-- DataMapping Integration ==================================================================================================== -->
-
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\DeliveryWeightCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\DeliveryWeightCalculator" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\LogisticianCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\LogisticianCalculator" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPriceCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPriceCalculator" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPricePerUnitCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionGrossPricePerUnitCalculator" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionNetPriceCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionNetPriceCalculator" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionNetPricePerUnitCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionNetPricePerUnitCalculator" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionProductIdCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionProductIdCalculator" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionProductNameCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionProductNameCalculator" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionQuantityCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionQuantityCalculator" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxCalculator" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxPercentCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\PositionTaxPercentCalculator" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\ValueCalculation\TrackingIdCalculator" class="AxytosKaufAufRechnungShopware5\ValueCalculation\TrackingIdCalculator" public="true"/>
-
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\BasketDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\BasketDtoFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\BasketPositionDtoCollectionFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\BasketPositionDtoCollectionFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\BasketPositionDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\BasketPositionDtoFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\CustomerDataDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\CustomerDataDtoFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\DeliveryAddressDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\DeliveryAddressDtoFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\InvoiceAddressDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\InvoiceAddressDtoFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceBasketDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceBasketDtoFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceBasketPositionDtoCollectionFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceBasketPositionDtoCollectionFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceBasketPositionDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceBasketPositionDtoFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceTaxGroupDtoCollectionFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceTaxGroupDtoCollectionFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceTaxGroupDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\CreateInvoiceTaxGroupDtoFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketDtoFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketPositionDtoCollectionFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketPositionDtoCollectionFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketPositionDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketPositionDtoFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketTaxGroupDtoCollectionFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketTaxGroupDtoCollectionFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketTaxGroupDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\RefundBasketTaxGroupDtoFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\ShippingBasketPositionDtoCollectionFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\ShippingBasketPositionDtoCollectionFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataMapping\ShippingBasketPositionDtoFactory" class="AxytosKaufAufRechnungShopware5\DataMapping\ShippingBasketPositionDtoFactory" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\MigrationsRepository" class="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\MigrationsRepository" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\LegacyOrderAttributesMigration" class="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\LegacyOrderAttributesMigration" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\OrderStateMigration" class="AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\OrderStateMigration" public="true"/>
 
         <!-- Event Subscribers ========================================================================================================== -->
 
@@ -129,17 +95,49 @@
 
         <!-- Cron Job ========================================================================================================== -->
 
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderFactory" class="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderFactory" public="true"/>
-        <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderRepository" class="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderRepository" public="true"/>
-        <service id="Axytos\ECommerce\OrderSync\ShopSystemOrderRepositoryInterface" alias="AxytosKaufAufRechnungShopware5\CronJob\ShopSystemOrderRepository" public="true"/>
+        <service autowire="true" id="Axytos\ECommerce\OrderSync\SHA256HashAlgorithm" class="Axytos\ECommerce\OrderSync\SHA256HashAlgorithm" public="true"/>
+        <service id="Axytos\ECommerce\OrderSync\HashAlgorithmInterface" alias="Axytos\ECommerce\OrderSync\SHA256HashAlgorithm" public="true"/>
+        <service autowire="true" id="Axytos\ECommerce\DataMapping\DtoArrayMapper" class="Axytos\ECommerce\DataMapping\DtoArrayMapper" public="true"/>
+        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderHashCalculator" class="Axytos\ECommerce\OrderSync\OrderHashCalculator" public="true"/>
 
-        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncItemFactory" class="Axytos\ECommerce\OrderSync\OrderSyncItemFactory" public="true"/>
-        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncItemRepository" class="Axytos\ECommerce\OrderSync\OrderSyncItemRepository" public="true"/>
-        <service autowire="true" id="Axytos\ECommerce\OrderSync\OrderSyncWorker" class="Axytos\ECommerce\OrderSync\OrderSyncWorker" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Logging\LoggerAdapter" class="AxytosKaufAufRechnungShopware5\Adapter\Logging\LoggerAdapter" public="true"/>
+        <service id="Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Logging\LoggerAdapterInterface" alias="AxytosKaufAufRechnungShopware5\Adapter\Logging\LoggerAdapter" public="true"/>
+
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderSyncRepository" class="AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderSyncRepository" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\OrderSyncRepository" class="AxytosKaufAufRechnungShopware5\Adapter\OrderSyncRepository" public="true"/>
+        <service id="Axytos\KaufAufRechnung\Core\Plugin\Abstractions\OrderSyncRepositoryInterface" alias="AxytosKaufAufRechnungShopware5\Adapter\OrderSyncRepository" public="true"/>
+
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Database\DatabaseTransactionFactory" class="AxytosKaufAufRechnungShopware5\Adapter\Database\DatabaseTransactionFactory" public="true"/>
+        <service id="Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Database\DatabaseTransactionFactoryInterface" alias="AxytosKaufAufRechnungShopware5\Adapter\Database\DatabaseTransactionFactory" public="true"/>
+
+        <service autowire="true" id="Axytos\KaufAufRechnung\Core\Model\AxytosOrderCommandFacade" class="Axytos\KaufAufRechnung\Core\Model\AxytosOrderCommandFacade" public="true"/>
+        <service autowire="true" id="Axytos\KaufAufRechnung\Core\Model\AxytosOrderFactory" class="Axytos\KaufAufRechnung\Core\Model\AxytosOrderFactory" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderFactory" class="AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderFactory" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\PluginOrderFactory" class="AxytosKaufAufRechnungShopware5\Adapter\PluginOrderFactory" public="true"/>
+        <service autowire="true" id="Axytos\KaufAufRechnung\Core\OrderSyncWorker" class="Axytos\KaufAufRechnung\Core\OrderSyncWorker" public="true"/>
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\SHA256HashAlgorithm" class="AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\SHA256HashAlgorithm" public="true"/>
+        <service id="AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\HashAlgorithmInterface" alias="AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\SHA256HashAlgorithm" public="true"/>
+
+        <service autowire="true" id="Axytos\KaufAufRechnung\Core\PaymentStatusUpdateWorker" class="Axytos\KaufAufRechnung\Core\PaymentStatusUpdateWorker" public="true"/>
+
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory" class="AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory" public="true" />
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Common\BasketPositionFactory" class="AxytosKaufAufRechnungShopware5\Adapter\Common\BasketPositionFactory" public="true" />
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Common\TaxGroupFactory" class="AxytosKaufAufRechnungShopware5\Adapter\Common\TaxGroupFactory" public="true" />
+
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory" class="AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory" public="true" />
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketPositionFactory" class="AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketPositionFactory" public="true" />
+
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\HashCalculator" class="AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\HashCalculator" public="true" />
 
         <service autowire="true" id="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncCronJobSubscriber" class="AxytosKaufAufRechnungShopware5\CronJob\OrderSyncCronJobSubscriber" public="true">
             <tag name="shopware.event_subscriber"/>
         </service>
+
+        <service autowire="true" id="AxytosKaufAufRechnungShopware5\Adapter\Configuration\ClientSecretProvider" class="AxytosKaufAufRechnungShopware5\Adapter\Configuration\ClientSecretProvider" public="true" />
+        <service id="Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Configuration\ClientSecretProviderInterface" alias="AxytosKaufAufRechnungShopware5\Adapter\Configuration\ClientSecretProvider" public="true"/>
+
+        <service autowire="true" id="Axytos\KaufAufRechnung\Core\Model\Actions\ActionExecutor" class="Axytos\KaufAufRechnung\Core\Model\Actions\ActionExecutor" public="true" />
+        <service id="Axytos\KaufAufRechnung\Core\Abstractions\Model\Actions\ActionExecutorInterface" alias="Axytos\KaufAufRechnung\Core\Model\Actions\ActionExecutor" public="true"/>
 
     </services>
 </container>

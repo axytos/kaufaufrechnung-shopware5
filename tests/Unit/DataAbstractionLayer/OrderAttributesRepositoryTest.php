@@ -2,14 +2,13 @@
 
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\DataAbstractionLayer;
 
-use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\LegacyOrderAttributesRepository;
+use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\LegacyOrderAttributesMigration;
+use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\OrderStateMigration;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 use PHPUnit\Framework\TestCase;
 use Shopware\Bundle\AttributeBundle\Service\CrudService;
-use Shopware\Bundle\AttributeBundle\Service\DataLoader;
-use Shopware\Bundle\AttributeBundle\Service\DataPersister;
-use Shopware\Bundle\AttributeBundle\Service\TableMapping;
 use Shopware\Components\Model\ModelManager;
 
 class OrderAttributesRepositoryTest extends TestCase
@@ -18,19 +17,6 @@ class OrderAttributesRepositoryTest extends TestCase
      * @var \Shopware\Bundle\AttributeBundle\Service\CrudService&MockObject
      */
     private $crudService;
-    /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\DataLoader&MockObject
-     */
-    private $dataLoader;
-    /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\DataPersister&MockObject
-     */
-    private $dataPersister;
-
-    /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\TableMapping&MockObject
-     */
-    private $tableMapping;
 
     /**
      * @var \Shopware\Components\Model\ModelManager&MockObject
@@ -38,9 +24,14 @@ class OrderAttributesRepositoryTest extends TestCase
     private $modelManager;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\LegacyOrderAttributesRepository&MockObject
+     * @var LegacyOrderAttributesMigration&MockObject
      */
-    private $legacyOrderAttributesRepository;
+    private $legacyOrderAttributesMigration;
+
+    /**
+     * @var OrderStateMigration&MockObject
+     */
+    private $orderStatesMigration;
 
     /**
      * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository
@@ -54,157 +45,180 @@ class OrderAttributesRepositoryTest extends TestCase
     public function beforeEach()
     {
         $this->crudService = $this->createMock(CrudService::class);
-        $this->dataLoader = $this->createMock(DataLoader::class);
-        $this->dataPersister = $this->createMock(DataPersister::class);
-        $this->tableMapping = $this->createMock(TableMapping::class);
         $this->modelManager = $this->createMock(ModelManager::class);
-        $this->legacyOrderAttributesRepository = $this->createMock(LegacyOrderAttributesRepository::class);
+        $this->legacyOrderAttributesMigration = $this->createMock(LegacyOrderAttributesMigration::class);
+        $this->orderStatesMigration = $this->createMock(OrderStateMigration::class);
 
         $this->sut = new OrderAttributesRepository(
             $this->crudService,
-            $this->dataLoader,
-            $this->dataPersister,
-            $this->tableMapping,
             $this->modelManager,
-            $this->legacyOrderAttributesRepository
+            $this->legacyOrderAttributesMigration,
+            $this->orderStatesMigration
         );
     }
 
     /**
      * @return void
      */
-    public function test_install_does_not_delete_legacy_attribute_column()
+    public function test_install_createAttributeColumns()
     {
-        $this->crudService->expects($this->never())->method('delete')->with('s_order_attributes', 'axytos_kauf_auf_rechnung_attributes');
+        $createdColumns = [];
+        $this->crudService
+            ->expects($this->exactly(6))
+            ->method('update')
+            ->willReturnCallback(function (...$args) use (&$createdColumns) {
+                $createdColumns[] = $args;
+            });
 
         $this->sut->install();
+
+        $expectedUpdates = [
+            [OrderAttributesRepository::ATTRIBUTE_NAME_ORDER_STATE, 'string', null],
+            [OrderAttributesRepository::ATTRIBUTE_NAME_ORDER_STATE_DATA, 'string', null],
+            [OrderAttributesRepository::ATTRIBUTE_NAME_PRECHECK_RESPONSE, 'string', null],
+            [OrderAttributesRepository::ATTRIBUTE_NAME_ORDER_BASKET_HASH, 'string', null],
+            [OrderAttributesRepository::ATTRIBUTE_NAME_HAS_SHIPPING_REPORTED, 'boolean', 0],
+            [OrderAttributesRepository::ATTRIBUTE_NAME_REPORTED_TRACKING_CODE, 'string', null],
+        ];
+
+        $this->assertEquals(count($expectedUpdates), count($createdColumns));
+
+        for ($i = 0; $i < count($expectedUpdates); $i++) {
+            $this->assertEquals('s_order_attributes', $createdColumns[0][0]);
+            $this->assertEquals($expectedUpdates[0][0], $createdColumns[0][1]);
+            $this->assertEquals($expectedUpdates[0][1], $createdColumns[0][2]);
+            $this->assertEmpty($createdColumns[0][3]);
+            $this->assertNull($createdColumns[0][4]);
+            $this->assertFalse($createdColumns[0][5]);
+            $this->assertEquals($expectedUpdates[0][2], $createdColumns[0][6]);
+        }
     }
 
-
     /**
+     * @dataProvider migrationVariants
+     * @param bool $legacyMigrationNeeded
+     * @param bool $orderStateMigrationNeeded
+     * @param InvocationOrder $legacyMigrationInvocations
+     * @param InvocationOrder $orderStateMigrationInvocations
      * @return void
      */
-    public function test_install_does_not_migrate_legacy_attribute_values_if_legacy_attribute_column_is_not_present()
+    public function test_install_executesAllRequiredMigrations($legacyMigrationNeeded, $orderStateMigrationNeeded, $legacyMigrationInvocations, $orderStateMigrationInvocations)
     {
-        $this->tableMapping->method('isTableColumn')->with('s_order_attributes', 'axytos_kauf_auf_rechnung_attributes')->willReturn(false);
+        $this->legacyOrderAttributesMigration
+            ->method('isMigrationNeeded')
+            ->willReturn($legacyMigrationNeeded);
+        $this->orderStatesMigration
+            ->method('isMigrationNeeded')
+            ->willReturn($orderStateMigrationNeeded);
 
-        $this->legacyOrderAttributesRepository->expects($this->never())->method('getOrderIdsWhereLegacyAttributeValuesArePresent');
-        $this->dataLoader->expects($this->never())->method('load');
-        $this->dataPersister->expects($this->never())->method('persist');
+        $this->legacyOrderAttributesMigration
+            ->expects($legacyMigrationInvocations)
+            ->method('migrate');
+        $this->orderStatesMigration
+            ->expects($orderStateMigrationInvocations)
+            ->method('migrate');
 
         $this->sut->install();
-    }
-
-    /**
-     * @return void
-     */
-    public function test_install_migrates_all_legacy_attribute_values_if_legacy_attribute_column_is_present()
-    {
-        $oldAttributeValues = [];
-        $expectedNewAttributeValues = [];
-        $actualNewAttributeValues = [];
-
-        for ($id = 0; $id < 5; $id++) {
-            $orderProcessState = "OrderProcessState-$id";
-            $preCheckResponse = [
-                'SomeKey' => "PreCheckResponse-$id"
-            ];
-            $oldAttributeValues[$id] = [
-                'axytos_kauf_auf_rechnung_attributes' => json_encode([
-                    'OrderProcessState' => $orderProcessState,
-                    'PreCheckResponse' => $preCheckResponse
-                ])
-            ];
-            $expectedNewAttributeValues[$id] = [
-                'axytos_kauf_auf_rechnung_attributes' => $oldAttributeValues[$id]['axytos_kauf_auf_rechnung_attributes'],
-                'axytos_kauf_auf_rechnung_check_process_state' => $orderProcessState,
-                'axytos_kauf_auf_rechnung_precheck_response' => json_encode($preCheckResponse)
-            ];
-        }
-
-        $this->tableMapping->method('isTableColumn')->with('s_order_attributes', 'axytos_kauf_auf_rechnung_attributes')->willReturn(true);
-
-        $this->legacyOrderAttributesRepository->method('getOrderIdsWhereLegacyAttributeValuesArePresent')->willReturn(array_keys($oldAttributeValues));
-
-        $this->dataLoader->method('load')->willReturnCallback(function ($table, $orderId) use (&$oldAttributeValues) {
-            if ($table === 's_order_attributes') {
-                return $oldAttributeValues[$orderId];
-            }
-            return null;
-        });
-
-        $this->dataPersister->method('persist')->willReturnCallback(function ($attributes, $table, $orderId) use (&$actualNewAttributeValues) {
-            if ($table === 's_order_attributes') {
-                $actualNewAttributeValues[$orderId] = $attributes;
-            }
-        });
-
-        $this->sut->install();
-
-        foreach ($actualNewAttributeValues as $id => $actualNewAttributeValue) {
-            $this->assertEquals($expectedNewAttributeValues[$id], $actualNewAttributeValue);
-        }
     }
 
     /**
      * @return void
      */
-    public function test_install_does_not_overwrite_non_empty_values_during_legacy_attribute_migration()
+    public function test_install_generatesAttributeModels()
     {
-        $oldAttributeValues = [];
-        $expectedNewAttributeValues = [];
-        $actualNewAttributeValues = [];
-
-        // attributes to migrate
-        $oldAttributeValues[0] = [
-            'axytos_kauf_auf_rechnung_attributes' => json_encode([
-                'OrderProcessState' => 'OrderProcessState-0',
-                'PreCheckResponse' => ['SomeKey' => "PreCheckResponse-0"]
-            ])
-        ];
-        $expectedNewAttributeValues[0] = [
-            'axytos_kauf_auf_rechnung_attributes' => $oldAttributeValues[0]['axytos_kauf_auf_rechnung_attributes'],
-            'axytos_kauf_auf_rechnung_check_process_state' => 'OrderProcessState-0',
-            'axytos_kauf_auf_rechnung_precheck_response' => json_encode(['SomeKey' => "PreCheckResponse-0"])
-        ];
-
-        // attributes to not migrate
-        $oldAttributeValues[1] = [
-            'axytos_kauf_auf_rechnung_attributes' => json_encode([
-                'OrderProcessState' => 'OrderProcessState-1',
-                'PreCheckResponse' => ['SomeKey' => "PreCheckResponse-1"]
-            ]),
-            'axytos_kauf_auf_rechnung_check_process_state' => 'Non Empty axytos_kauf_auf_rechnung_check_process_state',
-            'axytos_kauf_auf_rechnung_precheck_response' => 'Non Empty axytos_kauf_auf_rechnung_precheck_response'
-        ];
-        $expectedNewAttributeValues[1] = [
-            'axytos_kauf_auf_rechnung_attributes' => $oldAttributeValues[1]['axytos_kauf_auf_rechnung_attributes'],
-            'axytos_kauf_auf_rechnung_check_process_state' => 'Non Empty axytos_kauf_auf_rechnung_check_process_state',
-            'axytos_kauf_auf_rechnung_precheck_response' => 'Non Empty axytos_kauf_auf_rechnung_precheck_response'
-        ];
-
-
-        $this->tableMapping->method('isTableColumn')->with('s_order_attributes', 'axytos_kauf_auf_rechnung_attributes')->willReturn(true);
-
-        $this->legacyOrderAttributesRepository->method('getOrderIdsWhereLegacyAttributeValuesArePresent')->willReturn(array_keys($oldAttributeValues));
-
-        $this->dataLoader->method('load')->willReturnCallback(function ($table, $orderId) use (&$oldAttributeValues) {
-            if ($table === 's_order_attributes') {
-                return $oldAttributeValues[$orderId];
-            }
-            return null;
-        });
-
-        $this->dataPersister->method('persist')->willReturnCallback(function ($attributes, $table, $orderId) use (&$actualNewAttributeValues) {
-            if ($table === 's_order_attributes') {
-                $actualNewAttributeValues[$orderId] = $attributes;
-            }
-        });
+        $this->modelManager
+            ->expects($this->once())
+            ->method('generateAttributeModels');
 
         $this->sut->install();
+    }
 
-        foreach ($actualNewAttributeValues as $id => $actualNewAttributeValue) {
-            $this->assertEquals($expectedNewAttributeValues[$id], $actualNewAttributeValue);
+    /**
+     * @return void
+     */
+    public function test_update_createAttributeColumns()
+    {
+        $createdColumns = [];
+        $this->crudService
+            ->expects($this->exactly(6))
+            ->method('update')
+            ->willReturnCallback(function (...$args) use (&$createdColumns) {
+                $createdColumns[] = $args;
+            });
+
+        $this->sut->update();
+
+        $expectedUpdates = [
+            [OrderAttributesRepository::ATTRIBUTE_NAME_ORDER_STATE, 'string', null],
+            [OrderAttributesRepository::ATTRIBUTE_NAME_ORDER_STATE_DATA, 'string', null],
+            [OrderAttributesRepository::ATTRIBUTE_NAME_PRECHECK_RESPONSE, 'string', null],
+            [OrderAttributesRepository::ATTRIBUTE_NAME_ORDER_BASKET_HASH, 'string', null],
+            [OrderAttributesRepository::ATTRIBUTE_NAME_HAS_SHIPPING_REPORTED, 'boolean', 0],
+            [OrderAttributesRepository::ATTRIBUTE_NAME_REPORTED_TRACKING_CODE, 'string', null],
+        ];
+
+        $this->assertEquals(count($expectedUpdates), count($createdColumns));
+
+        for ($i = 0; $i < count($expectedUpdates); $i++) {
+            $this->assertEquals('s_order_attributes', $createdColumns[0][0]);
+            $this->assertEquals($expectedUpdates[0][0], $createdColumns[0][1]);
+            $this->assertEquals($expectedUpdates[0][1], $createdColumns[0][2]);
+            $this->assertEmpty($createdColumns[0][3]);
+            $this->assertNull($createdColumns[0][4]);
+            $this->assertFalse($createdColumns[0][5]);
+            $this->assertEquals($expectedUpdates[0][2], $createdColumns[0][6]);
         }
+    }
+
+    /**
+     * @dataProvider migrationVariants
+     * @param bool $legacyMigrationNeeded
+     * @param bool $orderStateMigrationNeeded
+     * @param InvocationOrder $legacyMigrationInvocations
+     * @param InvocationOrder $orderStateMigrationInvocations
+     * @return void
+     */
+    public function test_update_executesAllRequiredMigrations($legacyMigrationNeeded, $orderStateMigrationNeeded, $legacyMigrationInvocations, $orderStateMigrationInvocations)
+    {
+        $this->legacyOrderAttributesMigration
+            ->method('isMigrationNeeded')
+            ->willReturn($legacyMigrationNeeded);
+        $this->orderStatesMigration
+            ->method('isMigrationNeeded')
+            ->willReturn($orderStateMigrationNeeded);
+
+        $this->legacyOrderAttributesMigration
+            ->expects($legacyMigrationInvocations)
+            ->method('migrate');
+        $this->orderStatesMigration
+            ->expects($orderStateMigrationInvocations)
+            ->method('migrate');
+
+        $this->sut->update();
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_generatesAttributeModels()
+    {
+        $this->modelManager
+            ->expects($this->once())
+            ->method('generateAttributeModels');
+
+        $this->sut->update();
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function migrationVariants()
+    {
+        return [
+            'none' => [false, false, $this->never(), $this->never()],
+            'legacy' => [true, false, $this->once(), $this->never()],
+            'states' => [false, true, $this->never(), $this->once()],
+            'all' => [true, true, $this->once(), $this->once()],
+        ];
     }
 }

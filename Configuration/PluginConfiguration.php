@@ -56,7 +56,7 @@ class PluginConfiguration
     public function getInvoiceDocumentKey()
     {
         $invoiceDocumentKey = $this->getSettingsValue(PluginConfigurationValueNames::INVOICE_DOCUMENT_KEY);
-        if (!empty($invoiceDocumentKey)) {
+        if (is_string($invoiceDocumentKey) && strlen($invoiceDocumentKey) > 0) {
             return $invoiceDocumentKey;
         } else {
             return 'invoice';
