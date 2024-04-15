@@ -5,6 +5,7 @@
     {$smarty.block.parent}
     {if $sPayment["name"] == 'axytos_kauf_auf_rechnung'}
         <li class="block-group row--tos">
+            <br>
             <span class="block column--checkbox">
                 <input type="checkbox" required aria-required="true" id="axytos_conditions" name="axytos_conditions" />
             </span>
