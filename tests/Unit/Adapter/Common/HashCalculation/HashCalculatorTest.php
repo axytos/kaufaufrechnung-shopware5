@@ -6,6 +6,7 @@ use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\BasketUpdate\Bas
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\BasketUpdate\BasketPositionInterface;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\HashAlgorithmInterface;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\HashCalculator;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -25,6 +26,7 @@ class HashCalculatorTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->hashAlgorithm = $this->createMock(HashAlgorithmInterface::class);

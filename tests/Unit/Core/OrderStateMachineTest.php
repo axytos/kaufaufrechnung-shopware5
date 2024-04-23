@@ -7,6 +7,7 @@ use AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutPaymentStatus;
 use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository;
 use AxytosKaufAufRechnungShopware5\Core\OrderStateMachine;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Order;
@@ -29,6 +30,7 @@ class OrderStateMachineTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->orderRepository = $this->createMock(OrderRepository::class);

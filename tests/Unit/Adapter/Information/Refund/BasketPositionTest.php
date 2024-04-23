@@ -3,6 +3,7 @@
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Information\Refund;
 
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketPosition;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
@@ -23,6 +24,7 @@ class BasketPositionTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->invoiceItem = $this->createMock(Detail::class);

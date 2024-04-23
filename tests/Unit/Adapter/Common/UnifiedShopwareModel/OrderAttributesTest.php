@@ -4,6 +4,7 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Common\UnifiedShopwa
 
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderAttributes;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Order;
@@ -33,6 +34,7 @@ class OrderAttributesTest extends TestCase
      * @param mixed $getterResult
      * @return void
      */
+    #[DataProvider('delegation_of_generated_getters_test_cases')]
     public function test_delegation_of_generated_getters($proxyMethodName, $generatedMethodName, $getterResult)
     {
         /** @var ExpectedGeneratedOrderAttributesInterface&MockObject */
@@ -58,7 +60,7 @@ class OrderAttributesTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function delegation_of_generated_getters_test_cases()
+    public static function delegation_of_generated_getters_test_cases()
     {
         return [
             ['getAxytosKaufAufRechnungOrderState', 'getAxytosKaufAufRechnungOrderState', '1234'],
@@ -78,6 +80,7 @@ class OrderAttributesTest extends TestCase
      * @param mixed $setterArg
      * @return void
      */
+    #[DataProvider('delegation_of_generated_setters_test_cases')]
     public function test_delegation_of_generated_setters($proxyMethodName, $generatedMethodName, $setterArg)
     {
         /** @var ExpectedGeneratedOrderAttributesInterface&MockObject */
@@ -101,7 +104,7 @@ class OrderAttributesTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function delegation_of_generated_setters_test_cases()
+    public static function delegation_of_generated_setters_test_cases()
     {
         return [
             ['setAxytosKaufAufRechnungOrderState', 'setAxytosKaufAufRechnungOrderState', '1234'],

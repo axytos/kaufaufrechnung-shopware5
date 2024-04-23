@@ -8,6 +8,7 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\BasketPositionFactory;
 use PHPUnit\Framework\TestCase;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
+use PHPUnit\Framework\Attributes\Before;
 
 class BasketFactoryTest extends TestCase
 {
@@ -20,6 +21,7 @@ class BasketFactoryTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->sut = new BasketFactory(

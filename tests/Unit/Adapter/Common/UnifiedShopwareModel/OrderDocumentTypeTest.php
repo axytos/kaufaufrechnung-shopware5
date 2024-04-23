@@ -5,6 +5,8 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Common\UnifiedShopwa
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderDocumentType;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\ShopwareModelReflector;
 use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Shopware\Models\Document\Document as ShopwareDocumentType;
@@ -35,6 +37,7 @@ class OrderDocumentTypeTest extends TestCase
      * @before
      * @return void
      */
+    #[Before]
     public function beforeEach()
     {
         $this->shopwareDocumentType = $this->createMock(ShopwareDocumentType::class);
@@ -68,6 +71,7 @@ class OrderDocumentTypeTest extends TestCase
      * @param string $invoiceKey
      * @return void
      */
+    #[DataProvider('key_inference_test_cases')]
     public function test_getKey_infers_key_from_name_if_method_getKey_does_not_exist($name, $expectedKey, $invoiceKey)
     {
         $this->shopwareDocumentType->method('getName')->willReturn($name);
@@ -86,7 +90,7 @@ class OrderDocumentTypeTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function key_inference_test_cases()
+    public static function key_inference_test_cases()
     {
         return [
             ['invoice', 'invoice', 'invoice'],

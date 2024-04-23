@@ -4,6 +4,7 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Information\Tracking
 
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Checkout\Customer;
 use DateTime;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Customer\Customer as ShopwareCustomer;
@@ -24,6 +25,7 @@ class CustomerTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->customer = $this->createMock(ShopwareCustomer::class);

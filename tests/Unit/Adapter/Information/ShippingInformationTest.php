@@ -7,6 +7,7 @@ use AxytosKaufAufRechnungShopware5\Adapter\Information\ShippingInformation;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Shipping\BasketPosition;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Shipping\ShippingBasketPosition;
 use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
@@ -27,6 +28,7 @@ class ShippingInformationTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->order = $this->createMock(Order::class);

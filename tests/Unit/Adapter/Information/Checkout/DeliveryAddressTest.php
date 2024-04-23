@@ -3,6 +3,7 @@
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Information\Checkout;
 
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Checkout\DeliveryAddress;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Country\Country;
@@ -25,6 +26,7 @@ class DeliveryAddressTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->shipping = $this->createMock(Shipping::class);

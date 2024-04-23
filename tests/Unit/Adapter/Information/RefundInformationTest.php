@@ -6,6 +6,7 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\Basket;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\RefundInformation;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Document\Document;
@@ -31,6 +32,7 @@ class RefundInformationTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->order = $this->createMock(Order::class);

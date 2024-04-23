@@ -3,6 +3,7 @@
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Configuration;
 
 use AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutOrderStatus;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Status;
 
@@ -14,6 +15,7 @@ class AfterCheckoutOrderStatusTest extends TestCase
      * @param int $expectedStatusCode
      * @return void
      */
+    #[DataProvider('getStatusCodeTestCases')]
     public function test_getStatusCode_returns_correct_value($value, $expectedStatusCode)
     {
         $afterCheckoutOrderStatus = new AfterCheckoutOrderStatus($value);

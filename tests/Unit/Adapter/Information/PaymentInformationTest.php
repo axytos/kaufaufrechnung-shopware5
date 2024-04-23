@@ -5,6 +5,7 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Information;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\CancelInformation;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\PaymentInformation;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -24,6 +25,7 @@ class PaymentInformationTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->order = $this->createMock(Order::class);

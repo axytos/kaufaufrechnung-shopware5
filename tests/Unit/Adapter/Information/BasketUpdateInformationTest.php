@@ -6,6 +6,7 @@ use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\BasketUpdate\Bas
 use AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\BasketUpdateInformation;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -30,6 +31,7 @@ class BasketUpdateInformationTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->order = $this->createMock(Order::class);

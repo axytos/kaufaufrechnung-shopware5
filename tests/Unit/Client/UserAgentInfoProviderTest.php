@@ -4,6 +4,7 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Client;
 
 use Axytos\ECommerce\Abstractions\UserAgentInfoProviderInterface;
 use AxytosKaufAufRechnungShopware5\Client\UserAgentInfoProvider;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\TestCase;
 
 class UserAgentInfoProviderTest extends TestCase
@@ -17,6 +18,7 @@ class UserAgentInfoProviderTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->sut = new UserAgentInfoProvider();

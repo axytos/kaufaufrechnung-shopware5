@@ -10,6 +10,7 @@ use AxytosKaufAufRechnungShopware5\Adapter\Information\Checkout\Customer as Chec
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Checkout\DeliveryAddress;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Checkout\InvoiceAddress;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\CheckoutInformation;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Customer\Customer;
@@ -42,6 +43,7 @@ class CheckoutInformationTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->order = $this->createMock(Order::class);

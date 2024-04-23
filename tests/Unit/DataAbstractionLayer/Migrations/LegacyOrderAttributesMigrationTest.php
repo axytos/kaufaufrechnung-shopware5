@@ -5,6 +5,8 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\DataAbstractionLayer\Migrati
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\LegacyOrderAttributesMigration;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\MigrationsRepository;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Bundle\AttributeBundle\Service\CrudService;
@@ -48,6 +50,7 @@ class LegacyOrderAttributesMigrationTest extends TestCase
      * @before
      * @return void
      */
+    #[Before]
     public function beforeEach()
     {
         $this->tableMapping = $this->createMock(TableMapping::class);
@@ -101,6 +104,7 @@ class LegacyOrderAttributesMigrationTest extends TestCase
      * @param bool $skipped
      * @return void
      */
+    #[DataProvider('columnMigrationData')]
     public function test_migrate_migrates_column_data($attributes, $expectedCheckProcessState, $expectedPrecheckResponse, $skipped = false)
     {
         $orderId = 'test-order-id';
@@ -133,7 +137,7 @@ class LegacyOrderAttributesMigrationTest extends TestCase
     /**
      * @return mixed[]
      */
-    public function columnMigrationData()
+    public static function columnMigrationData()
     {
         return [
             'empty' => [

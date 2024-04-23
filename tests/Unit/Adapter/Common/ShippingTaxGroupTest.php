@@ -6,6 +6,7 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\ShippingTaxGroup;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
+use PHPUnit\Framework\Attributes\Before;
 
 class ShippingTaxGroupTest extends TestCase
 {
@@ -23,6 +24,7 @@ class ShippingTaxGroupTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->order = $this->createMock(Order::class);

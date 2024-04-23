@@ -5,6 +5,7 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Common;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Invoice\TaxGroupInterface as InvoiceTaxGroupInterface;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Refund\TaxGroupInterface as RefundTaxGroupInterface;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\CombinedTaxGroup;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -39,6 +40,7 @@ class CombinedTaxGroupTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->taxGroup1 = $this->createMock(TestTaxGroup::class);

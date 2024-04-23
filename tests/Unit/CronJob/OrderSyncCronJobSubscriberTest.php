@@ -7,6 +7,7 @@ use Axytos\ECommerce\Logging\LoggerAdapterInterface;
 use Axytos\KaufAufRechnung\Core\OrderSyncWorker;
 use AxytosKaufAufRechnungShopware5\CronJob\OrderSyncCronJobSubscriber;
 use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware_Components_Cron_CronJob;
@@ -37,6 +38,7 @@ class OrderSyncCronJobSubscriberTest extends TestCase
      * @before
      * @return void
      */
+    #[Before]
     public function beforeEach()
     {
         $this->pluginConfigurationValidator = $this->createMock(PluginConfigurationValidator::class);

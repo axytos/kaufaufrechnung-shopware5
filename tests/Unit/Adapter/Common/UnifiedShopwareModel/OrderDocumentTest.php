@@ -12,6 +12,8 @@ use Shopware\Models\Document\Document as ShopwareDocumentType;
 use Shopware\Models\Order\Order as ShopwareOrder;
 use Shopware\Models\Order\Document\Document as ShopwareOrderDocument;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository as OldOrderRepository;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class OrderDocumentTest extends TestCase
 {
@@ -44,6 +46,7 @@ class OrderDocumentTest extends TestCase
      * @before
      * @return void
      */
+    #[Before]
     public function beforeEach()
     {
         $this->shopwareDocumentType = $this->createMock(ShopwareDocumentType::class);
@@ -99,6 +102,7 @@ class OrderDocumentTest extends TestCase
      * @param bool $expected
      * @return void
      */
+    #[DataProvider('isInvoiceDocument_test_cases')]
     public function test_isInvoiceDocument($hasMethodGetKey, $documentKey, $configurationKey, $name, $expected)
     {
         $this->pluginConfiguration->method('getInvoiceDocumentKey')->willReturn($configurationKey);
@@ -112,7 +116,7 @@ class OrderDocumentTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function isInvoiceDocument_test_cases()
+    public static function isInvoiceDocument_test_cases()
     {
         return [
             [false, 'invoice', 'invoice', 'Rechnung', true],
@@ -136,6 +140,7 @@ class OrderDocumentTest extends TestCase
      * @param bool $expected
      * @return void
      */
+    #[DataProvider('isCreditDocument_test_cases')]
     public function test_isCreditDocument($hasMethodGetKey, $key, $name, $expected)
     {
         $this->shopwareModelReflector->method('hasMethod')->with($this->shopwareDocumentType, 'getKey')->willReturn($hasMethodGetKey);
@@ -148,7 +153,7 @@ class OrderDocumentTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function isCreditDocument_test_cases()
+    public static function isCreditDocument_test_cases()
     {
         return [
             [false, 'credit', 'Gutschrift', true],
@@ -168,6 +173,7 @@ class OrderDocumentTest extends TestCase
      * @param bool $expected
      * @return void
      */
+    #[DataProvider('isDeliveryNoteDocument_test_cases')]
     public function test_isDeliveryNoteDocument($hasMethodGetKey, $key, $name, $expected)
     {
         $this->shopwareModelReflector->method('hasMethod')->with($this->shopwareDocumentType, 'getKey')->willReturn($hasMethodGetKey);
@@ -180,7 +186,7 @@ class OrderDocumentTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function isDeliveryNoteDocument_test_cases()
+    public static function isDeliveryNoteDocument_test_cases()
     {
         return [
             [false, 'delivery_note', 'Lieferschein', true],
@@ -200,6 +206,7 @@ class OrderDocumentTest extends TestCase
      * @param bool $expected
      * @return void
      */
+    #[DataProvider('isCancellationDocument_test_cases')]
     public function test_isCancellationDocument($hasMethodGetKey, $key, $name, $expected)
     {
         $this->shopwareModelReflector->method('hasMethod')->with($this->shopwareDocumentType, 'getKey')->willReturn($hasMethodGetKey);
@@ -212,7 +219,7 @@ class OrderDocumentTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function isCancellationDocument_test_cases()
+    public static function isCancellationDocument_test_cases()
     {
         return [
             [false, 'cancellation', 'Stornorechnung', true],

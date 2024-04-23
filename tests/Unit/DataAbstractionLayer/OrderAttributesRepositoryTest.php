@@ -5,8 +5,9 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\DataAbstractionLayer;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\LegacyOrderAttributesMigration;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\OrderStateMigration;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 use PHPUnit\Framework\TestCase;
 use Shopware\Bundle\AttributeBundle\Service\CrudService;
 use Shopware\Components\Model\ModelManager;
@@ -42,6 +43,7 @@ class OrderAttributesRepositoryTest extends TestCase
      * @before
      * @return void
      */
+    #[Before]
     public function beforeEach()
     {
         $this->crudService = $this->createMock(CrudService::class);
@@ -98,10 +100,11 @@ class OrderAttributesRepositoryTest extends TestCase
      * @dataProvider migrationVariants
      * @param bool $legacyMigrationNeeded
      * @param bool $orderStateMigrationNeeded
-     * @param InvocationOrder $legacyMigrationInvocations
-     * @param InvocationOrder $orderStateMigrationInvocations
+     * @param int $legacyMigrationInvocations
+     * @param int $orderStateMigrationInvocations
      * @return void
      */
+    #[DataProvider('migrationVariants')]
     public function test_install_executesAllRequiredMigrations($legacyMigrationNeeded, $orderStateMigrationNeeded, $legacyMigrationInvocations, $orderStateMigrationInvocations)
     {
         $this->legacyOrderAttributesMigration
@@ -112,10 +115,10 @@ class OrderAttributesRepositoryTest extends TestCase
             ->willReturn($orderStateMigrationNeeded);
 
         $this->legacyOrderAttributesMigration
-            ->expects($legacyMigrationInvocations)
+            ->expects($this->exactly($legacyMigrationInvocations))
             ->method('migrate');
         $this->orderStatesMigration
-            ->expects($orderStateMigrationInvocations)
+            ->expects($this->exactly($orderStateMigrationInvocations))
             ->method('migrate');
 
         $this->sut->install();
@@ -174,10 +177,11 @@ class OrderAttributesRepositoryTest extends TestCase
      * @dataProvider migrationVariants
      * @param bool $legacyMigrationNeeded
      * @param bool $orderStateMigrationNeeded
-     * @param InvocationOrder $legacyMigrationInvocations
-     * @param InvocationOrder $orderStateMigrationInvocations
+     * @param int $legacyMigrationInvocations
+     * @param int $orderStateMigrationInvocations
      * @return void
      */
+    #[DataProvider('migrationVariants')]
     public function test_update_executesAllRequiredMigrations($legacyMigrationNeeded, $orderStateMigrationNeeded, $legacyMigrationInvocations, $orderStateMigrationInvocations)
     {
         $this->legacyOrderAttributesMigration
@@ -188,10 +192,10 @@ class OrderAttributesRepositoryTest extends TestCase
             ->willReturn($orderStateMigrationNeeded);
 
         $this->legacyOrderAttributesMigration
-            ->expects($legacyMigrationInvocations)
+            ->expects($this->exactly($legacyMigrationInvocations))
             ->method('migrate');
         $this->orderStatesMigration
-            ->expects($orderStateMigrationInvocations)
+            ->expects($this->exactly($orderStateMigrationInvocations))
             ->method('migrate');
 
         $this->sut->update();
@@ -212,13 +216,13 @@ class OrderAttributesRepositoryTest extends TestCase
     /**
      * @return mixed[]
      */
-    public function migrationVariants()
+    public static function migrationVariants()
     {
         return [
-            'none' => [false, false, $this->never(), $this->never()],
-            'legacy' => [true, false, $this->once(), $this->never()],
-            'states' => [false, true, $this->never(), $this->once()],
-            'all' => [true, true, $this->once(), $this->once()],
+            'none' => [false, false, 0, 0],
+            'legacy' => [true, false, 1, 0],
+            'states' => [false, true, 0, 1],
+            'all' => [true, true, 1, 1],
         ];
     }
 }

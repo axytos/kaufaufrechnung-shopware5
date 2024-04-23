@@ -7,6 +7,7 @@ use Axytos\ECommerce\Abstractions\ApiKeyProviderInterface;
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\DispatchRepository;
 use AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation\PluginConfigurationValidatorDecorator;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Dispatch\Dispatch;
@@ -38,6 +39,7 @@ class PluginConfigurationValidatorDecoratorTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->apiHostProvider = $this->createMock(ApiHostProviderInterface::class);

@@ -14,6 +14,8 @@ use Shopware\Models\Order\Order as ShopwareOrder;
 use Shopware\Models\Order\Document\Document as ShopwareOrderDocument;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository as OldOrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class OrderTest extends TestCase
 {
@@ -46,6 +48,7 @@ class OrderTest extends TestCase
      * @before
      * @return void
      */
+    #[Before]
     public function beforeEach()
     {
         $this->shopwareOrder = $this->createMock(ShopwareOrder::class);
@@ -86,6 +89,7 @@ class OrderTest extends TestCase
      * @param mixed $expectedResult
      * @return void
      */
+    #[DataProvider('getter_delegation_test_cases')]
     public function test_Order_delegates_getter_calls_to_original_instance($getterName, $expectedResult)
     {
         $this->shopwareOrder->method($getterName)->willReturn($expectedResult);
@@ -100,7 +104,7 @@ class OrderTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function getter_delegation_test_cases()
+    public static function getter_delegation_test_cases()
     {
         return [
             ['getCurrency', 'EUR'],
@@ -138,6 +142,7 @@ class OrderTest extends TestCase
      * @param float $expectedInvoiceShippingTaxRate
      * @return void
      */
+    #[DataProvider('calculate_getInvoiceShippingTaxRate_test_cases')]
     public function test_getInvoiceShippingTaxRate_calculates_value_if_method_getInvoiceShippingTaxRate_does_not_exist(
         $invoiceShipping,
         $invoiceShippingNet,
@@ -154,7 +159,7 @@ class OrderTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function calculate_getInvoiceShippingTaxRate_test_cases()
+    public static function calculate_getInvoiceShippingTaxRate_test_cases()
     {
         return [
             [100, 81, 19],
@@ -182,6 +187,7 @@ class OrderTest extends TestCase
      * @param ArrayCollection<int,ShopwareOrderDocument>|null $documents
      * @return void
      */
+    #[DataProvider('document_is_not_found_test_cases')]
     public function test_findInvoiceDocument_returns_null_if_document_is_not_found($documents)
     {
         $this->shopwareOrder->method('getDocuments')->willReturn($documents);
@@ -221,6 +227,7 @@ class OrderTest extends TestCase
      * @param ArrayCollection<int,ShopwareOrderDocument>|null $documents
      * @return void
      */
+    #[DataProvider('document_is_not_found_test_cases')]
     public function test_findCancellationDocument_returns_null_if_document_is_not_found($documents)
     {
         $this->shopwareOrder->method('getDocuments')->willReturn($documents);
@@ -260,6 +267,7 @@ class OrderTest extends TestCase
      * @param ArrayCollection<int,ShopwareOrderDocument>|null $documents
      * @return void
      */
+    #[DataProvider('document_is_not_found_test_cases')]
     public function test_findCreditDocument_returns_null_if_document_is_not_found($documents)
     {
         $this->shopwareOrder->method('getDocuments')->willReturn($documents);
@@ -299,6 +307,7 @@ class OrderTest extends TestCase
      * @param ArrayCollection<int,ShopwareOrderDocument>|null $documents
      * @return void
      */
+    #[DataProvider('document_is_not_found_test_cases')]
     public function test_findDeliveryNoteDocument_returns_null_if_document_is_not_found($documents)
     {
         $this->shopwareOrder->method('getDocuments')->willReturn($documents);
@@ -309,7 +318,7 @@ class OrderTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function document_is_not_found_test_cases()
+    public static function document_is_not_found_test_cases()
     {
         return [
             [null],

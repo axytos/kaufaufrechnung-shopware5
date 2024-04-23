@@ -3,6 +3,7 @@
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Common;
 
 use AxytosKaufAufRechnungShopware5\Adapter\Common\TaxGroup;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
@@ -23,6 +24,7 @@ class TaxGroupTest extends TestCase
      * @return void
      * @before
      */
+    #[Before]
     public function beforeEach()
     {
         $this->invoiceItem = $this->createMock(Detail::class);
