@@ -1,8 +1,8 @@
 ---
 author: axytos GmbH
 title: "Installation Guide"
-subtitle: "axytos Buy Now Pay Later, Shopware5"
-header-right: axytos Buy Now Pay Later, Shopware5
+subtitle: "axytos Buy Now Pay Later for Shopware5"
+header-right: axytos Buy Now Pay Later for Shopware5
 lang: "en"
 titlepage: true
 titlepage-rule-height: 2
