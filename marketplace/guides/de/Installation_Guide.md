@@ -1,8 +1,8 @@
 ---
 author: axytos GmbH
 title: "Installationsanleitung"
-subtitle: "axytos Kauf auf Rechnung, Shopware5"
-header-right: axytos Kauf auf Rechnung, Shopware5
+subtitle: "axytos Kauf auf Rechnung für Shopware5"
+header-right: axytos Kauf auf Rechnung für Shopware5
 lang: "de"
 titlepage: true
 titlepage-rule-height: 2
