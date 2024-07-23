@@ -22,6 +22,9 @@
             "AxytosKaufAufRechnungShopware5\\": "."
         }
     },
+    "extra": {
+        "installer-name": "AxytosKaufAufRechnungShopware5"
+    },
     "scripts": {
         "sw5-clear-cache": "../../../bin/console sw:cache:clear",
         "sw5-install": "../../../bin/console sw:plugin:install AxytosKaufAufRechnungShopware5",
