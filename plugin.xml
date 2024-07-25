@@ -388,14 +388,26 @@
   </changelog>
   <changelog version="1.6.19-rc">
     <changes><![CDATA[
+
+      Adjusted handling and formatting of plugin additional description 
+
 	]]></changes>
     <changes lang="de"><![CDATA[
+
+      Anpassung der Handhabung und Formatierung der zusätzlichen Plugin-Beschreibung
+
 	]]></changes>
   </changelog>
   <changelog version="1.6.19">
     <changes><![CDATA[
+
+      Adjusted handling and formatting of plugin additional description
+
 	]]></changes>
     <changes lang="de"><![CDATA[
+
+      Anpassung der Handhabung und Formatierung der zusätzlichen Plugin-Beschreibung
+
 	]]></changes>
   </changelog>
 </plugin>
