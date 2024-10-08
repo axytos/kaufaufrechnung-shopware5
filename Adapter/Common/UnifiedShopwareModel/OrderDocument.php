@@ -3,28 +3,28 @@
 namespace AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel;
 
 use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
-use Shopware\Models\Order\Document\Document as ShopwareOrderDocument;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository as OldOrderRepository;
+use Shopware\Models\Order\Document\Document as ShopwareOrderDocument;
 
 class OrderDocument
 {
     /**
-     * @var \Shopware\Models\Order\Document\Document
+     * @var ShopwareOrderDocument
      */
     private $document;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository
+     * @var OldOrderRepository
      */
     private $orderRepository;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\ShopwareModelReflector
+     * @var ShopwareModelReflector
      */
     private $shopwareModelReflector;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration
+     * @var PluginConfiguration
      */
     private $pluginConfiguration;
 
@@ -49,7 +49,7 @@ class OrderDocument
     }
 
     /**
-     * @return \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @return Order
      */
     public function getOrder()
     {
@@ -94,7 +94,7 @@ class OrderDocument
     }
 
     /**
-     * @return \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderDocumentType
+     * @return OrderDocumentType
      */
     private function getType()
     {

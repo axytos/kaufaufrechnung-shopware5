@@ -8,6 +8,9 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class CancelInformationTest extends TestCase
 {
     /**
@@ -22,6 +25,7 @@ class CancelInformationTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -35,11 +39,12 @@ class CancelInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getOrderNumber_returnsOrderNumber()
+    public function test_get_order_number_returns_order_number()
     {
         $this->order
             ->method('getNumber')
-            ->willReturn('order-123');
+            ->willReturn('order-123')
+        ;
 
         $this->assertEquals('order-123', $this->sut->getOrderNumber());
     }

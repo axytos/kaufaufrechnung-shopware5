@@ -2,11 +2,11 @@
 
 namespace AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation;
 
+use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Shopware\Models\Config\Element;
 use Doctrine\ORM\Events;
-use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
+use Shopware\Models\Config\Element;
 
 class PluginConfigurationPostUpdateSubscriber implements EventSubscriber
 {
@@ -18,12 +18,13 @@ class PluginConfigurationPostUpdateSubscriber implements EventSubscriber
     public function getSubscribedEvents()
     {
         return [
-            Events::postUpdate
+            Events::postUpdate,
         ];
     }
 
     /**
      * @param LifecycleEventArgs $eventArgs
+     *
      * @return void
      */
     public function postUpdate($eventArgs)

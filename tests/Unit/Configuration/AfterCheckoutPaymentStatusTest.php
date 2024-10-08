@@ -7,16 +7,21 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Status;
 
+/**
+ * @internal
+ */
 class AfterCheckoutPaymentStatusTest extends TestCase
 {
     /**
      * @dataProvider getStatusCodeTestCases
+     *
      * @param string $value
-     * @param int $expectedStatusCode
+     * @param int    $expectedStatusCode
+     *
      * @return void
      */
     #[DataProvider('getStatusCodeTestCases')]
-    public function test_getStatusCode_returns_correct_value($value, $expectedStatusCode)
+    public function test_get_status_code_returns_correct_value($value, $expectedStatusCode)
     {
         $afterCheckoutOrderStatus = new AfterCheckoutPaymentStatus($value);
 
@@ -54,7 +59,7 @@ class AfterCheckoutPaymentStatusTest extends TestCase
     /**
      * @return void
      */
-    public function test_getStatusCode_returns_ORDER_STATE_OPEN_as_default()
+    public function test_get_status_code_returns_orde_r_stat_e_ope_n_as_default()
     {
         $afterCheckoutOrderStatus = new AfterCheckoutPaymentStatus('');
 

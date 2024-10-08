@@ -1,9 +1,6 @@
 <?php
 
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
-use Shopware\Components\CSRFWhitelistAware;
-use Shopware\Components\DependencyInjection\Container;
-use Shopware\Models\Order\Order;
 use Axytos\KaufAufRechnung\Core\Abstractions\Model\AxytosOrderCheckoutAction;
 use Axytos\KaufAufRechnung\Core\Abstractions\Model\AxytosOrderEvents;
 use Axytos\KaufAufRechnung\Core\Model\AxytosOrderFactory;
@@ -11,46 +8,47 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderFact
 use AxytosKaufAufRechnungShopware5\Adapter\PluginOrderFactory;
 use AxytosKaufAufRechnungShopware5\Core\OrderStateMachine;
 use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
+use Shopware\Components\CSRFWhitelistAware;
+use Shopware\Components\DependencyInjection\Container;
 use Shopware\Models\Customer\Address;
 use Shopware\Models\Order\Billing;
+use Shopware\Models\Order\Order;
 use Shopware\Models\Order\Shipping;
 
-class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Shopware_Controllers_Frontend_Payment implements CSRFWhitelistAware
+class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends Shopware_Controllers_Frontend_Payment implements CSRFWhitelistAware
 {
     /**
-     * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator
+     * @var PluginConfigurationValidator
      */
     private $pluginConfigurationValidator;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler
+     * @var ErrorHandler
      */
     private $errorHandler;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Core\OrderStateMachine
+     * @var OrderStateMachine
      */
     private $orderStateMachine;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderFactory
+     * @var OrderFactory
      */
     private $unifiedOrderFactory;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\PluginOrderFactory
+     * @var PluginOrderFactory
      */
     private $pluginOrderFactory;
 
     /**
-     * @var \Axytos\KaufAufRechnung\Core\Model\AxytosOrderFactory
+     * @var AxytosOrderFactory
      */
     private $axytosOrderFactory;
 
-
-
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
      */
     private $orderHandle;
 
@@ -90,10 +88,10 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
             }
 
             $this->executeAxytosKaufAufRechnung();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->errorHandler->handle($th);
             $this->redirectToChangePaymentMethod();
-        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
+        } catch (Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
             $this->errorHandler->handle($th);
             $this->redirectToChangePaymentMethod();
         }
@@ -113,8 +111,9 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
         $axytosOrder->subscribeEventListener(AxytosOrderEvents::CHECKOUT_AFTER_CONFIRMED, [$this, 'afterAxytosConfirmed']);
         $axytosOrder->checkout();
 
-        if ($axytosOrder->getOrderCheckoutAction() === AxytosOrderCheckoutAction::CHANGE_PAYMENT_METHOD) {
+        if (AxytosOrderCheckoutAction::CHANGE_PAYMENT_METHOD === $axytosOrder->getOrderCheckoutAction()) {
             $this->redirectToChangePaymentMethod();
+
             return;
         }
 
@@ -157,8 +156,8 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
         $this->redirect([
             'controller' => 'checkout',
             'action' => 'shippingPayment',
-            'axytos' => "error",
-            'forceSecure' => true
+            'axytos' => 'error',
+            'forceSecure' => true,
         ]);
     }
 
@@ -171,12 +170,12 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
             'controller' => 'checkout',
             'action' => 'finish',
             'sUniqueId' => $this->orderHandle->getTemporaryId(), // generated payment unique id is stored as temporary id for actual orders
-            'forceSecure' => true
+            'forceSecure' => true,
         ]);
     }
 
     /**
-     * @return \Shopware\Models\Order\Order
+     * @return Order
      */
     private function saveActualOrder()
     {
@@ -191,7 +190,7 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
     }
 
     /**
-     * @return \Shopware\Models\Order\Order
+     * @return Order
      */
     private function loadTemporaryOrder()
     {
@@ -249,7 +248,7 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungController extends \Sho
     public function getWhitelistedCSRFActions()
     {
         return [
-            'index'
+            'index',
         ];
     }
 }

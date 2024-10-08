@@ -14,6 +14,9 @@ use Shopware\Bundle\AttributeBundle\Service\DataLoader;
 use Shopware\Bundle\AttributeBundle\Service\DataPersister;
 use Shopware\Bundle\AttributeBundle\Service\TableMapping;
 
+/**
+ * @internal
+ */
 class LegacyOrderAttributesMigrationTest extends TestCase
 {
     /**
@@ -48,6 +51,7 @@ class LegacyOrderAttributesMigrationTest extends TestCase
 
     /**
      * @before
+     *
      * @return void
      */
     #[Before]
@@ -71,12 +75,13 @@ class LegacyOrderAttributesMigrationTest extends TestCase
     /**
      * @return void
      */
-    public function test_isMigrationNeeded_returnsTrueIfLegacyColumnExists()
+    public function test_is_migration_needed_returns_true_if_legacy_column_exists()
     {
         $this->tableMapping
             ->method('isTableColumn')
             ->with(LegacyOrderAttributesMigration::ORDER_ATTRIBUTES_TABLE_NAME, LegacyOrderAttributesMigration::LEGACY_COLUMN_NAME)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $result = $this->sut->isMigrationNeeded();
         $this->assertTrue($result);
@@ -85,12 +90,13 @@ class LegacyOrderAttributesMigrationTest extends TestCase
     /**
      * @return void
      */
-    public function test_isMigrationNeeded_returnsFalseIfLegacyColumnDoesNotExists()
+    public function test_is_migration_needed_returns_false_if_legacy_column_does_not_exists()
     {
         $this->tableMapping
             ->method('isTableColumn')
             ->with(LegacyOrderAttributesMigration::ORDER_ATTRIBUTES_TABLE_NAME, LegacyOrderAttributesMigration::LEGACY_COLUMN_NAME)
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $result = $this->sut->isMigrationNeeded();
         $this->assertFalse($result);
@@ -98,10 +104,12 @@ class LegacyOrderAttributesMigrationTest extends TestCase
 
     /**
      * @dataProvider columnMigrationData
+     *
      * @param array<string,mixed> $attributes
-     * @param string $expectedCheckProcessState
-     * @param string $expectedPrecheckResponse
-     * @param bool $skipped
+     * @param string              $expectedCheckProcessState
+     * @param string              $expectedPrecheckResponse
+     * @param bool                $skipped
+     *
      * @return void
      */
     #[DataProvider('columnMigrationData')]
@@ -111,16 +119,19 @@ class LegacyOrderAttributesMigrationTest extends TestCase
 
         $this->migrationsRepository
             ->method('getOrderIdsWhereLegacyAttributeValuesArePresent')
-            ->willReturn([$orderId]);
+            ->willReturn([$orderId])
+        ;
         $this->dataLoader
             ->method('load')
             ->with(LegacyOrderAttributesMigration::ORDER_ATTRIBUTES_TABLE_NAME, $orderId)
-            ->willReturn($attributes);
+            ->willReturn($attributes)
+        ;
 
         if ($skipped) {
             $this->dataPersister
                 ->expects($this->never())
-                ->method('persist');
+                ->method('persist')
+            ;
         } else {
             $resultAttributes = $attributes;
             $resultAttributes[LegacyOrderAttributesMigration::ATTRIBUTE_NAME_CHECK_PROCESS_STATE] = $expectedCheckProcessState;
@@ -128,7 +139,8 @@ class LegacyOrderAttributesMigrationTest extends TestCase
             $this->dataPersister
                 ->expects($this->once())
                 ->method('persist')
-                ->with($resultAttributes, LegacyOrderAttributesMigration::ORDER_ATTRIBUTES_TABLE_NAME, $orderId);
+                ->with($resultAttributes, LegacyOrderAttributesMigration::ORDER_ATTRIBUTES_TABLE_NAME, $orderId)
+            ;
         }
 
         $this->sut->migrate();
@@ -144,7 +156,7 @@ class LegacyOrderAttributesMigrationTest extends TestCase
                 [],
                 null,
                 null,
-                true
+                true,
             ],
             'legacy data' => [
                 [
@@ -195,16 +207,18 @@ class LegacyOrderAttributesMigrationTest extends TestCase
     /**
      * @return void
      */
-    public function test_migrate_deletesOldColumns()
+    public function test_migrate_deletes_old_columns()
     {
         $this->migrationsRepository
             ->method('getOrderIdsWhereLegacyAttributeValuesArePresent')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->crudService
             ->expects($this->once())
             ->method('delete')
-            ->with(LegacyOrderAttributesMigration::ORDER_ATTRIBUTES_TABLE_NAME, LegacyOrderAttributesMigration::LEGACY_COLUMN_NAME);
+            ->with(LegacyOrderAttributesMigration::ORDER_ATTRIBUTES_TABLE_NAME, LegacyOrderAttributesMigration::LEGACY_COLUMN_NAME)
+        ;
 
         $this->sut->migrate();
     }

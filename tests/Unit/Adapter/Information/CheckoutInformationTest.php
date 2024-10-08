@@ -17,6 +17,9 @@ use Shopware\Models\Customer\Customer;
 use Shopware\Models\Order\Billing;
 use Shopware\Models\Order\Shipping;
 
+/**
+ * @internal
+ */
 class CheckoutInformationTest extends TestCase
 {
     /**
@@ -41,6 +44,7 @@ class CheckoutInformationTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -52,7 +56,8 @@ class CheckoutInformationTest extends TestCase
 
         $this->order
             ->method('getAttributes')
-            ->willReturn($this->orderAttributes);
+            ->willReturn($this->orderAttributes)
+        ;
 
         $this->sut = new CheckoutInformation(
             $this->order,
@@ -63,7 +68,7 @@ class CheckoutInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_savePreCheckResponseData_persistsDataAsAttribute()
+    public function test_save_pre_check_response_data_persists_data_as_attribute()
     {
         $precheckData = [
             'a' => 1,
@@ -74,10 +79,12 @@ class CheckoutInformationTest extends TestCase
         $this->orderAttributes
             ->expects($this->once())
             ->method('setAxytosKaufAufRechnungPrecheckResponse')
-            ->with($precheckDataJson);
+            ->with($precheckDataJson)
+        ;
         $this->orderAttributes
             ->expects($this->once())
-            ->method('persist');
+            ->method('persist')
+        ;
 
         $this->sut->savePreCheckResponseData($precheckData);
     }
@@ -85,7 +92,7 @@ class CheckoutInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getPreCheckResponseData_loadsDataFromAttribute()
+    public function test_get_pre_check_response_data_loads_data_from_attribute()
     {
         $precheckData = [
             'a' => 1,
@@ -96,7 +103,8 @@ class CheckoutInformationTest extends TestCase
         $this->orderAttributes
             ->expects($this->once())
             ->method('getAxytosKaufAufRechnungPrecheckResponse')
-            ->willReturn($precheckDataJson);
+            ->willReturn($precheckDataJson)
+        ;
 
         $result = $this->sut->getPreCheckResponseData();
 
@@ -106,11 +114,12 @@ class CheckoutInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getOrderNumber_returnsOrderNumber()
+    public function test_get_order_number_returns_order_number()
     {
         $this->order
             ->method('getNumber')
-            ->willReturn('order-123');
+            ->willReturn('order-123')
+        ;
 
         $this->assertEquals('order-123', $this->sut->getOrderNumber());
     }
@@ -118,13 +127,14 @@ class CheckoutInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCustomer_returnsCustomer()
+    public function test_get_customer_returns_customer()
     {
         $customer = $this->createMock(Customer::class);
 
         $this->order
             ->method('getCustomer')
-            ->willReturn($customer);
+            ->willReturn($customer)
+        ;
 
         $result = $this->sut->getCustomer();
 
@@ -134,13 +144,14 @@ class CheckoutInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getInvoiceAddress_returnsInvoiceAddress()
+    public function test_get_invoice_address_returns_invoice_address()
     {
         $billing = $this->createMock(Billing::class);
 
         $this->order
             ->method('getBilling')
-            ->willReturn($billing);
+            ->willReturn($billing)
+        ;
 
         $result = $this->sut->getInvoiceAddress();
 
@@ -150,13 +161,14 @@ class CheckoutInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getDeliveryAddress_returnsDeliveryAddress()
+    public function test_get_delivery_address_returns_delivery_address()
     {
         $shipping = $this->createMock(Shipping::class);
 
         $this->order
             ->method('getShipping')
-            ->willReturn($shipping);
+            ->willReturn($shipping)
+        ;
 
         $result = $this->sut->getDeliveryAddress();
 
@@ -166,14 +178,15 @@ class CheckoutInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getBasket_returns_basket()
+    public function test_get_basket_returns_basket()
     {
         $expected = $this->createMock(Basket::class);
 
         $this->basketFactory
             ->method('create')
             ->with($this->order)
-            ->willReturn($expected);
+            ->willReturn($expected)
+        ;
 
         $basket = $this->sut->getBasket();
 

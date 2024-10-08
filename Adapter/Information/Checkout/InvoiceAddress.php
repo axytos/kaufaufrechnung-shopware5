@@ -120,7 +120,7 @@ class InvoiceAddress implements InvoiceAddressInterface
 
         /**
          * @var ?\Shopware\Models\Country\Country
-         * can be null in some versions of shopware
+         *                                        can be null in some versions of shopware
          */
         $country = $this->billing->getCountry();
 

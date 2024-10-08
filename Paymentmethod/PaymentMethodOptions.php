@@ -10,8 +10,8 @@ abstract class PaymentMethodOptions
         'action' => 'AxytosKaufAufRechnungController',
         'active' => 1,
         'position' => 0,
-        'additionalDescription' => 'Sie zahlen bequem die Rechnung, sobald Sie die Ware erhalten haben, innerhalb der Zahlfrist'
+        'additionalDescription' => 'Sie zahlen bequem die Rechnung, sobald Sie die Ware erhalten haben, innerhalb der Zahlfrist',
     ];
 
-    const NAME = PaymentMethodOptions::OPTIONS["name"];
+    const NAME = PaymentMethodOptions::OPTIONS['name'];
 }

@@ -3,15 +3,18 @@
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Information;
 
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
-use AxytosKaufAufRechnungShopware5\Adapter\Information\ShippingInformation;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Shipping\BasketPosition;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Shipping\ShippingBasketPosition;
+use AxytosKaufAufRechnungShopware5\Adapter\Information\ShippingInformation;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
 
+/**
+ * @internal
+ */
 class ShippingInformationTest extends TestCase
 {
     /**
@@ -26,6 +29,7 @@ class ShippingInformationTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -41,11 +45,12 @@ class ShippingInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getOrderNumber_returnsOrderNumber()
+    public function test_get_order_number_returns_order_number()
     {
         $this->order
             ->method('getNumber')
-            ->willReturn('order-123');
+            ->willReturn('order-123')
+        ;
 
         $this->assertEquals('order-123', $this->sut->getOrderNumber());
     }
@@ -53,7 +58,7 @@ class ShippingInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getShippingBasketPositions_creates_basket_positions()
+    public function test_get_shipping_basket_positions_creates_basket_positions()
     {
         $details = new ArrayCollection();
         $details->add($this->createMock(Detail::class));
@@ -74,7 +79,7 @@ class ShippingInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getShippingBasketPositions_contains_shipping()
+    public function test_get_shipping_basket_positions_contains_shipping()
     {
         $details = new ArrayCollection();
         $details->add($this->createMock(Detail::class));

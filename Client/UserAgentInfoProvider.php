@@ -12,7 +12,7 @@ class UserAgentInfoProvider implements UserAgentInfoProviderInterface
      */
     public function getPluginName()
     {
-        return "KaufAufRechnung";
+        return 'KaufAufRechnung';
     }
 
     /**
@@ -28,7 +28,7 @@ class UserAgentInfoProvider implements UserAgentInfoProviderInterface
      */
     public function getShopSystemName()
     {
-        return "Shopware";
+        return 'Shopware';
     }
 
     /**
@@ -38,9 +38,9 @@ class UserAgentInfoProvider implements UserAgentInfoProviderInterface
     {
         try {
             $config = Shopware()->Config();
+
             /** @phpstan-ignore-next-line */
-            $version = $config->Version;
-            return $version;
+            return $config->Version;
         } catch (\Throwable $th) {
             return '5.X.X';
         } catch (\Exception $th) { /** @phpstan-ignore-line because php5 compatibility */

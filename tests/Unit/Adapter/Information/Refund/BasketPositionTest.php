@@ -8,6 +8,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
 
+/**
+ * @internal
+ */
 class BasketPositionTest extends TestCase
 {
     /**
@@ -22,6 +25,7 @@ class BasketPositionTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -37,11 +41,12 @@ class BasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getProductNumber_returnsCorrectValue()
+    public function test_get_product_number_returns_correct_value()
     {
         $this->invoiceItem
             ->method('getArticleNumber')
-            ->willReturn('art123');
+            ->willReturn('art123')
+        ;
 
         $result = $this->sut->getProductNumber();
 
@@ -51,17 +56,20 @@ class BasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getNetRefundTotal_returnsCorrectValue()
+    public function test_get_net_refund_total_returns_correct_value()
     {
         $this->invoiceItem
             ->method('getPrice')
-            ->willReturn(119.0);
+            ->willReturn(119.0)
+        ;
         $this->invoiceItem
             ->method('getTaxRate')
-            ->willReturn(19.0);
+            ->willReturn(19.0)
+        ;
         $this->invoiceItem
             ->method('getQuantity')
-            ->willReturn(3);
+            ->willReturn(3)
+        ;
 
         $result = $this->sut->getNetRefundTotal();
 
@@ -71,17 +79,20 @@ class BasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getGrossRefundTotal_returnsCorrectValue()
+    public function test_get_gross_refund_total_returns_correct_value()
     {
         $this->invoiceItem
             ->method('getPrice')
-            ->willReturn(119.0);
+            ->willReturn(119.0)
+        ;
         $this->invoiceItem
             ->method('getTaxRate')
-            ->willReturn(19.0);
+            ->willReturn(19.0)
+        ;
         $this->invoiceItem
             ->method('getQuantity')
-            ->willReturn(3);
+            ->willReturn(3)
+        ;
 
         $result = $this->sut->getGrossRefundTotal();
 

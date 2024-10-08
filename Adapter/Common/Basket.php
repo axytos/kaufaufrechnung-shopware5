@@ -2,29 +2,29 @@
 
 namespace AxytosKaufAufRechnungShopware5\Adapter\Common;
 
+use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\BasketUpdate\BasketInterface as UpdateBasketInterface;
+use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\BasketUpdate\BasketPositionInterface as UpdateBasketPositionInterface;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Checkout\BasketInterface as CheckoutBasketInterface;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Checkout\BasketPositionInterface as CheckoutBasketPositionInterface;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Invoice\BasketInterface as InvoiceBasketInterface;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Invoice\BasketPositionInterface as InvoiceBasketPositionInterface;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Invoice\TaxGroupInterface as InvoiceTaxGroupInterface;
-use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\BasketUpdate\BasketInterface as UpdateBasketInterface;
-use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\BasketUpdate\BasketPositionInterface as UpdateBasketPositionInterface;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 
 class Basket implements InvoiceBasketInterface, UpdateBasketInterface, CheckoutBasketInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\BasketPositionFactory
+     * @var BasketPositionFactory
      */
     private $basketPositionFactory;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\TaxGroupFactory
+     * @var TaxGroupFactory
      */
     private $taxGroupFactory;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var Order
      */
     private $order;
 
@@ -71,6 +71,7 @@ class Basket implements InvoiceBasketInterface, UpdateBasketInterface, CheckoutB
         $details = $this->order->getDetails()->getValues();
         $positions = $this->basketPositionFactory->createMany($details);
         $positions[] = $this->basketPositionFactory->createShipping($this->order);
+
         return $positions;
     }
 
@@ -83,6 +84,7 @@ class Basket implements InvoiceBasketInterface, UpdateBasketInterface, CheckoutB
         $details = $this->order->getDetails()->getValues();
         $taxGroups = $this->taxGroupFactory->createMany($details);
         $taxGroups[] = $this->taxGroupFactory->createShipping($this->order);
+
         return $this->taxGroupFactory->combineTaxGroups($taxGroups);
     }
 }

@@ -11,6 +11,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Document\Document;
 
+/**
+ * @internal
+ */
 class RefundInformationTest extends TestCase
 {
     /**
@@ -30,6 +33,7 @@ class RefundInformationTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -47,11 +51,12 @@ class RefundInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getOrderNumber_returnsOrderNumber()
+    public function test_get_order_number_returns_order_number()
     {
         $this->order
             ->method('getNumber')
-            ->willReturn('order-123');
+            ->willReturn('order-123')
+        ;
 
         $this->assertEquals('order-123', $this->sut->getOrderNumber());
     }
@@ -59,7 +64,7 @@ class RefundInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getInvoiceNumber_returns_invoice_number_when_invoice_document_is_not_found()
+    public function test_get_invoice_number_returns_invoice_number_when_invoice_document_is_not_found()
     {
         /** @var Document&MockObject */
         $invoiceDocument = $this->createMock(Document::class);
@@ -75,20 +80,20 @@ class RefundInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getInvoiceNumber_returns_empty_string_when_invoice_document_is_not_found()
+    public function test_get_invoice_number_returns_empty_string_when_invoice_document_is_not_found()
     {
         $this->order->method('findInvoiceDocument')->willReturn(null);
 
         $invoiceNumber = $this->sut->getInvoiceNumber();
 
         $this->assertTrue(is_string($invoiceNumber));
-        $this->assertTrue($invoiceNumber === '');
+        $this->assertTrue('' === $invoiceNumber);
     }
 
     /**
      * @return void
      */
-    public function test_getBasket_returns_basket_for_credit_document_if_credit_document_is_found()
+    public function test_get_basket_returns_basket_for_credit_document_if_credit_document_is_found()
     {
         $expected = $this->createMock(Basket::class);
 
@@ -108,7 +113,7 @@ class RefundInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getBasket_returns_basket_for_order_if_credit_document_is_not_found()
+    public function test_get_basket_returns_basket_for_order_if_credit_document_is_not_found()
     {
         $expected = $this->createMock(Basket::class);
 

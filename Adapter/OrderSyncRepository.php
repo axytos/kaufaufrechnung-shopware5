@@ -8,12 +8,12 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderSync
 class OrderSyncRepository implements OrderSyncRepositoryInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderSyncRepository
+     * @var UnifiedOrderSyncRepository
      */
     private $unifedOrderSyncRepository;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\PluginOrderFactory
+     * @var PluginOrderFactory
      */
     private $pluginOrderFactory;
 
@@ -26,19 +26,22 @@ class OrderSyncRepository implements OrderSyncRepositoryInterface
     }
 
     /**
-     * @param string[] $orderStates
-     * @param int|null $limit
+     * @param string[]    $orderStates
+     * @param int|null    $limit
      * @param string|null $firstId
+     *
      * @return \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\PluginOrderInterface[]
      */
     public function getOrdersByStates($orderStates, $limit = null, $firstId = null)
     {
         $orders = $this->unifedOrderSyncRepository->getOrdersByStates($orderStates, $limit, $firstId);
+
         return $this->pluginOrderFactory->createMany($orders);
     }
 
     /**
      * @param string|int $orderNumber
+     *
      * @return \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\PluginOrderInterface|null
      */
     public function getOrderByOrderNumber($orderNumber)
@@ -47,6 +50,7 @@ class OrderSyncRepository implements OrderSyncRepositoryInterface
         if (is_null($order)) {
             return null;
         }
+
         return $this->pluginOrderFactory->create($order);
     }
 }

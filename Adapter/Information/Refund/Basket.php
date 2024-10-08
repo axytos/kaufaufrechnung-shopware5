@@ -9,17 +9,17 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 class Basket implements BasketInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketPositionFactory
+     * @var BasketPositionFactory
      */
     private $basketPositionFactory;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\TaxGroupFactory
+     * @var TaxGroupFactory
      */
     private $taxGroupFactory;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var Order
      */
     private $order;
 
@@ -55,6 +55,7 @@ class Basket implements BasketInterface
         $details = $this->order->getDetails()->getValues();
         $positions = $this->basketPositionFactory->createMany($details);
         $positions[] = $this->basketPositionFactory->createShipping($this->order);
+
         return $positions;
     }
 
@@ -64,6 +65,7 @@ class Basket implements BasketInterface
         $details = $this->order->getDetails()->getValues();
         $taxGroups = $this->taxGroupFactory->createMany($details);
         $taxGroups[] = $this->taxGroupFactory->createShipping($this->order);
+
         return $this->taxGroupFactory->combineTaxGroups($taxGroups);
     }
 }

@@ -20,6 +20,9 @@ use Shopware\Models\Order\Order;
 use Shopware\Models\Order\Repository;
 use Shopware\Models\Order\Status;
 
+/**
+ * @internal
+ */
 class OrderStateMigrationTest extends TestCase
 {
     /**
@@ -59,9 +62,10 @@ class OrderStateMigrationTest extends TestCase
 
     /**
      * @before
+     *
      * @return void
      */
-     #[Before]
+    #[Before]
     public function beforeEach()
     {
         $this->tableMapping = $this->createMock(TableMapping::class);
@@ -84,12 +88,13 @@ class OrderStateMigrationTest extends TestCase
     /**
      * @return void
      */
-    public function test_isMigrationNeeded_returnsTrueIfCheckProcessStateColumnExists()
+    public function test_is_migration_needed_returns_true_if_check_process_state_column_exists()
     {
         $this->tableMapping
             ->method('isTableColumn')
             ->with(OrderStateMigration::ORDER_ATTRIBUTES_TABLE_NAME, OrderStateMigration::ATTRIBUTE_NAME_CHECK_PROCESS_STATE)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $result = $this->sut->isMigrationNeeded();
         $this->assertTrue($result);
@@ -98,12 +103,13 @@ class OrderStateMigrationTest extends TestCase
     /**
      * @return void
      */
-    public function test_isMigrationNeeded_returnsFalseIfCheckProcessStateColumnDoesNotExists()
+    public function test_is_migration_needed_returns_false_if_check_process_state_column_does_not_exists()
     {
         $this->tableMapping
             ->method('isTableColumn')
             ->with(OrderStateMigration::ORDER_ATTRIBUTES_TABLE_NAME, OrderStateMigration::ATTRIBUTE_NAME_CHECK_PROCESS_STATE)
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $result = $this->sut->isMigrationNeeded();
         $this->assertFalse($result);
@@ -111,15 +117,20 @@ class OrderStateMigrationTest extends TestCase
 
     /**
      * @dataProvider columnMigrationData
+     *
      * @param array<string,mixed> $attributes
-     * @param int $paymentState
+     * @param int                 $paymentState
+     *
      * @phpstan-param \Shopware\Models\Order\Status::* $paymentState
+     *
      * @param string $expectedOrderStatus
+     *
      * @phpstan-param \Axytos\KaufAufRechnung\Core\Model\OrderStateMachine\OrderStates::* $expectedOrderStatus
+     *
      * @return void
      */
     #[DataProvider('columnMigrationData')]
-    public function test_migrate_createOrderStateFromOldColumnData($attributes, $paymentState, $expectedOrderStatus)
+    public function test_migrate_create_order_state_from_old_column_data($attributes, $paymentState, $expectedOrderStatus)
     {
         $orderId = 'test-order-id';
 
@@ -127,39 +138,46 @@ class OrderStateMigrationTest extends TestCase
         $paymentStatus = $this->createMock(Status::class);
         $paymentStatus
             ->method('getId')
-            ->willReturn($paymentState);
+            ->willReturn($paymentState)
+        ;
 
         /** @var Order&MockObject */
         $order = $this->createMock(Order::class);
         $order
             ->method('getPaymentStatus')
-            ->willReturn($paymentStatus);
+            ->willReturn($paymentStatus)
+        ;
 
         /** @var Repository&MockObject */
         $orderRepository = $this->createMock(Repository::class);
         $orderRepository
             ->method('find')
             ->with($orderId)
-            ->willReturn($order);
+            ->willReturn($order)
+        ;
 
         $this->migrationsRepository
             ->method('getOrderIdsWhereOrderStateMigrationIsNeeded')
-            ->willReturn([$orderId]);
+            ->willReturn([$orderId])
+        ;
         $this->modelManager
             ->method('getRepository')
             ->with(Order::class)
-            ->willReturn($orderRepository);
+            ->willReturn($orderRepository)
+        ;
         $this->dataLoader
             ->method('load')
             ->with(OrderStateMigration::ORDER_ATTRIBUTES_TABLE_NAME, $orderId)
-            ->willReturn($attributes);
+            ->willReturn($attributes)
+        ;
 
         $resultAttributes = $attributes;
         $resultAttributes[OrderAttributesRepository::ATTRIBUTE_NAME_ORDER_STATE] = $expectedOrderStatus;
         $this->dataPersister
             ->expects($this->once())
             ->method('persist')
-            ->with($resultAttributes, OrderStateMigration::ORDER_ATTRIBUTES_TABLE_NAME, $orderId);
+            ->with($resultAttributes, OrderStateMigration::ORDER_ATTRIBUTES_TABLE_NAME, $orderId)
+        ;
 
         $this->sut->migrate();
     }
@@ -341,11 +359,12 @@ class OrderStateMigrationTest extends TestCase
     /**
      * @return void
      */
-    public function test_migrate_deletesOldColumns()
+    public function test_migrate_deletes_old_columns()
     {
         $this->migrationsRepository
             ->method('getOrderIdsWhereOrderStateMigrationIsNeeded')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $deletions = [];
         $this->crudService
@@ -353,7 +372,8 @@ class OrderStateMigrationTest extends TestCase
             ->method('delete')
             ->willReturnCallback(function ($table, $column) use (&$deletions) {
                 $deletions[] = [$table, $column];
-            });
+            })
+        ;
 
         $this->sut->migrate();
 

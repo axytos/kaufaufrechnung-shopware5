@@ -2,12 +2,12 @@
 
 namespace AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation;
 
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Shopware\Models\Payment\Payment;
-use Doctrine\ORM\Events;
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
 use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
+use Shopware\Models\Payment\Payment;
 
 class PaymentMethodConfigurationPreUpdateSubscriber implements EventSubscriber
 {
@@ -17,12 +17,13 @@ class PaymentMethodConfigurationPreUpdateSubscriber implements EventSubscriber
     public function getSubscribedEvents()
     {
         return [
-            Events::preUpdate
+            Events::preUpdate,
         ];
     }
 
-     /**
-     * @param LifecycleEventArgs  $eventArgs
+    /**
+     * @param LifecycleEventArgs $eventArgs
+     *
      * @return void
      */
     public function preUpdate($eventArgs)
@@ -34,7 +35,7 @@ class PaymentMethodConfigurationPreUpdateSubscriber implements EventSubscriber
                 return;
             }
 
-            if ($model->getName() !== "axytos_kauf_auf_rechnung") {
+            if ('axytos_kauf_auf_rechnung' !== $model->getName()) {
                 return;
             }
 

@@ -10,8 +10,10 @@ use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Shopware_Components_Cron_CronJob;
 
+/**
+ * @internal
+ */
 class OrderSyncCronJobSubscriberTest extends TestCase
 {
     /**
@@ -30,12 +32,13 @@ class OrderSyncCronJobSubscriberTest extends TestCase
     private $orderSyncWorker;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\CronJob\OrderSyncCronJobSubscriber
+     * @var OrderSyncCronJobSubscriber
      */
     private $sut;
 
     /**
      * @before
+     *
      * @return void
      */
     #[Before]
@@ -56,7 +59,7 @@ class OrderSyncCronJobSubscriberTest extends TestCase
     /**
      * @return void
      */
-    public function test_getSubscribedEvents_subscribes_execute_method_to_event()
+    public function test_get_subscribed_events_subscribes_execute_method_to_event()
     {
         $subscribedEvents = OrderSyncCronJobSubscriber::getSubscribedEvents();
 
@@ -66,12 +69,12 @@ class OrderSyncCronJobSubscriberTest extends TestCase
     /**
      * @return void
      */
-    public function test_execute_returns_INVALID_CONFIG_when_config_is_not_valid()
+    public function test_execute_returns_invali_d_confi_g_when_config_is_not_valid()
     {
         $this->pluginConfigurationValidator->method('isInvalid')->willReturn(true);
 
-        /** @var Shopware_Components_Cron_CronJob&MockObject */
-        $job = $this->createMock(Shopware_Components_Cron_CronJob::class);
+        /** @var \Shopware_Components_Cron_CronJob&MockObject */
+        $job = $this->createMock(\Shopware_Components_Cron_CronJob::class);
 
         $result = $this->sut->execute($job);
 
@@ -87,8 +90,8 @@ class OrderSyncCronJobSubscriberTest extends TestCase
 
         $this->orderSyncWorker->expects($this->once())->method('sync');
 
-        /** @var Shopware_Components_Cron_CronJob&MockObject */
-        $job = $this->createMock(Shopware_Components_Cron_CronJob::class);
+        /** @var \Shopware_Components_Cron_CronJob&MockObject */
+        $job = $this->createMock(\Shopware_Components_Cron_CronJob::class);
 
         $this->sut->execute($job);
     }
@@ -96,12 +99,12 @@ class OrderSyncCronJobSubscriberTest extends TestCase
     /**
      * @return void
      */
-    public function test_execute_returns_SUCCESS_when_sync_succeeds()
+    public function test_execute_returns_succes_s_when_sync_succeeds()
     {
         $this->pluginConfigurationValidator->method('isInvalid')->willReturn(false);
 
-        /** @var Shopware_Components_Cron_CronJob&MockObject */
-        $job = $this->createMock(Shopware_Components_Cron_CronJob::class);
+        /** @var \Shopware_Components_Cron_CronJob&MockObject */
+        $job = $this->createMock(\Shopware_Components_Cron_CronJob::class);
 
         $result = $this->sut->execute($job);
 
@@ -111,14 +114,14 @@ class OrderSyncCronJobSubscriberTest extends TestCase
     /**
      * @return void
      */
-    public function test_execute_returns_FAILED_when_sync_fails()
+    public function test_execute_returns_faile_d_when_sync_fails()
     {
         $this->pluginConfigurationValidator->method('isInvalid')->willReturn(false);
 
         $this->orderSyncWorker->method('sync')->willThrowException(new \Exception());
 
-        /** @var Shopware_Components_Cron_CronJob&MockObject */
-        $job = $this->createMock(Shopware_Components_Cron_CronJob::class);
+        /** @var \Shopware_Components_Cron_CronJob&MockObject */
+        $job = $this->createMock(\Shopware_Components_Cron_CronJob::class);
 
         $result = $this->sut->execute($job);
 
@@ -137,8 +140,8 @@ class OrderSyncCronJobSubscriberTest extends TestCase
 
         $this->errorHandler->expects($this->once())->method('handle')->with($exception);
 
-        /** @var Shopware_Components_Cron_CronJob&MockObject */
-        $job = $this->createMock(Shopware_Components_Cron_CronJob::class);
+        /** @var \Shopware_Components_Cron_CronJob&MockObject */
+        $job = $this->createMock(\Shopware_Components_Cron_CronJob::class);
 
         $result = $this->sut->execute($job);
     }

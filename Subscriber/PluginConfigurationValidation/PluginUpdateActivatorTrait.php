@@ -3,11 +3,10 @@
 namespace AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation;
 
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
-use AxytosKaufAufRechnungShopware5\Paymentmethod\PaymentMethodOptions;
 use AxytosKaufAufRechnungShopware5\Configuration\PluginConfigurationValueNames;
+use AxytosKaufAufRechnungShopware5\Paymentmethod\PaymentMethodOptions;
 use Shopware\Components\Plugin\PaymentInstaller;
 use Shopware\Models\Payment\Payment;
-use Shopware\Models\Payment\Repository;
 
 trait PluginUpdateActivatorTrait
 {
@@ -23,7 +22,7 @@ trait PluginUpdateActivatorTrait
         $paymentRepository = Shopware()->Models()->getRepository(Payment::class);
         /** @var Payment|null $payment */
         $payment = $paymentRepository->findOneBy([
-           'name' => $options['name'],
+            'name' => $options['name'],
         ]);
         if (!is_null($payment)) {
             $options['position'] = $payment->getPosition();

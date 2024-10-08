@@ -8,12 +8,12 @@ use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository as OldOr
 class OrderFactory
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository
+     * @var OldOrderRepository
      */
     private $orderRepository;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration
+     * @var PluginConfiguration
      */
     private $pluginConfiguration;
 
@@ -27,7 +27,8 @@ class OrderFactory
 
     /**
      * @param \Shopware\Models\Order\Order $order
-     * @return \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     *
+     * @return Order
      */
     public function create($order)
     {
@@ -41,6 +42,7 @@ class OrderFactory
 
     /**
      * @param \Shopware\Models\Order\Order[] $orders
+     *
      * @return \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order[]
      */
     public function createMany($orders)

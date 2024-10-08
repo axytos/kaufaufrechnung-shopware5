@@ -3,34 +3,30 @@
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
 use Axytos\KaufAufRechnung\Core\PaymentStatusUpdateWorker;
 use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
-use AxytosKaufAufRechnungShopware5\Controllers\AxytosControllerTrait;
 use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 use Shopware\Components\CSRFWhitelistAware;
 
 class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends Enlight_Controller_Action implements CSRFWhitelistAware
 {
-    use AxytosControllerTrait;
-
     /**
-     * @var \AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler
+     * @var ErrorHandler
      */
     private $errorHandler;
 
     /**
-     * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator
+     * @var PluginConfigurationValidator
      */
     private $pluginConfigurationValidator;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration
+     * @var PluginConfiguration
      */
     private $pluginConfiguration;
 
     /**
-     * @var \Axytos\KaufAufRechnung\Core\PaymentStatusUpdateWorker
+     * @var PaymentStatusUpdateWorker
      */
     private $paymentStatusUpdateWorker;
-
 
     /**
      * @return void
@@ -55,33 +51,37 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
         try {
             if ($this->isNotPostRequest()) {
                 $this->setResponseStatusCode(405);
+
                 return;
             }
 
             if ($this->pluginConfigurationValidator->isInvalid()) {
                 $this->setResponseStatusCode(500);
+
                 return;
             }
 
             if ($this->isClientSecretInvalid()) {
                 $this->setResponseStatusCode(401);
+
                 return;
             }
 
             $paymentId = $this->getRequestPaymentId();
             $this->setOrderState($paymentId);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->setResponseStatusCode(500);
             $this->errorHandler->handle($th);
-        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
+        } catch (Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
             $this->setResponseStatusCode(500);
             $this->errorHandler->handle($th);
         }
     }
 
     /**
-     * @return void
      * @param string $paymentId
+     *
+     * @return void
      */
     private function setOrderState($paymentId)
     {
@@ -93,7 +93,8 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
      */
     private function getRequestPaymentId()
     {
-        $pathData = explode("/", $this->request->getPathInfo());
+        $pathData = explode('/', $this->request->getPathInfo());
+
         return end($pathData);
     }
 
@@ -103,7 +104,7 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
     public function getWhitelistedCSRFActions()
     {
         return [
-            'payment'
+            'payment',
         ];
     }
 
@@ -113,8 +114,31 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungPaymentCallback extends
     protected function isClientSecretInvalid()
     {
         $configClientSecret = $this->pluginConfiguration->getClientSecret();
-        $headerClientSecret = $this->request->getHeader("X-secret");
+        $headerClientSecret = $this->request->getHeader('X-secret');
 
         return is_null($configClientSecret) || $configClientSecret !== $headerClientSecret;
+    }
+
+    /**
+     * @param int $statusCode
+     *
+     * @return void
+     */
+    protected function setResponseStatusCode($statusCode)
+    {
+        if (!method_exists($this->response, 'setStatusCode')) {
+            return;
+        }
+        $this->response->setStatusCode($statusCode);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isNotPostRequest()
+    {
+        $requestMethod = strtolower($this->request->getMethod());
+
+        return 'post' !== $requestMethod;
     }
 }

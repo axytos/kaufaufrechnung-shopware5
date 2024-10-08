@@ -2,33 +2,25 @@
 
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
 use Axytos\KaufAufRechnung\Core\Abstractions\Model\Actions\ActionExecutorInterface;
-use Axytos\KaufAufRechnung\Core\Abstractions\Model\Actions\ActionResultInterface;
-use Axytos\KaufAufRechnung\Core\Model\Actions\Results\FatalErrorResult;
-use Axytos\KaufAufRechnung\Core\Model\Actions\Results\InvalidDataResult;
-use Axytos\KaufAufRechnung\Core\Model\Actions\Results\InvalidMethodResult;
-use Axytos\KaufAufRechnung\Core\Model\Actions\Results\PluginNotConfiguredResult;
-use AxytosKaufAufRechnungShopware5\Controllers\AxytosControllerTrait;
+use Axytos\KaufAufRechnung\Core\AxytosActionControllerTrait;
+use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Logging\LoggerAdapterInterface;
 use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 use Shopware\Components\CSRFWhitelistAware;
 
+/**
+ * URL of this controll: http://localhost/AxytosKaufAufRechnungActionCallback/execute.
+ *
+ * For controller development see:
+ * - https://developers.shopware.com/developers-guide/controller/
+ */
 class Shopware_Controllers_Frontend_AxytosKaufAufRechnungActionCallback extends Enlight_Controller_Action implements CSRFWhitelistAware
 {
-    use AxytosControllerTrait;
+    use AxytosActionControllerTrait;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler
+     * @var ErrorHandler
      */
     private $errorHandler;
-
-    /**
-     * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator
-     */
-    private $pluginConfigurationValidator;
-
-    /**
-     * @var \Axytos\KaufAufRechnung\Core\Abstractions\Model\Actions\ActionExecutorInterface
-     */
-    private $actionExecutor;
 
     /**
      * @return void
@@ -41,32 +33,8 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungActionCallback extends 
         $this->pluginConfigurationValidator = Shopware()->Container()->get(PluginConfigurationValidator::class);
         /** @phpstan-ignore-next-line */
         $this->actionExecutor = Shopware()->Container()->get(ActionExecutorInterface::class);
-    }
-
-    /**
-     * @return void
-     */
-    public function executeAction()
-    {
-        try {
-            if ($this->isNotPostRequest()) {
-                $this->setResult(new InvalidMethodResult($this->request->getMethod()));
-                return;
-            }
-
-            if ($this->pluginConfigurationValidator->isInvalid()) {
-                $this->setResult(new PluginNotConfiguredResult());
-                return;
-            }
-
-            $this->processAction();
-        } catch (\Throwable $th) {
-            $this->setResult(new FatalErrorResult());
-            $this->errorHandler->handle($th);
-        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
-            $this->setResult(new FatalErrorResult());
-            $this->errorHandler->handle($th);
-        }
+        /** @phpstan-ignore-next-line */
+        $this->logger = Shopware()->Container()->get(LoggerAdapterInterface::class);
     }
 
     /**
@@ -75,57 +43,70 @@ class Shopware_Controllers_Frontend_AxytosKaufAufRechnungActionCallback extends 
     public function getWhitelistedCSRFActions()
     {
         return [
-            'execute'
+            'execute',
         ];
     }
 
     /**
      * @return void
      */
-    private function processAction()
+    public function executeAction()
     {
-        $rawBody = $this->request->getRawBody();
-        if ($rawBody === false) {
-            $this->setResult(new InvalidDataResult('HTTP request body empty'));
-            return;
+        try {
+            $this->executeActionInternal();
+        } catch (Throwable $th) {
+            $this->setErrorResult();
+            $this->errorHandler->handle($th);
+        } catch (Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
+            $this->setErrorResult();
+            $this->errorHandler->handle($th);
         }
-
-        $decodedBody = json_decode($rawBody, true);
-        if (!is_array($decodedBody)) {
-            $this->setResult(new InvalidDataResult('HTTP request body is not a json object'));
-            return;
-        }
-
-        $clientSecret = $decodedBody['clientSecret'];
-        if (!is_string($clientSecret)) {
-            $this->setResult(new InvalidDataResult('Required string property', 'clientSecret'));
-            return;
-        }
-
-        $action = $decodedBody['action'];
-        if (!is_string($action)) {
-            $this->setResult(new InvalidDataResult('Required string property', 'action'));
-            return;
-        }
-
-        $params = $decodedBody['params'];
-        if (!is_null($params) && !is_array($params)) {
-            $this->setResult(new InvalidDataResult('Optional object property', 'params'));
-            return;
-        }
-
-        $result = $this->actionExecutor->executeAction($clientSecret, $action, $params);
-        $this->setResult($result);
     }
 
+    /**
+     * @return string
+     */
+    protected function getRequestBody()
+    {
+        $rawBody = $this->request->getRawBody();
+        if (!is_string($rawBody)) {
+            return '';
+        }
+
+        return $rawBody;
+    }
 
     /**
-     * @param ActionResultInterface $actionResult
+     * @return string
+     */
+    protected function getRequestMethod()
+    {
+        return strtoupper($this->request->getMethod());
+    }
+
+    /**
+     * @param string $responseBody
+     * @param int    $statusCode
+     *
      * @return void
      */
-    private function setResult($actionResult)
+    protected function setResponseBody($responseBody, $statusCode)
     {
-        $this->setResponseStatusCode($actionResult->getHttpStatusCode());
-        $this->response->setBody(json_encode($actionResult));
+        $this->setResponseStatusCode($statusCode);
+        $this->response->setHeader('Content-Type', 'application/json');
+        $this->response->setBody($responseBody);
+    }
+
+    /**
+     * @param int $statusCode
+     *
+     * @return void
+     */
+    private function setResponseStatusCode($statusCode)
+    {
+        if (!method_exists($this->response, 'setStatusCode')) {
+            return;
+        }
+        $this->response->setStatusCode($statusCode);
     }
 }

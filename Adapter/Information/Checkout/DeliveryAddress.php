@@ -120,7 +120,7 @@ class DeliveryAddress implements DeliveryAddressInterface
 
         /**
          * @var ?\Shopware\Models\Country\Country
-         * can be null in some versions of shopware
+         *                                        can be null in some versions of shopware
          */
         $country = $this->shipping->getCountry();
 

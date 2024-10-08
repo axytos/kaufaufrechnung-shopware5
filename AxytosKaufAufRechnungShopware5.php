@@ -4,17 +4,17 @@ namespace AxytosKaufAufRechnungShopware5;
 
 use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository;
+use AxytosKaufAufRechnungShopware5\Paymentmethod\PaymentMethodOptions;
 use Doctrine\Common\Collections\ArrayCollection;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Plugin;
+use Shopware\Components\Plugin\Context\ActivateContext;
+use Shopware\Components\Plugin\Context\DeactivateContext;
 use Shopware\Components\Plugin\Context\InstallContext;
 use Shopware\Components\Plugin\Context\UninstallContext;
-use Shopware\Components\Plugin\Context\DeactivateContext;
-use Shopware\Components\Plugin\Context\ActivateContext;
-use Shopware\Models\Payment\Payment;
-use AxytosKaufAufRechnungShopware5\Paymentmethod\PaymentMethodOptions;
 use Shopware\Components\Plugin\Context\UpdateContext;
 use Shopware\Components\Plugin\PaymentInstaller;
+use Shopware\Models\Payment\Payment;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
@@ -22,7 +22,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 /**
- * @phpstan-property \Symfony\Component\DependencyInjection\ContainerInterface $container
+ * @phpstan-property ContainerInterface $container
  */
 class AxytosKaufAufRechnungShopware5 extends Plugin
 {
@@ -32,17 +32,16 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
             'Enlight_Controller_Action_PreDispatch_Frontend' => ['onFrontend', -100],
             'Enlight_Controller_Action_PreDispatch_Widgets' => ['onFrontend', -100],
             'Enlight_Controller_Action_PostDispatchSecure_Frontend' => 'onPostDispatch',
-            'Enlight_Controller_Action_PostDispatchSecure_Widgets' => 'onPostDispatch'
+            'Enlight_Controller_Action_PostDispatchSecure_Widgets' => 'onPostDispatch',
         ];
     }
 
     /**
-     * @param InstallContext $context
      * @return void
      */
     public function install(InstallContext $context)
     {
-        /** @var ContainerInterface  */
+        /** @var ContainerInterface */
         $container = $this->container;
         /** @var PaymentInstaller */
         $installer = $container->get('shopware.plugin_payment_installer');
@@ -55,7 +54,6 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
     }
 
     /**
-     * @param UpdateContext $context
      * @return void
      */
     public function update(UpdateContext $context)
@@ -67,7 +65,6 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
     }
 
     /**
-     * @param UninstallContext $context
      * @return void
      */
     public function uninstall(UninstallContext $context)
@@ -77,7 +74,6 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
     }
 
     /**
-     * @param DeactivateContext $context
      * @return void
      */
     public function deactivate(DeactivateContext $context)
@@ -87,7 +83,6 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
     }
 
     /**
-     * @param ActivateContext $context
      * @return void
      */
     public function activate(ActivateContext $context)
@@ -98,12 +93,13 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
 
     /**
      * @param ArrayCollection<int,Payment> $payments
-     * @param bool $active
+     * @param bool                         $active
+     *
      * @return void
      */
     private function setActiveFlag($payments, $active)
     {
-        /** @var ContainerInterface  */
+        /** @var ContainerInterface */
         $container = $this->container;
         /** @var ModelManager */
         $em = $container->get('models');
@@ -119,7 +115,7 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
      */
     public function onFrontend(\Enlight_Event_EventArgs $args)
     {
-        /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+        /** @var ContainerInterface */
         $container = $this->container;
         // @phpstan-ignore-next-line
         $container->get('Template')->addTemplateDir(
@@ -128,19 +124,18 @@ class AxytosKaufAufRechnungShopware5 extends Plugin
     }
 
     /**
-     * @param \Enlight_Controller_ActionEventArgs $args
      * @return void
      */
     public function onPostDispatch(\Enlight_Controller_ActionEventArgs $args)
     {
-        /** @var ContainerInterface  */
+        /** @var ContainerInterface */
         $container = $this->container;
         $subject = $args->getSubject();
         if ($subject instanceof \Shopware_Controllers_Frontend_Checkout) {
             /** @var PluginConfiguration */
             $configuration = $container->get(PluginConfiguration::class);
             $errorMessage = $configuration->getCustomErrorMessage();
-            $subject->View()->assign("sAxytosErrorMessage", $errorMessage);
+            $subject->View()->assign('sAxytosErrorMessage', $errorMessage);
         }
     }
 }

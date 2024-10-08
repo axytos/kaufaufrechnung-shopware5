@@ -22,6 +22,7 @@ class CombinedTaxGroup implements InvoiceTaxGroupInterface, RefundTaxGroupInterf
 
     /**
      * @param InvoiceTaxGroupInterface&RefundTaxGroupInterface $taxGroup
+     *
      * @return void
      */
     public function addTaxGroup($taxGroup)
@@ -46,13 +47,14 @@ class CombinedTaxGroup implements InvoiceTaxGroupInterface, RefundTaxGroupInterf
             $this->taxGroups,
             function ($sum, $taxGroup) {
                 /**
-                 * @var float $sum
+                 * @var float                                            $sum
                  * @var InvoiceTaxGroupInterface&RefundTaxGroupInterface $taxGroup
                  */
                 return $sum + $taxGroup->getValueToTax();
             },
             0.0
         );
+
         return round($valueToTax, 2);
     }
 
@@ -65,13 +67,14 @@ class CombinedTaxGroup implements InvoiceTaxGroupInterface, RefundTaxGroupInterf
             $this->taxGroups,
             function ($sum, $taxGroup) {
                 /**
-                 * @var float $sum
+                 * @var float                                            $sum
                  * @var InvoiceTaxGroupInterface&RefundTaxGroupInterface $taxGroup
                  */
                 return $sum + $taxGroup->getTotal();
             },
             0.0
         );
+
         return round($total, 2);
     }
 }

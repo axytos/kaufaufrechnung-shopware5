@@ -4,17 +4,15 @@ namespace AxytosKaufAufRechnungShopware5\Core;
 
 use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository;
-use Shopware\Models\Order\Order;
-use Shopware\Models\Order\Status;
 
 class OrderStateMachine
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository
+     * @var OrderRepository
      */
     private $orderRepository;
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration
+     * @var PluginConfiguration
      */
     private $pluginConfiguration;
 
@@ -28,6 +26,7 @@ class OrderStateMachine
 
     /**
      * @param \Shopware\Models\Order\Order $order
+     *
      * @return void
      */
     public function setConfiguredAfterCheckoutOrderStatus($order)
@@ -39,6 +38,7 @@ class OrderStateMachine
 
     /**
      * @param \Shopware\Models\Order\Order $order
+     *
      * @return void
      */
     public function setConfiguredAfterCheckoutPaymentStatus($order)

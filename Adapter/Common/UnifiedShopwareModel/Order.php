@@ -3,28 +3,29 @@
 namespace AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel;
 
 use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
-use Shopware\Models\Order\Order as ShopwareOrder;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository as OldOrderRepository;
+use Shopware\Models\Order\Order as ShopwareOrder;
+use Shopware\Models\Order\Status;
 
 class Order
 {
     /**
-     * @var \Shopware\Models\Order\Order
+     * @var ShopwareOrder
      */
     private $order;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository
+     * @var OldOrderRepository
      */
     private $orderRepository;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\ShopwareModelReflector
+     * @var ShopwareModelReflector
      */
     private $shopwareModelReflector;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration
+     * @var PluginConfiguration
      */
     private $pluginConfiguration;
 
@@ -41,7 +42,7 @@ class Order
     }
 
     /**
-     * @return \Shopware\Models\Order\Order
+     * @return ShopwareOrder
      */
     public function getShopwareOrderObject()
     {
@@ -49,7 +50,8 @@ class Order
     }
 
     /**
-     * @param \Shopware\Models\Order\Order $order
+     * @param ShopwareOrder $order
+     *
      * @return void
      */
     public function setShopwareOrderObject($order)
@@ -66,7 +68,7 @@ class Order
     }
 
     /**
-     * @return \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderAttributes
+     * @return OrderAttributes
      */
     public function getAttributes()
     {
@@ -208,6 +210,7 @@ class Order
 
     /**
      * @param int $paymentStatusId
+     *
      * @return void
      */
     public function savePaymentStatus($paymentStatusId)
@@ -216,7 +219,31 @@ class Order
     }
 
     /**
-     * @return \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderDocument|null
+     * @return bool
+     */
+    public function isCompleted()
+    {
+        return Status::ORDER_STATE_COMPLETED === $this->order->getOrderStatus()->getId();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCanceled()
+    {
+        return Status::ORDER_STATE_CANCELLED === $this->order->getOrderStatus()->getId();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompletelyShipped()
+    {
+        return Status::ORDER_STATE_COMPLETELY_DELIVERED === $this->order->getOrderStatus()->getId();
+    }
+
+    /**
+     * @return OrderDocument|null
      */
     public function findInvoiceDocument()
     {
@@ -232,7 +259,7 @@ class Order
     }
 
     /**
-     * @return \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderDocument|null
+     * @return OrderDocument|null
      */
     public function findCreditDocument()
     {
@@ -248,7 +275,7 @@ class Order
     }
 
     /**
-     * @return \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderDocument|null
+     * @return OrderDocument|null
      */
     public function findDeliveryNoteDocument()
     {
@@ -264,7 +291,7 @@ class Order
     }
 
     /**
-     * @return \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\OrderDocument|null
+     * @return OrderDocument|null
      */
     public function findCancellationDocument()
     {
@@ -286,7 +313,7 @@ class Order
     {
         /**
          * @var ?\Doctrine\Common\Collections\ArrayCollection<int,\Shopware\Models\Order\Document\Document>
-         * can be null in some versions of shopware
+         *                                                                                                  can be null in some versions of shopware
          */
         $documentCollection = $this->order->getDocuments();
 
@@ -299,6 +326,7 @@ class Order
 
     /**
      * @param \Shopware\Models\Order\Document\Document $document
+     *
      * @return OrderDocument
      */
     private function createOrderDocument($document)

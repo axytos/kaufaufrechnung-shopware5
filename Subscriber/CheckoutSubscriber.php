@@ -6,12 +6,11 @@ use Axytos\ECommerce\Clients\Checkout\CheckoutClientInterface;
 use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 use AxytosKaufAufRechnungShopware5\Paymentmethod\PaymentMethodOptions;
 use Enlight\Event\SubscriberInterface;
-use Enlight_View_Default;
 
 class CheckoutSubscriber implements SubscriberInterface
 {
     /**
-     * @var \Axytos\ECommerce\Clients\Checkout\CheckoutClientInterface
+     * @var CheckoutClientInterface
      */
     private $checkoutClient;
 
@@ -33,16 +32,17 @@ class CheckoutSubscriber implements SubscriberInterface
 
     /**
      * @param \Enlight_Controller_ActionEventArgs $args
+     *
      * @return void
      */
     public function onPostDispatch($args)
     {
         try {
-            /** @var Enlight_View_Default */
+            /** @var \Enlight_View_Default */
             $view = $args->getSubject()->View();
 
             /** @phpstan-ignore-next-line because of Enlight_View::__get access */
-            if ($view->sPayment["name"] === PaymentMethodOptions::NAME) {
+            if (PaymentMethodOptions::NAME === $view->sPayment['name']) {
                 $creditCheckAgreementInfo = $this->checkoutClient->getCreditCheckAgreementInfo();
 
                 /** @phpstan-ignore-next-line because of Enlight_View::__set access */

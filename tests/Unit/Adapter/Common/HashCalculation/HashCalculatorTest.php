@@ -10,6 +10,9 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class HashCalculatorTest extends TestCase
 {
     /**
@@ -18,12 +21,13 @@ class HashCalculatorTest extends TestCase
     private $hashAlgorithm;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\HashCalculator
+     * @var HashCalculator
      */
     private $sut;
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -37,7 +41,7 @@ class HashCalculatorTest extends TestCase
     /**
      * @return void
      */
-    public function test_calculateBasketHash_calculatesDeterministicHash()
+    public function test_calculate_basket_hash_calculates_deterministic_hash()
     {
         /** @var BasketPositionInterface&MockObject */
         $position1 = $this->createMock(BasketPositionInterface::class);
@@ -48,72 +52,93 @@ class HashCalculatorTest extends TestCase
 
         $basket
             ->method('getNetTotal')
-            ->willReturn(100.0);
+            ->willReturn(100.0)
+        ;
         $basket
             ->method('getGrossTotal')
-            ->willReturn(119.0);
+            ->willReturn(119.0)
+        ;
         $basket
             ->method('getCurrency')
-            ->willReturn('EUR');
+            ->willReturn('EUR')
+        ;
         $basket
             ->method('getPositions')
-            ->willReturn([$position1, $position2]);
+            ->willReturn([$position1, $position2])
+        ;
 
         $position1
             ->method('getProductNumber')
-            ->willReturn('prod-1');
+            ->willReturn('prod-1')
+        ;
         $position1
             ->method('getProductName')
-            ->willReturn('Product 1');
+            ->willReturn('Product 1')
+        ;
         $position1
             ->method('getQuantity')
-            ->willReturn(1);
+            ->willReturn(1)
+        ;
         $position1
             ->method('getTaxPercent')
-            ->willReturn(19.0);
+            ->willReturn(19.0)
+        ;
         $position1
             ->method('getNetPricePerUnit')
-            ->willReturn(10.0);
+            ->willReturn(10.0)
+        ;
         $position1
             ->method('getGrossPricePerUnit')
-            ->willReturn(11.9);
+            ->willReturn(11.9)
+        ;
         $position1
             ->method('getNetPositionTotal')
-            ->willReturn(10.0);
+            ->willReturn(10.0)
+        ;
         $position1
             ->method('getGrossPositionTotal')
-            ->willReturn(11.9);
+            ->willReturn(11.9)
+        ;
 
         $position2
             ->method('getProductNumber')
-            ->willReturn('prod-2');
+            ->willReturn('prod-2')
+        ;
         $position2
             ->method('getProductName')
-            ->willReturn('Product 2');
+            ->willReturn('Product 2')
+        ;
         $position2
             ->method('getQuantity')
-            ->willReturn(3);
+            ->willReturn(3)
+        ;
         $position2
             ->method('getTaxPercent')
-            ->willReturn(7.0);
+            ->willReturn(7.0)
+        ;
         $position2
             ->method('getNetPricePerUnit')
-            ->willReturn(2.0);
+            ->willReturn(2.0)
+        ;
         $position2
             ->method('getGrossPricePerUnit')
-            ->willReturn(2.1);
+            ->willReturn(2.1)
+        ;
         $position2
             ->method('getNetPositionTotal')
-            ->willReturn(20.0);
+            ->willReturn(20.0)
+        ;
         $position2
             ->method('getGrossPositionTotal')
-            ->willReturn(21.4);
+            ->willReturn(21.4)
+        ;
 
         $this->hashAlgorithm
             ->expects($this->once())
             ->method('compute')
             ->with('[100,119,"EUR",[["prod-1","Product 1",null,1,19,10,11.9,10,11.9],["prod-2","Product 2",null,3,7,2,2.1,20,21.4]]]')
-            ->willReturn('hash-result');
+            ->willReturn('hash-result')
+        ;
 
         $result = $this->sut->calculateBasketHash($basket);
 

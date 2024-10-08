@@ -9,7 +9,7 @@ use AxytosKaufAufRechnungShopware5\Adapter\Information\Tracking\DeliveryAddress;
 class TrackingInformation implements TrackingInformationInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var Order
      */
     private $order;
 
@@ -45,6 +45,7 @@ class TrackingInformation implements TrackingInformationInterface
     public function getDeliveryMethod()
     {
         $dispatch = $this->order->getDispatch();
+
         return $dispatch->getName();
     }
 
@@ -63,7 +64,7 @@ class TrackingInformation implements TrackingInformationInterface
     {
         $trackingCode = strval($this->order->getTrackingCode());
 
-        if ($trackingCode !== '') {
+        if ('' !== $trackingCode) {
             return [$trackingCode];
         }
 

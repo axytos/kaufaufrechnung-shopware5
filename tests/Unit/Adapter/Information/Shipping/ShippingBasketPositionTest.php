@@ -6,6 +6,9 @@ use AxytosKaufAufRechnungShopware5\Adapter\Information\Shipping\ShippingBasketPo
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class ShippingBasketPositionTest extends TestCase
 {
     /**
@@ -15,6 +18,7 @@ class ShippingBasketPositionTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -26,7 +30,7 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getProductNumber_returnsCorrectValue()
+    public function test_get_product_number_returns_correct_value()
     {
         $result = $this->sut->getProductNumber();
 
@@ -36,7 +40,7 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getQuantity_returnsCorrectValue()
+    public function test_get_quantity_returns_correct_value()
     {
         $result = $this->sut->getQuantity();
 

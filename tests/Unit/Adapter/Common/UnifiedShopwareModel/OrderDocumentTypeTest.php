@@ -7,10 +7,13 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\ShopwareM
 use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Shopware\Models\Document\Document as ShopwareDocumentType;
 
+/**
+ * @internal
+ */
 class OrderDocumentTypeTest extends TestCase
 {
     /**
@@ -35,6 +38,7 @@ class OrderDocumentTypeTest extends TestCase
 
     /**
      * @before
+     *
      * @return void
      */
     #[Before]
@@ -54,7 +58,7 @@ class OrderDocumentTypeTest extends TestCase
     /**
      * @return void
      */
-    public function test_getKey_returns_key_if_method_getKey_exists()
+    public function test_get_key_returns_key_if_method_get_key_exists()
     {
         $this->shopwareModelReflector->method('hasMethod')->with($this->shopwareDocumentType, 'getKey')->willReturn(true);
         $this->shopwareModelReflector->method('callMethod')->with($this->shopwareDocumentType, 'getKey')->willReturn('DocumentTypeKey');
@@ -66,13 +70,15 @@ class OrderDocumentTypeTest extends TestCase
 
     /**
      * @dataProvider key_inference_test_cases
-     * @param string $name
+     *
+     * @param string      $name
      * @param string|null $expectedKey
-     * @param string $invoiceKey
+     * @param string      $invoiceKey
+     *
      * @return void
      */
     #[DataProvider('key_inference_test_cases')]
-    public function test_getKey_infers_key_from_name_if_method_getKey_does_not_exist($name, $expectedKey, $invoiceKey)
+    public function test_get_key_infers_key_from_name_if_method_get_key_does_not_exist($name, $expectedKey, $invoiceKey)
     {
         $this->shopwareDocumentType->method('getName')->willReturn($name);
         $this->shopwareModelReflector->method('hasMethod')->with($this->shopwareDocumentType, 'getKey')->willReturn(false);
@@ -82,9 +88,9 @@ class OrderDocumentTypeTest extends TestCase
 
         $this->assertEquals($expectedKey, $key);
         $this->assertEquals($expectedKey === $invoiceKey, $this->sut->isInvoiceDocument());
-        $this->assertEquals($expectedKey === 'credit', $this->sut->isCreditDocument());
-        $this->assertEquals($expectedKey === 'delivery_note', $this->sut->isDeliveryNoteDocument());
-        $this->assertEquals($expectedKey === 'cancellation', $this->sut->isCancellationDocument());
+        $this->assertEquals('credit' === $expectedKey, $this->sut->isCreditDocument());
+        $this->assertEquals('delivery_note' === $expectedKey, $this->sut->isDeliveryNoteDocument());
+        $this->assertEquals('cancellation' === $expectedKey, $this->sut->isCancellationDocument());
     }
 
     /**

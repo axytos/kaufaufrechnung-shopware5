@@ -2,8 +2,8 @@
 
 namespace AxytosKaufAufRechnungShopware5\Adapter;
 
-use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\PluginOrderInterface;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Model\AxytosOrderStateInfo;
+use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\PluginOrderInterface;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\HashCalculator;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
@@ -12,31 +12,31 @@ use AxytosKaufAufRechnungShopware5\Adapter\Information\CancelInformation;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\CheckoutInformation;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\InvoiceInformation;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\PaymentInformation;
+use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory as RefundBasketFactory;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\RefundInformation;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\ShippingInformation;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\TrackingInformation;
-use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory as RefundBasketFactory;
 use Shopware\Models\Order\Status;
 
 class PluginOrder implements PluginOrderInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var Order
      */
     private $order;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory
+     * @var BasketFactory
      */
     private $basketFactory;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory
+     * @var RefundBasketFactory
      */
     private $refundBasketFactory;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\HashCalculator
+     * @var HashCalculator
      */
     private $hashCalculator;
 
@@ -61,11 +61,12 @@ class PluginOrder implements PluginOrderInterface
     }
 
     /**
-     * @return \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Model\AxytosOrderStateInfo|null
+     * @return AxytosOrderStateInfo|null
      */
     public function loadState()
     {
         $attributes = $this->order->getAttributes();
+
         return new AxytosOrderStateInfo(
             $attributes->getAxytosKaufAufRechnungOrderState(),
             $attributes->getAxytosKaufAufRechnungOrderStateData()
@@ -73,8 +74,9 @@ class PluginOrder implements PluginOrderInterface
     }
 
     /**
-     * @param string $state
+     * @param string      $state
      * @param string|null $data
+     *
      * @return void
      */
     public function saveState($state, $data = null)
@@ -109,8 +111,7 @@ class PluginOrder implements PluginOrderInterface
      */
     public function hasBeenCanceled()
     {
-        $cancellationDocument = $this->order->findCancellationDocument();
-        return !is_null($cancellationDocument);
+        return $this->order->isCanceled();
     }
 
     public function cancelInformation()
@@ -123,8 +124,16 @@ class PluginOrder implements PluginOrderInterface
      */
     public function hasBeenInvoiced()
     {
+        // check if order status is completed
+        // one order may have multiple invoices
+        // when invoices are created with an ERP system and synced back to shopware we cannot know the final number of all invoices
+        // so we assume that the order is completely invoiced when:
+        // a) there is at least one invoice, because we need the number of the invoice
+        // b) the order status is completed
+
         $invoiceDocument = $this->order->findInvoiceDocument();
-        return !is_null($invoiceDocument);
+
+        return !is_null($invoiceDocument) && $this->order->isCompleted();
     }
 
     public function invoiceInformation()
@@ -137,8 +146,10 @@ class PluginOrder implements PluginOrderInterface
      */
     public function hasBeenRefunded()
     {
-        $creditDocument = $this->order->findCreditDocument();
-        return !is_null($creditDocument);
+        // disable refund detection for now
+        // refund detection does not work reliably because the refund is neither always created in shopware nor synced back from ERP systems
+        // need to discuss whether we need this feature or remove it
+        return false;
     }
 
     public function refundInformation()
@@ -152,6 +163,7 @@ class PluginOrder implements PluginOrderInterface
     public function hasShippingReported()
     {
         $orderAttributes = $this->order->getAttributes();
+
         return $orderAttributes->getAxytosKaufAufRechnungHasShippingReported();
     }
 
@@ -160,8 +172,7 @@ class PluginOrder implements PluginOrderInterface
      */
     public function hasBeenShipped()
     {
-        $deliveryNoteDocument = $this->order->findDeliveryNoteDocument();
-        return !is_null($deliveryNoteDocument);
+        return $this->order->isCompletelyShipped() || $this->order->isCompleted();
     }
 
     /**
@@ -217,6 +228,7 @@ class PluginOrder implements PluginOrderInterface
         $orderAttributes = $this->order->getAttributes();
         $oldHash = $orderAttributes->getAxytosKaufAufRechnungOrderBasketHash();
         $newHash = $this->calculateOrderBasketHash();
+
         return $oldHash !== $newHash;
     }
 

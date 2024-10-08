@@ -8,12 +8,12 @@ use Shopware\Models\Customer\Customer as ShopwareCustomer;
 class Customer implements CustomerInterface
 {
     /**
-     * @var \Shopware\Models\Customer\Customer|null
+     * @var ShopwareCustomer|null
      */
     private $customer;
 
     /**
-     * @param \Shopware\Models\Customer\Customer|null $customer
+     * @param ShopwareCustomer|null $customer
      */
     public function __construct($customer)
     {
@@ -28,6 +28,7 @@ class Customer implements CustomerInterface
         if (is_null($this->customer)) {
             return null;
         }
+
         return $this->customer->getNumber();
     }
 
@@ -39,6 +40,7 @@ class Customer implements CustomerInterface
         if (is_null($this->customer)) {
             return null;
         }
+
         return $this->customer->getBirthday();
     }
 
@@ -50,6 +52,7 @@ class Customer implements CustomerInterface
         if (is_null($this->customer)) {
             return null;
         }
+
         return $this->customer->getEmail();
     }
 
@@ -64,7 +67,7 @@ class Customer implements CustomerInterface
 
         $customerType = $this->customer->getCustomerType();
 
-        if ($customerType === ShopwareCustomer::CUSTOMER_TYPE_BUSINESS) {
+        if (ShopwareCustomer::CUSTOMER_TYPE_BUSINESS === $customerType) {
             return $this->customer->getFirstname() . ' ' . $this->customer->getLastname();
         }
 

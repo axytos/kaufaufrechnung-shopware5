@@ -11,7 +11,7 @@ class TaxGroup implements InvoiceTaxGroupInterface, RefundTaxGroupInterface
     use BasketPositionCalculationTrait;
 
     /**
-     * @var \Shopware\Models\Order\Detail
+     * @var Detail
      */
     private $invoiceItem;
 

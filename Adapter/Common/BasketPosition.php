@@ -2,9 +2,9 @@
 
 namespace AxytosKaufAufRechnungShopware5\Adapter\Common;
 
+use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\BasketUpdate\BasketPositionInterface as UpdateBasketPositionInterface;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Checkout\BasketPositionInterface as CheckoutBasketPositionInterface;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Invoice\BasketPositionInterface as InvoiceBasketPositionInterface;
-use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\BasketUpdate\BasketPositionInterface as UpdateBasketPositionInterface;
 use Shopware\Models\Order\Detail;
 
 class BasketPosition implements InvoiceBasketPositionInterface, UpdateBasketPositionInterface, CheckoutBasketPositionInterface
@@ -12,7 +12,7 @@ class BasketPosition implements InvoiceBasketPositionInterface, UpdateBasketPosi
     use BasketPositionCalculationTrait;
 
     /**
-     * @var \Shopware\Models\Order\Detail
+     * @var Detail
      */
     private $invoiceItem;
 
@@ -47,7 +47,7 @@ class BasketPosition implements InvoiceBasketPositionInterface, UpdateBasketPosi
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getQuantity()
     {

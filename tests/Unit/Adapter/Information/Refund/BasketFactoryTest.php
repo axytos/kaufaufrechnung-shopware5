@@ -3,13 +3,16 @@
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Information\Refund;
 
 use AxytosKaufAufRechnungShopware5\Adapter\Common\TaxGroupFactory;
+use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\Basket;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketPositionFactory;
-use PHPUnit\Framework\TestCase;
-use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class BasketFactoryTest extends TestCase
 {
     /**
@@ -19,6 +22,7 @@ class BasketFactoryTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -29,10 +33,11 @@ class BasketFactoryTest extends TestCase
             $this->createMock(TaxGroupFactory::class)
         );
     }
+
     /**
      * @return void
      */
-    public function test_create_returns_instance_of_Basket()
+    public function test_create_returns_instance_of_basket()
     {
         $basket = $this->sut->create($this->createMock(Order::class));
 
