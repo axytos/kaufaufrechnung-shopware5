@@ -12,6 +12,9 @@ use PHPUnit\Framework\TestCase;
 use Shopware\Bundle\AttributeBundle\Service\CrudService;
 use Shopware\Components\Model\ModelManager;
 
+/**
+ * @internal
+ */
 class OrderAttributesRepositoryTest extends TestCase
 {
     /**
@@ -35,12 +38,13 @@ class OrderAttributesRepositoryTest extends TestCase
     private $orderStatesMigration;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderAttributesRepository
+     * @var OrderAttributesRepository
      */
     private $sut;
 
     /**
      * @before
+     *
      * @return void
      */
     #[Before]
@@ -62,7 +66,7 @@ class OrderAttributesRepositoryTest extends TestCase
     /**
      * @return void
      */
-    public function test_install_createAttributeColumns()
+    public function test_install_create_attribute_columns()
     {
         $createdColumns = [];
         $this->crudService
@@ -70,7 +74,8 @@ class OrderAttributesRepositoryTest extends TestCase
             ->method('update')
             ->willReturnCallback(function (...$args) use (&$createdColumns) {
                 $createdColumns[] = $args;
-            });
+            })
+        ;
 
         $this->sut->install();
 
@@ -85,7 +90,7 @@ class OrderAttributesRepositoryTest extends TestCase
 
         $this->assertEquals(count($expectedUpdates), count($createdColumns));
 
-        for ($i = 0; $i < count($expectedUpdates); $i++) {
+        for ($i = 0; $i < count($expectedUpdates); ++$i) {
             $this->assertEquals('s_order_attributes', $createdColumns[0][0]);
             $this->assertEquals($expectedUpdates[0][0], $createdColumns[0][1]);
             $this->assertEquals($expectedUpdates[0][1], $createdColumns[0][2]);
@@ -98,28 +103,34 @@ class OrderAttributesRepositoryTest extends TestCase
 
     /**
      * @dataProvider migrationVariants
+     *
      * @param bool $legacyMigrationNeeded
      * @param bool $orderStateMigrationNeeded
-     * @param int $legacyMigrationInvocations
-     * @param int $orderStateMigrationInvocations
+     * @param int  $legacyMigrationInvocations
+     * @param int  $orderStateMigrationInvocations
+     *
      * @return void
      */
     #[DataProvider('migrationVariants')]
-    public function test_install_executesAllRequiredMigrations($legacyMigrationNeeded, $orderStateMigrationNeeded, $legacyMigrationInvocations, $orderStateMigrationInvocations)
+    public function test_install_executes_all_required_migrations($legacyMigrationNeeded, $orderStateMigrationNeeded, $legacyMigrationInvocations, $orderStateMigrationInvocations)
     {
         $this->legacyOrderAttributesMigration
             ->method('isMigrationNeeded')
-            ->willReturn($legacyMigrationNeeded);
+            ->willReturn($legacyMigrationNeeded)
+        ;
         $this->orderStatesMigration
             ->method('isMigrationNeeded')
-            ->willReturn($orderStateMigrationNeeded);
+            ->willReturn($orderStateMigrationNeeded)
+        ;
 
         $this->legacyOrderAttributesMigration
             ->expects($this->exactly($legacyMigrationInvocations))
-            ->method('migrate');
+            ->method('migrate')
+        ;
         $this->orderStatesMigration
             ->expects($this->exactly($orderStateMigrationInvocations))
-            ->method('migrate');
+            ->method('migrate')
+        ;
 
         $this->sut->install();
     }
@@ -127,11 +138,12 @@ class OrderAttributesRepositoryTest extends TestCase
     /**
      * @return void
      */
-    public function test_install_generatesAttributeModels()
+    public function test_install_generates_attribute_models()
     {
         $this->modelManager
             ->expects($this->once())
-            ->method('generateAttributeModels');
+            ->method('generateAttributeModels')
+        ;
 
         $this->sut->install();
     }
@@ -139,7 +151,7 @@ class OrderAttributesRepositoryTest extends TestCase
     /**
      * @return void
      */
-    public function test_update_createAttributeColumns()
+    public function test_update_create_attribute_columns()
     {
         $createdColumns = [];
         $this->crudService
@@ -147,7 +159,8 @@ class OrderAttributesRepositoryTest extends TestCase
             ->method('update')
             ->willReturnCallback(function (...$args) use (&$createdColumns) {
                 $createdColumns[] = $args;
-            });
+            })
+        ;
 
         $this->sut->update();
 
@@ -162,7 +175,7 @@ class OrderAttributesRepositoryTest extends TestCase
 
         $this->assertEquals(count($expectedUpdates), count($createdColumns));
 
-        for ($i = 0; $i < count($expectedUpdates); $i++) {
+        for ($i = 0; $i < count($expectedUpdates); ++$i) {
             $this->assertEquals('s_order_attributes', $createdColumns[0][0]);
             $this->assertEquals($expectedUpdates[0][0], $createdColumns[0][1]);
             $this->assertEquals($expectedUpdates[0][1], $createdColumns[0][2]);
@@ -175,28 +188,34 @@ class OrderAttributesRepositoryTest extends TestCase
 
     /**
      * @dataProvider migrationVariants
+     *
      * @param bool $legacyMigrationNeeded
      * @param bool $orderStateMigrationNeeded
-     * @param int $legacyMigrationInvocations
-     * @param int $orderStateMigrationInvocations
+     * @param int  $legacyMigrationInvocations
+     * @param int  $orderStateMigrationInvocations
+     *
      * @return void
      */
     #[DataProvider('migrationVariants')]
-    public function test_update_executesAllRequiredMigrations($legacyMigrationNeeded, $orderStateMigrationNeeded, $legacyMigrationInvocations, $orderStateMigrationInvocations)
+    public function test_update_executes_all_required_migrations($legacyMigrationNeeded, $orderStateMigrationNeeded, $legacyMigrationInvocations, $orderStateMigrationInvocations)
     {
         $this->legacyOrderAttributesMigration
             ->method('isMigrationNeeded')
-            ->willReturn($legacyMigrationNeeded);
+            ->willReturn($legacyMigrationNeeded)
+        ;
         $this->orderStatesMigration
             ->method('isMigrationNeeded')
-            ->willReturn($orderStateMigrationNeeded);
+            ->willReturn($orderStateMigrationNeeded)
+        ;
 
         $this->legacyOrderAttributesMigration
             ->expects($this->exactly($legacyMigrationInvocations))
-            ->method('migrate');
+            ->method('migrate')
+        ;
         $this->orderStatesMigration
             ->expects($this->exactly($orderStateMigrationInvocations))
-            ->method('migrate');
+            ->method('migrate')
+        ;
 
         $this->sut->update();
     }
@@ -204,11 +223,12 @@ class OrderAttributesRepositoryTest extends TestCase
     /**
      * @return void
      */
-    public function test_update_generatesAttributeModels()
+    public function test_update_generates_attribute_models()
     {
         $this->modelManager
             ->expects($this->once())
-            ->method('generateAttributeModels');
+            ->method('generateAttributeModels')
+        ;
 
         $this->sut->update();
     }

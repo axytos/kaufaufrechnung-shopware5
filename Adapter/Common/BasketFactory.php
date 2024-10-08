@@ -2,20 +2,19 @@
 
 namespace AxytosKaufAufRechnungShopware5\Adapter\Common;
 
+use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\BasketUpdate\BasketInterface as UpdateBasketInterface;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Checkout\BasketInterface as CheckoutBasketInterface;
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Invoice\BasketInterface as InvoiceBasketInterface;
-use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\BasketUpdate\BasketInterface as UpdateBasketInterface;
-use AxytosKaufAufRechnungShopware5\Adapter\Common\TaxGroupFactory;
 
 class BasketFactory
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\BasketPositionFactory
+     * @var BasketPositionFactory
      */
     private $basketPositionFactory;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\TaxGroupFactory
+     * @var TaxGroupFactory
      */
     private $taxGroupFactory;
 
@@ -28,7 +27,8 @@ class BasketFactory
     }
 
     /**
-     * @param \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order $order
+     * @param UnifiedShopwareModel\Order $order
+     *
      * @return InvoiceBasketInterface&UpdateBasketInterface&CheckoutBasketInterface
      */
     public function create($order)

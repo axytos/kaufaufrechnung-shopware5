@@ -8,6 +8,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
 
+/**
+ * @internal
+ */
 class TaxGroupTest extends TestCase
 {
     /**
@@ -22,6 +25,7 @@ class TaxGroupTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -37,11 +41,12 @@ class TaxGroupTest extends TestCase
     /**
      * @return void
      */
-    public function test_getTaxPercent_returnsCorrectValue()
+    public function test_get_tax_percent_returns_correct_value()
     {
         $this->invoiceItem
             ->method('getTaxRate')
-            ->willReturn(19.0);
+            ->willReturn(19.0)
+        ;
 
         $result = $this->sut->getTaxPercent();
 
@@ -51,17 +56,20 @@ class TaxGroupTest extends TestCase
     /**
      * @return void
      */
-    public function test_getValueToTax_returnsCorrectValue()
+    public function test_get_value_to_tax_returns_correct_value()
     {
         $this->invoiceItem
             ->method('getPrice')
-            ->willReturn(119.0);
+            ->willReturn(119.0)
+        ;
         $this->invoiceItem
             ->method('getTaxRate')
-            ->willReturn(19.0);
+            ->willReturn(19.0)
+        ;
         $this->invoiceItem
             ->method('getQuantity')
-            ->willReturn(3);
+            ->willReturn(3)
+        ;
 
         $result = $this->sut->getValueToTax();
 
@@ -71,17 +79,20 @@ class TaxGroupTest extends TestCase
     /**
      * @return void
      */
-    public function test_getTotal_returnsCorrectValue()
+    public function test_get_total_returns_correct_value()
     {
         $this->invoiceItem
             ->method('getPrice')
-            ->willReturn(119.0);
+            ->willReturn(119.0)
+        ;
         $this->invoiceItem
             ->method('getTaxRate')
-            ->willReturn(19.0);
+            ->willReturn(19.0)
+        ;
         $this->invoiceItem
             ->method('getQuantity')
-            ->willReturn(3);
+            ->willReturn(3)
+        ;
 
         $result = $this->sut->getTotal();
 

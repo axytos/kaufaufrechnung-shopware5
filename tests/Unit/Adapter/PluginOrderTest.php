@@ -17,6 +17,9 @@ use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Document\Document;
 use Shopware\Models\Order\Status;
 
+/**
+ * @internal
+ */
 class PluginOrderTest extends TestCase
 {
     /**
@@ -51,6 +54,7 @@ class PluginOrderTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -64,7 +68,8 @@ class PluginOrderTest extends TestCase
 
         $this->order
             ->method('getAttributes')
-            ->willReturn($this->orderAttributes);
+            ->willReturn($this->orderAttributes)
+        ;
 
         $this->sut = new PluginOrder(
             $this->order,
@@ -77,11 +82,12 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_getOrderNumber_returnsOrderNumber()
+    public function test_get_order_number_returns_order_number()
     {
         $this->order
             ->method('getNumber')
-            ->willReturn('order-123');
+            ->willReturn('order-123')
+        ;
 
         $this->assertEquals('order-123', $this->sut->getOrderNumber());
     }
@@ -89,16 +95,18 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_loadState_createsStateFromAttributes()
+    public function test_load_state_creates_state_from_attributes()
     {
         $testState = 'test-state';
         $testStateData = 'test-state-data';
         $this->orderAttributes
             ->method('getAxytosKaufAufRechnungOrderState')
-            ->willReturn($testState);
+            ->willReturn($testState)
+        ;
         $this->orderAttributes
             ->method('getAxytosKaufAufRechnungOrderStateData')
-            ->willReturn($testStateData);
+            ->willReturn($testStateData)
+        ;
 
         $expected = new AxytosOrderStateInfo($testState, $testStateData);
         $this->assertEquals($expected, $this->sut->loadState());
@@ -107,7 +115,7 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_saveState_persistsStateToAttributes()
+    public function test_save_state_persists_state_to_attributes()
     {
         $testState = 'test-state';
         $testStateData = 'test-state-data';
@@ -115,14 +123,17 @@ class PluginOrderTest extends TestCase
         $this->orderAttributes
             ->expects($this->once())
             ->method('setAxytosKaufAufRechnungOrderState')
-            ->with($testState);
+            ->with($testState)
+        ;
         $this->orderAttributes
             ->expects($this->once())
             ->method('setAxytosKaufAufRechnungOrderStateData')
-            ->with($testStateData);
+            ->with($testStateData)
+        ;
         $this->orderAttributes
             ->expects($this->once())
-            ->method('persist');
+            ->method('persist')
+        ;
 
         $this->sut->saveState($testState, $testStateData);
     }
@@ -130,7 +141,7 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_freezeBasket()
+    public function test_freeze_basket()
     {
         $testBasket = $this->createMock(Basket::class);
         $testHash = 'test-hash-sum';
@@ -138,19 +149,23 @@ class PluginOrderTest extends TestCase
         $this->basketFactory
             ->method('create')
             ->with($this->order)
-            ->willReturn($testBasket);
+            ->willReturn($testBasket)
+        ;
         $this->hashCalculator
             ->method('calculateBasketHash')
             ->with($testBasket)
-            ->willReturn($testHash);
+            ->willReturn($testHash)
+        ;
 
         $this->orderAttributes
             ->expects($this->once())
             ->method('setAxytosKaufAufRechnungOrderBasketHash')
-            ->with($testHash);
+            ->with($testHash)
+        ;
         $this->orderAttributes
             ->expects($this->once())
-            ->method('persist');
+            ->method('persist')
+        ;
 
         $this->sut->freezeBasket();
     }
@@ -158,11 +173,12 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasBeenCanceled_returns_true_when_cancellation_document_is_found()
+    public function test_has_been_canceled_returns_true_when_order_is_canceled()
     {
         $this->order
-            ->method('findCancellationDocument')
-            ->willReturn($this->createMock(Document::class));
+            ->method('isCanceled')
+            ->willReturn(true)
+        ;
 
         $this->assertTrue($this->sut->hasBeenCanceled());
     }
@@ -170,11 +186,12 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasBeenCanceled_returns_false_when_cancellation_document_is_not_found()
+    public function test_has_been_canceled_returns_false_when_order_is_not_canceld()
     {
         $this->order
-            ->method('findCancellationDocument')
-            ->willReturn(null);
+            ->method('isCanceled')
+            ->willReturn(false)
+        ;
 
         $this->assertFalse($this->sut->hasBeenCanceled());
     }
@@ -182,11 +199,17 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasBeenInvoiced_returns_true_when_invoice_document_is_found()
+    public function test_has_been_invoiced_returns_true_when_invoice_document_is_found_and_order_is_completed()
     {
         $this->order
             ->method('findInvoiceDocument')
-            ->willReturn($this->createMock(Document::class));
+            ->willReturn($this->createMock(Document::class))
+        ;
+
+        $this->order
+            ->method('isCompleted')
+            ->willReturn(true)
+        ;
 
         $this->assertTrue($this->sut->hasBeenInvoiced());
     }
@@ -194,11 +217,17 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasBeenInvoiced_returns_false_when_invoice_document_is_not_found()
+    public function test_has_been_invoiced_returns_false_when_invoice_document_is_found_and_order_is_not_completed()
     {
         $this->order
             ->method('findInvoiceDocument')
-            ->willReturn(null);
+            ->willReturn($this->createMock(Document::class))
+        ;
+
+        $this->order
+            ->method('isCompleted')
+            ->willReturn(false)
+        ;
 
         $this->assertFalse($this->sut->hasBeenInvoiced());
     }
@@ -206,31 +235,71 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasBeenRefunded_returns_true_when_cancellation_document_is_found()
+    public function test_has_been_invoiced_returns_false_when_invoice_document_is_not_found_and_order_is_completed()
     {
         $this->order
-            ->method('findCreditDocument')
-            ->willReturn($this->createMock(Document::class));
+            ->method('findInvoiceDocument')
+            ->willReturn(null)
+        ;
 
-        $this->assertTrue($this->sut->hasBeenRefunded());
+        $this->order
+            ->method('isCompleted')
+            ->willReturn(true)
+        ;
+
+        $this->assertFalse($this->sut->hasBeenInvoiced());
     }
 
     /**
      * @return void
      */
-    public function test_hasBeenRefunded_returns_false_when_cancellation_document_is_not_found()
+    public function test_has_been_invoiced_returns_false_when_invoice_document_is_not_found_and_order_is_not_completed()
+    {
+        $this->order
+            ->method('findInvoiceDocument')
+            ->willReturn(null)
+        ;
+
+        $this->order
+            ->method('isCompleted')
+            ->willReturn(false)
+        ;
+
+        $this->assertFalse($this->sut->hasBeenInvoiced());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_has_been_refunded_returns_true_when_cancellation_document_is_found()
     {
         $this->order
             ->method('findCreditDocument')
-            ->willReturn(null);
+            ->willReturn($this->createMock(Document::class))
+        ;
 
+        // hasBeenRefunded should always return false because this feature is disabled for now
         $this->assertFalse($this->sut->hasBeenRefunded());
     }
 
     /**
      * @return void
      */
-    public function test_hasShippingReported_returns_true_when_attribute_is_true()
+    public function test_has_been_refunded_returns_false_when_cancellation_document_is_not_found()
+    {
+        $this->order
+            ->method('findCreditDocument')
+            ->willReturn(null)
+        ;
+
+        // hasBeenRefunded should always return false because this feature is disabled for now
+        $this->assertFalse($this->sut->hasBeenRefunded());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_has_shipping_reported_returns_true_when_attribute_is_true()
     {
         $this->orderAttributes->method('getAxytosKaufAufRechnungHasShippingReported')->willReturn(true);
 
@@ -242,7 +311,7 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasShippingReported_returns_false_when_attribute_is_false()
+    public function test_has_shipping_reported_returns_false_when_attribute_is_false()
     {
         $this->orderAttributes->method('getAxytosKaufAufRechnungHasShippingReported')->willReturn(false);
 
@@ -254,9 +323,9 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasBeenShipped_returns_true_when_cancellation_document_is_found()
+    public function test_has_been_shipped_returns_true_when_order_is_completed()
     {
-        $this->order->method('findDeliveryNoteDocument')->willReturn($this->createMock(Document::class));
+        $this->order->method('isCompleted')->willReturn(true);
 
         $this->assertTrue($this->sut->hasBeenShipped());
     }
@@ -264,9 +333,20 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasBeenShipped_returns_false_when_cancellation_document_is_not_found()
+    public function test_has_been_shipped_returns_true_when_order_is_completely_shipped()
     {
-        $this->order->method('findDeliveryNoteDocument')->willReturn(null);
+        $this->order->method('isCompletelyShipped')->willReturn(true);
+
+        $this->assertTrue($this->sut->hasBeenShipped());
+    }
+
+    /**
+     * @return void
+     */
+    public function test_has_been_shipped_returns_false_when_order_is_neither_shipped_nor_completed()
+    {
+        $this->order->method('isCompletelyShipped')->willReturn(false);
+        $this->order->method('isCompleted')->willReturn(false);
 
         $this->assertFalse($this->sut->hasBeenShipped());
     }
@@ -274,7 +354,7 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_saveHasShippingReported_sets_attribute_to_true()
+    public function test_save_has_shipping_reported_sets_attribute_to_true()
     {
         $this->orderAttributes->expects($this->once())->method('setAxytosKaufAufRechnungHasShippingReported')->willReturn(false);
 
@@ -286,7 +366,7 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_saveHasShippingReported_persists_attribute()
+    public function test_save_has_shipping_reported_persists_attribute()
     {
         $this->orderAttributes->expects($this->once())->method('persist');
 
@@ -298,7 +378,7 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasNewTrackingInformation_returnsTrueIfTrackingCodesAreDifferent()
+    public function test_has_new_tracking_information_returns_true_if_tracking_codes_are_different()
     {
         $this->orderAttributes->method('getAxytosKaufAufRechnungReportedTrackingCode')->willReturn('old-code');
 
@@ -306,7 +386,8 @@ class PluginOrderTest extends TestCase
 
         $this->order
             ->method('getTrackingCode')
-            ->willReturn('new-code');
+            ->willReturn('new-code')
+        ;
 
         $result = $this->sut->hasNewTrackingInformation();
 
@@ -316,7 +397,7 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasNewTrackingInformation_returnsFalseIfTrackingCodesAreEqual()
+    public function test_has_new_tracking_information_returns_false_if_tracking_codes_are_equal()
     {
         $this->orderAttributes->method('getAxytosKaufAufRechnungReportedTrackingCode')->willReturn('old-code');
 
@@ -324,7 +405,8 @@ class PluginOrderTest extends TestCase
 
         $this->order
             ->method('getTrackingCode')
-            ->willReturn('old-code');
+            ->willReturn('old-code')
+        ;
 
         $result = $this->sut->hasNewTrackingInformation();
 
@@ -334,21 +416,24 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_saveNewTrackingInformation_updatesOrderWithNewTrackingCode()
+    public function test_save_new_tracking_information_updates_order_with_new_tracking_code()
     {
         $this->order->method('getAttributes')->willReturn($this->orderAttributes);
 
         $newTrackingCode = 'new-code';
         $this->order
             ->method('getTrackingCode')
-            ->willReturn($newTrackingCode);
+            ->willReturn($newTrackingCode)
+        ;
         $this->orderAttributes
             ->expects($this->once())
             ->method('setAxytosKaufAufRechnungReportedTrackingCode')
-            ->with($newTrackingCode);
+            ->with($newTrackingCode)
+        ;
         $this->orderAttributes
             ->expects($this->once())
-            ->method('persist');
+            ->method('persist')
+        ;
 
         $this->sut->saveNewTrackingInformation();
     }
@@ -356,21 +441,24 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasBasketUpdates_returnsTrueIfHashesAreDifferent()
+    public function test_has_basket_updates_returns_true_if_hashes_are_different()
     {
         /** @var BasketInterface&MockObject */
         $basket = $this->createMock(BasketInterface::class);
         $this->basketFactory
             ->method('create')
             ->with($this->order)
-            ->willReturn($basket);
+            ->willReturn($basket)
+        ;
         $this->hashCalculator
             ->method('calculateBasketHash')
             ->with($basket)
-            ->willReturn('new-hash');
+            ->willReturn('new-hash')
+        ;
         $this->orderAttributes
             ->method('getAxytosKaufAufRechnungOrderBasketHash')
-            ->willReturn('old-hash');
+            ->willReturn('old-hash')
+        ;
 
         $this->assertTrue($this->sut->hasBasketUpdates());
     }
@@ -378,21 +466,24 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_hasBasketUpdates_returnsFalseIfHashesAreIdentical()
+    public function test_has_basket_updates_returns_false_if_hashes_are_identical()
     {
         /** @var BasketInterface&MockObject */
         $basket = $this->createMock(BasketInterface::class);
         $this->basketFactory
             ->method('create')
             ->with($this->order)
-            ->willReturn($basket);
+            ->willReturn($basket)
+        ;
         $this->hashCalculator
             ->method('calculateBasketHash')
             ->with($basket)
-            ->willReturn('old-hash');
+            ->willReturn('old-hash')
+        ;
         $this->orderAttributes
             ->method('getAxytosKaufAufRechnungOrderBasketHash')
-            ->willReturn('old-hash');
+            ->willReturn('old-hash')
+        ;
 
         $this->assertFalse($this->sut->hasBasketUpdates());
     }
@@ -400,24 +491,28 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_saveBasketUpdatesReported_storesNewHashWithOrder()
+    public function test_save_basket_updates_reported_stores_new_hash_with_order()
     {
         /** @var BasketInterface&MockObject */
         $basket = $this->createMock(BasketInterface::class);
         $this->basketFactory
             ->method('create')
             ->with($this->order)
-            ->willReturn($basket);
+            ->willReturn($basket)
+        ;
         $this->hashCalculator
             ->method('calculateBasketHash')
             ->with($basket)
-            ->willReturn('new-hash');
+            ->willReturn('new-hash')
+        ;
         $this->orderAttributes
             ->expects($this->once())
-            ->method('setAxytosKaufAufRechnungOrderBasketHash');
+            ->method('setAxytosKaufAufRechnungOrderBasketHash')
+        ;
         $this->orderAttributes
             ->expects($this->once())
-            ->method('persist');
+            ->method('persist')
+        ;
 
         $this->sut->saveBasketUpdatesReported();
     }
@@ -425,12 +520,13 @@ class PluginOrderTest extends TestCase
     /**
      * @return void
      */
-    public function test_setOrderStatusPaid_updatesThePaymentStatusToCompletelyPaid()
+    public function test_set_order_status_paid_updates_the_payment_status_to_completely_paid()
     {
         $this->order
             ->expects($this->once())
             ->method('savePaymentStatus')
-            ->with(Status::PAYMENT_STATE_COMPLETELY_PAID);
+            ->with(Status::PAYMENT_STATE_COMPLETELY_PAID)
+        ;
 
         $this->sut->saveHasBeenPaid();
     }

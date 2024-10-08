@@ -2,7 +2,7 @@
 <plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.3/engine/Shopware/Components/Plugin/schema/plugin.xsd">
   <label>Buy Now Pay Later</label>
   <label lang="de">Kauf auf Rechnung</label>
-  <version>1.6.19-rc</version>
+  <version>1.7.0-rc</version>
   <copyright>axytos GmbH</copyright>
   <license>proprietary</license>
   <link>https://www.axytos.com </link>
@@ -350,7 +350,7 @@
     <changes lang="de"><![CDATA[
 	]]></changes>
   </changelog>
-  <changelog version="1.6.16">
+  <changelog version="1.6.11-rc">
     <changes><![CDATA[
 	]]></changes>
     <changes lang="de"><![CDATA[
@@ -388,11 +388,29 @@
   </changelog>
   <changelog version="1.6.19-rc">
     <changes><![CDATA[
+
+      Adjusted handling and formatting of plugin additional description 
+
 	]]></changes>
     <changes lang="de"><![CDATA[
+
+      Anpassung der Handhabung und Formatierung der zusätzlichen Plugin-Beschreibung
+
 	]]></changes>
   </changelog>
-  <changelog version="1.6.19">
+  <changelog version="1.7.0-alpha">
+    <changes><![CDATA[
+
+      Adjusted handling and formatting of plugin additional description
+
+	]]></changes>
+    <changes lang="de"><![CDATA[
+
+      Anpassung der Handhabung und Formatierung der zusätzlichen Plugin-Beschreibung
+
+	]]></changes>
+  </changelog>
+  <changelog version="1.7.0-rc">
     <changes><![CDATA[
 	]]></changes>
     <changes lang="de"><![CDATA[

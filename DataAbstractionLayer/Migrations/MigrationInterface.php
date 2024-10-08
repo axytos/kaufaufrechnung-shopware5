@@ -5,7 +5,7 @@ namespace AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations;
 interface MigrationInterface
 {
     /**
-     * @return boolean
+     * @return bool
      */
     public function isMigrationNeeded();
 

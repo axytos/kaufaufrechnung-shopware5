@@ -5,6 +5,9 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Common\HashCalculati
 use AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\SHA256HashAlgorithm;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class SHA256HashAlgorithmTest extends TestCase
 {
     /**

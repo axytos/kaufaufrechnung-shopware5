@@ -12,6 +12,7 @@ class MigrationsRepository
     public function getOrderIdsWhereLegacyAttributeValuesArePresent()
     {
         $stmt = Shopware()->Db()->query('SELECT orderID FROM s_order_attributes WHERE ' . LegacyOrderAttributesMigration::LEGACY_COLUMN_NAME . ' IS NOT NULL;');
+
         return $stmt->fetchAll(\PDO::FETCH_COLUMN, 0);
     }
 
@@ -27,6 +28,7 @@ class MigrationsRepository
                 . OrderAttributesRepository::ATTRIBUTE_NAME_ORDER_STATE
                 . ' IS NULL;'
         );
+
         return $stmt->fetchAll(\PDO::FETCH_COLUMN, 0);
     }
 }

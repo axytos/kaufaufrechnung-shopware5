@@ -11,7 +11,7 @@ class BasketPosition implements BasketPositionInterface
     use BasketPositionCalculationTrait;
 
     /**
-     * @var \Shopware\Models\Order\Detail
+     * @var Detail
      */
     private $invoiceItem;
 

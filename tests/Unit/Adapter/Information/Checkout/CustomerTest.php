@@ -3,12 +3,14 @@
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Information\Tracking;
 
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Checkout\Customer;
-use DateTime;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Customer\Customer as ShopwareCustomer;
 
+/**
+ * @internal
+ */
 class CustomerTest extends TestCase
 {
     /**
@@ -23,6 +25,7 @@ class CustomerTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -36,11 +39,12 @@ class CustomerTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCustomerNumber_returnsCorrectValue()
+    public function test_get_customer_number_returns_correct_value()
     {
         $this->customer
             ->method('getNumber')
-            ->willReturn('12345');
+            ->willReturn('12345')
+        ;
 
         $result = $this->sut->getCustomerNumber();
 
@@ -50,7 +54,7 @@ class CustomerTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCustomerNumber_returnsNullAsDefault()
+    public function test_get_customer_number_returns_null_as_default()
     {
         $sut = new Customer(null);
 
@@ -60,12 +64,13 @@ class CustomerTest extends TestCase
     /**
      * @return void
      */
-    public function test_getDateOfBirth_returnsCorrectValue()
+    public function test_get_date_of_birth_returns_correct_value()
     {
-        $date = new DateTime();
+        $date = new \DateTime();
         $this->customer
             ->method('getBirthday')
-            ->willReturn($date);
+            ->willReturn($date)
+        ;
 
         $result = $this->sut->getDateOfBirth();
 
@@ -75,7 +80,7 @@ class CustomerTest extends TestCase
     /**
      * @return void
      */
-    public function test_getDateOfBirth_returnsNullAsDefault()
+    public function test_get_date_of_birth_returns_null_as_default()
     {
         $sut = new Customer(null);
 
@@ -85,11 +90,12 @@ class CustomerTest extends TestCase
     /**
      * @return void
      */
-    public function test_getEmailAddress_returnsCorrectValue()
+    public function test_get_email_address_returns_correct_value()
     {
         $this->customer
             ->method('getEmail')
-            ->willReturn('test@mail.de');
+            ->willReturn('test@mail.de')
+        ;
 
         $result = $this->sut->getEmailAddress();
 
@@ -99,7 +105,7 @@ class CustomerTest extends TestCase
     /**
      * @return void
      */
-    public function test_getEmailAddress_returnsNullAsDefault()
+    public function test_get_email_address_returns_null_as_default()
     {
         $sut = new Customer(null);
 
@@ -109,17 +115,20 @@ class CustomerTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCompanyName_returnsCorrectValue()
+    public function test_get_company_name_returns_correct_value()
     {
         $this->customer
             ->method('getCustomerType')
-            ->willReturn(ShopwareCustomer::CUSTOMER_TYPE_BUSINESS);
+            ->willReturn(ShopwareCustomer::CUSTOMER_TYPE_BUSINESS)
+        ;
         $this->customer
             ->method('getFirstname')
-            ->willReturn('Very Awesome');
+            ->willReturn('Very Awesome')
+        ;
         $this->customer
             ->method('getLastname')
-            ->willReturn('Company');
+            ->willReturn('Company')
+        ;
 
         $result = $this->sut->getCompanyName();
 
@@ -129,11 +138,12 @@ class CustomerTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCompanyName_returnsNullIfCustomerIsNotACompany()
+    public function test_get_company_name_returns_null_if_customer_is_not_a_company()
     {
         $this->customer
             ->method('getCustomerType')
-            ->willReturn(ShopwareCustomer::CUSTOMER_TYPE_PRIVATE);
+            ->willReturn(ShopwareCustomer::CUSTOMER_TYPE_PRIVATE)
+        ;
 
         $this->assertNull($this->sut->getCompanyName());
     }
@@ -141,7 +151,7 @@ class CustomerTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCompanyName_returnsNullAsDefault()
+    public function test_get_company_name_returns_null_as_default()
     {
         $sut = new Customer(null);
 

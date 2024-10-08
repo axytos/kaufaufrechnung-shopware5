@@ -3,11 +3,14 @@
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Common;
 
 use AxytosKaufAufRechnungShopware5\Adapter\Common\ShippingTaxGroup;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class ShippingTaxGroupTest extends TestCase
 {
     /**
@@ -22,6 +25,7 @@ class ShippingTaxGroupTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -37,11 +41,12 @@ class ShippingTaxGroupTest extends TestCase
     /**
      * @return void
      */
-    public function test_getTaxPercent_returnsCorrectValue()
+    public function test_get_tax_percent_returns_correct_value()
     {
         $this->order
             ->method('getInvoiceShippingTaxRate')
-            ->willReturn(19.0);
+            ->willReturn(19.0)
+        ;
 
         $result = $this->sut->getTaxPercent();
 
@@ -51,11 +56,12 @@ class ShippingTaxGroupTest extends TestCase
     /**
      * @return void
      */
-    public function test_getValueToTax_returnsCorrectValue()
+    public function test_get_value_to_tax_returns_correct_value()
     {
         $this->order
             ->method('getInvoiceShippingNet')
-            ->willReturn(10.0);
+            ->willReturn(10.0)
+        ;
 
         $result = $this->sut->getValueToTax();
 
@@ -65,14 +71,16 @@ class ShippingTaxGroupTest extends TestCase
     /**
      * @return void
      */
-    public function test_getTotal_returnsCorrectValue()
+    public function test_get_total_returns_correct_value()
     {
         $this->order
             ->method('getInvoiceShipping')
-            ->willReturn(11.9);
+            ->willReturn(11.9)
+        ;
         $this->order
             ->method('getInvoiceShippingNet')
-            ->willReturn(10.0);
+            ->willReturn(10.0)
+        ;
 
         $result = $this->sut->getTotal();
 

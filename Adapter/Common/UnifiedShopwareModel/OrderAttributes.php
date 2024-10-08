@@ -2,18 +2,18 @@
 
 namespace AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel;
 
-use Shopware\Models\Order\Order as ShopwareOrder;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository as OldOrderRepository;
+use Shopware\Models\Order\Order as ShopwareOrder;
 
 class OrderAttributes
 {
     /**
-     * @var \Shopware\Models\Order\Order
+     * @var ShopwareOrder
      */
     private $order;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository
+     * @var OldOrderRepository
      */
     private $orderRepository;
 
@@ -42,6 +42,7 @@ class OrderAttributes
 
     /**
      * @param string $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungOrderState($value)
@@ -61,6 +62,7 @@ class OrderAttributes
 
     /**
      * @param string|null $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungOrderStateData($value)
@@ -80,6 +82,7 @@ class OrderAttributes
 
     /**
      * @param bool $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungHasShippingReported($value)
@@ -99,6 +102,7 @@ class OrderAttributes
 
     /**
      * @param string $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungPrecheckResponse($value)
@@ -118,6 +122,7 @@ class OrderAttributes
 
     /**
      * @param string $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungReportedTrackingCode($value)
@@ -137,6 +142,7 @@ class OrderAttributes
 
     /**
      * @param string $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungOrderBasketHash($value)

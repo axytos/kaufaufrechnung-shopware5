@@ -9,6 +9,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Order;
 
+/**
+ * @internal
+ */
 class OrderAttributesTest extends TestCase
 {
     /**
@@ -29,9 +32,11 @@ class OrderAttributesTest extends TestCase
 
     /**
      * @dataProvider delegation_of_generated_getters_test_cases
+     *
      * @param string $proxyMethodName
      * @param string $generatedMethodName
-     * @param mixed $getterResult
+     * @param mixed  $getterResult
+     *
      * @return void
      */
     #[DataProvider('delegation_of_generated_getters_test_cases')]
@@ -69,15 +74,17 @@ class OrderAttributesTest extends TestCase
             ['getAxytosKaufAufRechnungPrecheckResponse', 'getAxytosKaufAufRechnungPrecheckResponse', '1234'],
             ['getAxytosKaufAufRechnungOrderBasketHash', 'getAxytosKaufAufRechnungOrderBasketHash', '1234'],
             ['getAxytosKaufAufRechnungReportedTrackingCode', 'getAxytosKaufAufRechnungReportedTrackingCode', '1234'],
-            ['getAxytosKaufAufRechnungPrecheckResponse', 'getAxytosKaufAufRechnungPrecheckResponse', '1234']
+            ['getAxytosKaufAufRechnungPrecheckResponse', 'getAxytosKaufAufRechnungPrecheckResponse', '1234'],
         ];
     }
 
     /**
      * @dataProvider delegation_of_generated_setters_test_cases
+     *
      * @param string $proxyMethodName
      * @param string $generatedMethodName
-     * @param mixed $setterArg
+     * @param mixed  $setterArg
+     *
      * @return void
      */
     #[DataProvider('delegation_of_generated_setters_test_cases')]
@@ -113,7 +120,7 @@ class OrderAttributesTest extends TestCase
             ['setAxytosKaufAufRechnungPrecheckResponse', 'setAxytosKaufAufRechnungPrecheckResponse', '1234'],
             ['setAxytosKaufAufRechnungOrderBasketHash', 'setAxytosKaufAufRechnungOrderBasketHash', '1234'],
             ['setAxytosKaufAufRechnungReportedTrackingCode', 'setAxytosKaufAufRechnungReportedTrackingCode', '1234'],
-            ['setAxytosKaufAufRechnungPrecheckResponse', 'setAxytosKaufAufRechnungPrecheckResponse', '1234']
+            ['setAxytosKaufAufRechnungPrecheckResponse', 'setAxytosKaufAufRechnungPrecheckResponse', '1234'],
         ];
     }
 }

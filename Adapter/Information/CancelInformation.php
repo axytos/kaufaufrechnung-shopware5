@@ -8,7 +8,7 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 class CancelInformation implements CancelInformationInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var Order
      */
     private $order;
 

@@ -2,11 +2,22 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.7/engine/Shopware/Components/Plugin/schema/config.xsd">
     <elements>
-        <element type="text">
+        <element type="select">
             <name>apiHost</name>
             <label>API Host</label>
-            <description lang="de">Notwendig für den API-Verbindungstest. Siehe Installationsanleitung.</description>
-            <description>Required for API connectivity test. See installation guide.</description>
+            <value>APIHOST_SANDBOX</value>
+            <store>
+                <option>
+                    <value>APIHOST_LIVE</value>
+                    <label lang="de">Live</label>
+                    <label>Live</label>
+                </option>
+                <option>
+                    <value>APIHOST_SANDBOX</value>
+                    <label lang="de">Sandbox</label>
+                    <label>Sandbox</label>
+                </option>
+            </store>
         </element>
         <element type="password">
             <name>apiKey</name>

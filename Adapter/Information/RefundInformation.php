@@ -3,18 +3,18 @@
 namespace AxytosKaufAufRechnungShopware5\Adapter\Information;
 
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\RefundInformationInterface;
-use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
+use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory;
 
 class RefundInformation implements RefundInformationInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var Order
      */
     private $order;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory
+     * @var BasketFactory
      */
     private $basketFactory;
 
@@ -43,6 +43,7 @@ class RefundInformation implements RefundInformationInterface
         if (!is_null($invoiceDocument)) {
             return $invoiceDocument->getDocumentId();
         }
+
         return '';
     }
 

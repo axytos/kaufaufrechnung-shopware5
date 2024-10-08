@@ -9,12 +9,12 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 class BasketUpdateInformation implements BasketUpdateInformationInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var Order
      */
     private $order;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory
+     * @var BasketFactory
      */
     private $basketFactory;
 

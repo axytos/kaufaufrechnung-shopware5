@@ -31,7 +31,7 @@ class PluginConfiguration
     }
 
     /**
-     * @return \AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutOrderStatus
+     * @return AfterCheckoutOrderStatus
      */
     public function getAfterCheckoutOrderStatus()
     {
@@ -41,7 +41,7 @@ class PluginConfiguration
     }
 
     /**
-     * @return \AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutPaymentStatus
+     * @return AfterCheckoutPaymentStatus
      */
     public function getAfterCheckoutPaymentStatus()
     {
@@ -58,9 +58,9 @@ class PluginConfiguration
         $invoiceDocumentKey = $this->getSettingsValue(PluginConfigurationValueNames::INVOICE_DOCUMENT_KEY);
         if (is_string($invoiceDocumentKey) && strlen($invoiceDocumentKey) > 0) {
             return $invoiceDocumentKey;
-        } else {
-            return 'invoice';
         }
+
+        return 'invoice';
     }
 
     /**
@@ -72,21 +72,23 @@ class PluginConfiguration
         /** @phpstan-ignore-next-line */
         if (empty($errorMessage)) {
             return null;
-        } else {
-            return $errorMessage;
         }
+
+        return $errorMessage;
     }
 
     /**
-     * @return string
      * @param string $settingName
+     *
+     * @return string
      */
     private function getSettingsValue($settingName)
     {
         $settingName = (string) $settingName;
-        /** @var DBALConfigReader  */
+        /** @var DBALConfigReader */
         $configReader = Shopware()->Container()->get('shopware.plugin.config_reader');
         $config = $configReader->getByPluginName(PluginConfigurationValueNames::PLUGIN_NAME);
+
         return $config[$settingName];
     }
 }

@@ -3,15 +3,18 @@
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Information\Refund;
 
 use AxytosKaufAufRechnungShopware5\Adapter\Common\TaxGroupFactory;
+use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\Basket;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketPositionFactory;
 use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
-use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
-use PHPUnit\Framework\Attributes\Before;
 
+/**
+ * @internal
+ */
 class BasketTest extends TestCase
 {
     /**
@@ -26,6 +29,7 @@ class BasketTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -43,14 +47,16 @@ class BasketTest extends TestCase
     /**
      * @return void
      */
-    public function test_getNetTotal_returnsCorrectValue()
+    public function test_get_net_total_returns_correct_value()
     {
         $this->order
             ->method('getDetails')
-            ->willReturn(new ArrayCollection());
+            ->willReturn(new ArrayCollection())
+        ;
         $this->order
             ->method('getInvoiceAmountNet')
-            ->willReturn(100.00);
+            ->willReturn(100.00)
+        ;
 
         $result = $this->sut->getNetTotal();
 
@@ -60,14 +66,16 @@ class BasketTest extends TestCase
     /**
      * @return void
      */
-    public function test_getGrossTotal_returnsCorrectValue()
+    public function test_get_gross_total_returns_correct_value()
     {
         $this->order
             ->method('getDetails')
-            ->willReturn(new ArrayCollection());
+            ->willReturn(new ArrayCollection())
+        ;
         $this->order
             ->method('getInvoiceAmount')
-            ->willReturn(119.00);
+            ->willReturn(119.00)
+        ;
 
         $result = $this->sut->getGrossTotal();
 
@@ -77,23 +85,26 @@ class BasketTest extends TestCase
     /**
      * @return void
      */
-    public function test_getPositions_usesFactory()
+    public function test_get_positions_uses_factory()
     {
         /** @var Detail&MockObject */
         $detail1 = $this->createMock(Detail::class);
         $detail1
             ->method('getArticleNumber')
-            ->willReturn('art-1');
+            ->willReturn('art-1')
+        ;
 
         /** @var Detail&MockObject */
         $detail2 = $this->createMock(Detail::class);
         $detail2
             ->method('getArticleNumber')
-            ->willReturn('art-2');
+            ->willReturn('art-2')
+        ;
 
         $this->order
             ->method('getDetails')
-            ->willReturn(new ArrayCollection([$detail1, $detail2]));
+            ->willReturn(new ArrayCollection([$detail1, $detail2]))
+        ;
 
         $result = $this->sut->getPositions();
 
@@ -106,44 +117,54 @@ class BasketTest extends TestCase
     /**
      * @return void
      */
-    public function test_getTaxGroups_usesFactory()
+    public function test_get_tax_groups_uses_factory()
     {
         /** @var Detail&MockObject */
         $detail1 = $this->createMock(Detail::class);
         $detail1
             ->method('getPrice')
-            ->willReturn(119.0);
+            ->willReturn(119.0)
+        ;
         $detail1
             ->method('getTaxRate')
-            ->willReturn(19.0);
+            ->willReturn(19.0)
+        ;
         $detail1
             ->method('getQuantity')
-            ->willReturn(1);
+            ->willReturn(1)
+        ;
 
         /** @var Detail&MockObject */
         $detail2 = $this->createMock(Detail::class);
         $detail2
             ->method('getPrice')
-            ->willReturn(10.7);
+            ->willReturn(10.7)
+        ;
         $detail2
             ->method('getTaxRate')
-            ->willReturn(7.0);
+            ->willReturn(7.0)
+        ;
         $detail2
             ->method('getQuantity')
-            ->willReturn(3);
+            ->willReturn(3)
+        ;
 
         $this->order
             ->method('getInvoiceShippingTaxRate')
-            ->willReturn(19.0);
+            ->willReturn(19.0)
+        ;
         $this->order
             ->method('getInvoiceShipping')
-            ->willReturn(5.95);
+            ->willReturn(5.95)
+        ;
         $this->order
             ->method('getInvoiceShippingNet')
-            ->willReturn(5.0);
+            ->willReturn(5.0)
+        ;
         $this->order
             ->method('getDetails')
-            ->willReturn(new ArrayCollection([$detail1, $detail2]));
+            ->willReturn(new ArrayCollection([$detail1, $detail2]))
+        ;
 
         $result = $this->sut->getTaxGroups();
 

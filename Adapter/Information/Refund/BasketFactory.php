@@ -7,12 +7,12 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\TaxGroupFactory;
 class BasketFactory
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketPositionFactory
+     * @var BasketPositionFactory
      */
     private $basketPositionFactory;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\TaxGroupFactory
+     * @var TaxGroupFactory
      */
     private $taxGroupFactory;
 
@@ -26,6 +26,7 @@ class BasketFactory
 
     /**
      * @param \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order $order
+     *
      * @return \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Refund\BasketInterface
      */
     public function create($order)

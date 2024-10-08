@@ -7,7 +7,6 @@ use Axytos\ECommerce\Logging\LoggerAdapterInterface;
 use Axytos\KaufAufRechnung\Core\OrderSyncWorker;
 use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 use Enlight\Event\SubscriberInterface;
-use Shopware_Components_Cron_CronJob;
 
 class OrderSyncCronJobSubscriber implements SubscriberInterface
 {
@@ -16,22 +15,22 @@ class OrderSyncCronJobSubscriber implements SubscriberInterface
     const RESULT_CODE_FAILED = 'FAILED';
 
     /**
-     * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator
+     * @var PluginConfigurationValidator
      */
     private $pluginConfigurationValidator;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler
+     * @var ErrorHandler
      */
     private $errorHandler;
 
     /**
-     * @var \Axytos\KaufAufRechnung\Core\OrderSyncWorker
+     * @var OrderSyncWorker
      */
     private $orderSyncWorker;
 
     /**
-     * @var \Axytos\ECommerce\Logging\LoggerAdapterInterface
+     * @var LoggerAdapterInterface
      */
     private $logger;
 
@@ -58,7 +57,8 @@ class OrderSyncCronJobSubscriber implements SubscriberInterface
     }
 
     /**
-     * @param Shopware_Components_Cron_CronJob $job
+     * @param \Shopware_Components_Cron_CronJob $job
+     *
      * @return string
      */
     public function execute($job)
@@ -68,6 +68,7 @@ class OrderSyncCronJobSubscriber implements SubscriberInterface
 
             if ($this->pluginConfigurationValidator->isInvalid()) {
                 $this->logger->info('CronJob Order Sync aborted: invalid config');
+
                 return self::RESULT_CODE_INVALD_CONFIG;
             }
 

@@ -38,6 +38,7 @@ class LoggerAdapter implements LoggerAdapterInterface
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function error($message)
@@ -47,6 +48,7 @@ class LoggerAdapter implements LoggerAdapterInterface
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function warning($message)
@@ -56,6 +58,7 @@ class LoggerAdapter implements LoggerAdapterInterface
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function info($message)
@@ -65,6 +68,7 @@ class LoggerAdapter implements LoggerAdapterInterface
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function debug($message)

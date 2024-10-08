@@ -6,6 +6,7 @@ class BasketPositionFactory
 {
     /**
      * @param \Shopware\Models\Order\Detail $invoiceItem
+     *
      * @return \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Refund\BasketPositionInterface
      */
     public function create($invoiceItem)
@@ -17,6 +18,7 @@ class BasketPositionFactory
 
     /**
      * @param \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order $order
+     *
      * @return \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Refund\BasketPositionInterface
      */
     public function createShipping($order)
@@ -26,6 +28,7 @@ class BasketPositionFactory
 
     /**
      * @param \Shopware\Models\Order\Detail[] $invoiceItems
+     *
      * @return \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Refund\BasketPositionInterface[]
      */
     public function createMany($invoiceItems)

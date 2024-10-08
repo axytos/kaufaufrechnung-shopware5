@@ -11,7 +11,7 @@ use AxytosKaufAufRechnungShopware5\Adapter\Information\Shipping\ShippingBasketPo
 class ShippingInformation implements ShippingInformationInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var Order
      */
     private $order;
 
@@ -39,14 +39,15 @@ class ShippingInformation implements ShippingInformationInterface
             [$this, 'createBasketPosition'],
             $this->order->getDetails()->getValues()
         );
-        $positions[] =  new ShippingBasketPosition();
+        $positions[] = new ShippingBasketPosition();
 
         return $positions;
     }
 
     /**
      * @param \Shopware\Models\Order\Detail $detail
-     * @return \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\Shipping\BasketPositionInterface
+     *
+     * @return BasketPositionInterface
      */
     private function createBasketPosition($detail)
     {

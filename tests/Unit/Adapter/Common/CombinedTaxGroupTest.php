@@ -13,7 +13,9 @@ abstract class TestTaxGroup implements InvoiceTaxGroupInterface, RefundTaxGroupI
 {
 }
 
-
+/**
+ * @internal
+ */
 class CombinedTaxGroupTest extends TestCase
 {
     /**
@@ -38,6 +40,7 @@ class CombinedTaxGroupTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -55,17 +58,20 @@ class CombinedTaxGroupTest extends TestCase
     /**
      * @return void
      */
-    public function test_getTaxPercent_returnsCorrectValue()
+    public function test_get_tax_percent_returns_correct_value()
     {
         $this->taxGroup1
             ->method('getTaxPercent')
-            ->willReturn(19.0);
+            ->willReturn(19.0)
+        ;
         $this->taxGroup2
             ->method('getTaxPercent')
-            ->willReturn(30.0);
+            ->willReturn(30.0)
+        ;
         $this->taxGroup3
             ->method('getTaxPercent')
-            ->willReturn(40.0);
+            ->willReturn(40.0)
+        ;
 
         $result = $this->sut->getTaxPercent();
 
@@ -75,17 +81,20 @@ class CombinedTaxGroupTest extends TestCase
     /**
      * @return void
      */
-    public function test_getValueToTax_returnsCorrectValue()
+    public function test_get_value_to_tax_returns_correct_value()
     {
         $this->taxGroup1
             ->method('getValueToTax')
-            ->willReturn(10.333);
+            ->willReturn(10.333)
+        ;
         $this->taxGroup2
             ->method('getValueToTax')
-            ->willReturn(15.333);
+            ->willReturn(15.333)
+        ;
         $this->taxGroup3
             ->method('getValueToTax')
-            ->willReturn(20.333);
+            ->willReturn(20.333)
+        ;
 
         $result = $this->sut->getValueToTax();
 
@@ -95,17 +104,20 @@ class CombinedTaxGroupTest extends TestCase
     /**
      * @return void
      */
-    public function test_getTotal_returnsCorrectValue()
+    public function test_get_total_returns_correct_value()
     {
         $this->taxGroup1
             ->method('getTotal')
-            ->willReturn(5.033);
+            ->willReturn(5.033)
+        ;
         $this->taxGroup2
             ->method('getTotal')
-            ->willReturn(10.033);
+            ->willReturn(10.033)
+        ;
         $this->taxGroup3
             ->method('getTotal')
-            ->willReturn(5.033);
+            ->willReturn(5.033)
+        ;
 
         $result = $this->sut->getTotal();
 
