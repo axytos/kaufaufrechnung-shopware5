@@ -60,6 +60,7 @@ class AfterCheckoutOrderStatus
         if (!isset(self::$orderStatusMapping[$this->value])) {
             return self::$default;
         }
+
         return self::$orderStatusMapping[$this->value];
     }
 }

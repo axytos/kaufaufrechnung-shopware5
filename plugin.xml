@@ -356,22 +356,58 @@
     <changes lang="de"><![CDATA[
 	]]></changes>
   </changelog>
+  <changelog version="1.6.14-rc">
+    <changes><![CDATA[
+	]]></changes>
+    <changes lang="de"><![CDATA[
+	]]></changes>
+  </changelog>
   <changelog version="1.6.15-rc">
     <changes><![CDATA[
 	]]></changes>
     <changes lang="de"><![CDATA[
 	]]></changes>
   </changelog>
-  <changelog version="1.6.17-alpha">
+  <changelog version="1.6.16-rc">
     <changes><![CDATA[
 	]]></changes>
     <changes lang="de"><![CDATA[
 	]]></changes>
   </changelog>
-  <changelog version="1.7.0-alpha">
+  <changelog version="1.6.17-rc">
     <changes><![CDATA[
 	]]></changes>
     <changes lang="de"><![CDATA[
+	]]></changes>
+  </changelog>
+  <changelog version="1.6.18-rc">
+    <changes><![CDATA[
+	]]></changes>
+    <changes lang="de"><![CDATA[
+	]]></changes>
+  </changelog>
+  <changelog version="1.6.19-rc">
+    <changes><![CDATA[
+
+      Adjusted handling and formatting of plugin additional description 
+
+	]]></changes>
+    <changes lang="de"><![CDATA[
+
+      Anpassung der Handhabung und Formatierung der zusätzlichen Plugin-Beschreibung
+
+	]]></changes>
+  </changelog>
+  <changelog version="1.7.0-alpha">
+    <changes><![CDATA[
+
+      Adjusted handling and formatting of plugin additional description
+
+	]]></changes>
+    <changes lang="de"><![CDATA[
+
+      Anpassung der Handhabung und Formatierung der zusätzlichen Plugin-Beschreibung
+
 	]]></changes>
   </changelog>
 </plugin>

@@ -3,21 +3,21 @@
 namespace AxytosKaufAufRechnungShopware5\Adapter\Information;
 
 use Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Information\CheckoutInformationInterface;
+use AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory;
+use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Checkout\Customer;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Checkout\DeliveryAddress;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Checkout\InvoiceAddress;
-use AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory;
-use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 
 class CheckoutInformation implements CheckoutInformationInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var Order
      */
     private $order;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory
+     * @var BasketFactory
      */
     private $basketFactory;
 
@@ -31,6 +31,7 @@ class CheckoutInformation implements CheckoutInformationInterface
 
     /**
      * @param mixed[] $preCheckResponseData
+     *
      * @return void
      */
     public function savePreCheckResponseData($preCheckResponseData)
@@ -43,15 +44,15 @@ class CheckoutInformation implements CheckoutInformationInterface
     }
 
     /**
-     * @return mixed[] $preCheckResponseData
+     * @return mixed[]
      */
     public function getPreCheckResponseData()
     {
         $orderAttributes = $this->order->getAttributes();
         $preCheckResponseJson = $orderAttributes->getAxytosKaufAufRechnungPrecheckResponse();
-        $preCheckResponse = json_decode($preCheckResponseJson, true);
-        /** @phpstan-ignore-next-line */
-        return $preCheckResponse;
+
+        /** @var mixed[] */
+        return json_decode($preCheckResponseJson, true);
     }
 
     /**

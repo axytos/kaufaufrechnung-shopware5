@@ -11,7 +11,7 @@ use AxytosKaufAufRechnungShopware5\Paymentmethod\PaymentMethodOptions;
 class PluginConfigurationValidatorDecorator extends PluginConfigurationValidator
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\DispatchRepository
+     * @var DispatchRepository
      */
     private $dispatchRepository;
 
@@ -45,7 +45,7 @@ class PluginConfigurationValidatorDecorator extends PluginConfigurationValidator
     private function isReferencedByDispatch()
     {
         $options = PaymentMethodOptions::OPTIONS;
-        $pluginName = $options["name"];
+        $pluginName = $options['name'];
 
         $dispatches = $this->dispatchRepository->findAll();
         foreach ($dispatches as $dispatch) {

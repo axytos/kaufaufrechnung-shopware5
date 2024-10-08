@@ -8,7 +8,7 @@ use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
 class ClientSecretProvider implements ClientSecretProviderInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration
+     * @var PluginConfiguration
      */
     private $pluginConfiguration;
 

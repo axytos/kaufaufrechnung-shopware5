@@ -5,14 +5,16 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Core;
 use AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutOrderStatus;
 use AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutPaymentStatus;
 use AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration;
-use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository;
 use AxytosKaufAufRechnungShopware5\Core\OrderStateMachine;
+use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\OrderRepository;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Order;
-use Shopware\Models\Order\Status;
 
+/**
+ * @internal
+ */
 class OrderStateMachineTest extends TestCase
 {
     /** @var OrderRepository&MockObject */
@@ -22,12 +24,13 @@ class OrderStateMachineTest extends TestCase
     private $pluginConfiguration;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Core\OrderStateMachine
+     * @var OrderStateMachine
      */
     private $sut;
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -42,7 +45,7 @@ class OrderStateMachineTest extends TestCase
     /**
      * @return void
      */
-    public function test_setConfiguredAfterCheckoutOrderStatus_calls_saveAfterCheckoutOrderStatus()
+    public function test_set_configured_after_checkout_order_status_calls_save_after_checkout_order_status()
     {
         /** @var AfterCheckoutOrderStatus&MockObject */
         $afterCheckoutOrderStatus = $this->createMock(AfterCheckoutOrderStatus::class);
@@ -54,7 +57,8 @@ class OrderStateMachineTest extends TestCase
         $this->orderRepository
             ->expects($this->once())
             ->method('saveAfterCheckoutOrderStatus')
-            ->with($order, $afterCheckoutOrderStatus);
+            ->with($order, $afterCheckoutOrderStatus)
+        ;
 
         $this->sut->setConfiguredAfterCheckoutOrderStatus($order);
     }
@@ -62,7 +66,7 @@ class OrderStateMachineTest extends TestCase
     /**
      * @return void
      */
-    public function test_setConfiguredAfterCheckoutOrderStatus_calls_saveAfterCheckoutPaymentStatus()
+    public function test_set_configured_after_checkout_order_status_calls_save_after_checkout_payment_status()
     {
         /** @var AfterCheckoutPaymentStatus&MockObject */
         $afterCheckoutPaymentStatus = $this->createMock(AfterCheckoutPaymentStatus::class);
@@ -74,7 +78,8 @@ class OrderStateMachineTest extends TestCase
         $this->orderRepository
             ->expects($this->once())
             ->method('saveAfterCheckoutPaymentStatus')
-            ->with($order, $afterCheckoutPaymentStatus);
+            ->with($order, $afterCheckoutPaymentStatus)
+        ;
 
         $this->sut->setConfiguredAfterCheckoutPaymentStatus($order);
     }

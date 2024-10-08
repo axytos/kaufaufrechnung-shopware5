@@ -3,11 +3,14 @@
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Common;
 
 use AxytosKaufAufRechnungShopware5\Adapter\Common\ShippingBasketPosition;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class ShippingBasketPositionTest extends TestCase
 {
     /**
@@ -22,6 +25,7 @@ class ShippingBasketPositionTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -37,7 +41,7 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getProductNumber_returnsCorrectValue()
+    public function test_get_product_number_returns_correct_value()
     {
         $result = $this->sut->getProductNumber();
 
@@ -47,7 +51,7 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getProductName_returnsCorrectValue()
+    public function test_get_product_name_returns_correct_value()
     {
         $result = $this->sut->getProductName();
 
@@ -57,7 +61,7 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getProductCategory_returnsCorrectValue()
+    public function test_get_product_category_returns_correct_value()
     {
         $result = $this->sut->getProductCategory();
 
@@ -67,7 +71,7 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getQuantity_returnsCorrectValue()
+    public function test_get_quantity_returns_correct_value()
     {
         $result = $this->sut->getQuantity();
 
@@ -77,11 +81,12 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getTaxPercent_returnsCorrectValue()
+    public function test_get_tax_percent_returns_correct_value()
     {
         $this->order
             ->method('getInvoiceShippingTaxRate')
-            ->willReturn(19.0);
+            ->willReturn(19.0)
+        ;
 
         $result = $this->sut->getTaxPercent();
 
@@ -91,11 +96,12 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getNetPricePerUnit_returnsCorrectValue()
+    public function test_get_net_price_per_unit_returns_correct_value()
     {
         $this->order
             ->method('getInvoiceShippingNet')
-            ->willReturn(10.0);
+            ->willReturn(10.0)
+        ;
 
         $result = $this->sut->getNetPricePerUnit();
 
@@ -105,11 +111,12 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getGrossPricePerUnit_returnsCorrectValue()
+    public function test_get_gross_price_per_unit_returns_correct_value()
     {
         $this->order
             ->method('getInvoiceShipping')
-            ->willReturn(11.9);
+            ->willReturn(11.9)
+        ;
 
         $result = $this->sut->getGrossPricePerUnit();
 
@@ -119,11 +126,12 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getNetPositionTotal_returnsCorrectValue()
+    public function test_get_net_position_total_returns_correct_value()
     {
         $this->order
             ->method('getInvoiceShippingNet')
-            ->willReturn(10.0);
+            ->willReturn(10.0)
+        ;
 
         $result = $this->sut->getNetPositionTotal();
 
@@ -133,11 +141,12 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getGrossPositionTotal_returnsCorrectValue()
+    public function test_get_gross_position_total_returns_correct_value()
     {
         $this->order
             ->method('getInvoiceShipping')
-            ->willReturn(11.9);
+            ->willReturn(11.9)
+        ;
 
         $result = $this->sut->getGrossPositionTotal();
 

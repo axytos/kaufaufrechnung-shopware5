@@ -3,12 +3,11 @@
 namespace AxytosKaufAufRechnungShopware5\ErrorReporting;
 
 use Axytos\ECommerce\Clients\ErrorReporting\ErrorReportingClientInterface;
-use Throwable;
 
 class ErrorHandler
 {
     /**
-     * @var \Axytos\ECommerce\Clients\ErrorReporting\ErrorReportingClientInterface
+     * @var ErrorReportingClientInterface
      */
     private $errorReportingClient;
 
@@ -20,6 +19,7 @@ class ErrorHandler
 
     /**
      * @param \Throwable $throwable
+     *
      * @return void
      */
     public function handle($throwable)
@@ -37,8 +37,8 @@ class ErrorHandler
     private function isDebug()
     {
         try {
-            return getenv('SHOPWARE_ENV') !== 'production'
-                || getenv('REDIRECT_SHOPWARE_ENV') !== 'production';
+            return 'production' !== getenv('SHOPWARE_ENV')
+                || 'production' !== getenv('REDIRECT_SHOPWARE_ENV');
         } catch (\Throwable $th) {
             return false;
         } catch (\Exception $th) { /** @phpstan-ignore-line because of php5 compatibility */

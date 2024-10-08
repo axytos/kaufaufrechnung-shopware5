@@ -19,27 +19,27 @@ class LegacyOrderAttributesMigration implements MigrationInterface
     const ORDER_ATTRIBUTES_TABLE_NAME = 's_order_attributes';
 
     /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\TableMapping
+     * @var TableMapping
      */
     private $tableMapping;
 
     /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\DataLoader
+     * @var DataLoader
      */
     private $dataLoader;
 
     /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\DataPersister
+     * @var DataPersister
      */
     private $dataPersister;
 
     /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\CrudService
+     * @var CrudService
      */
     private $crudService;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\MigrationsRepository
+     * @var MigrationsRepository
      */
     private $migrationsRepository;
 
@@ -117,11 +117,12 @@ class LegacyOrderAttributesMigration implements MigrationInterface
 
     /**
      * @param array<string,mixed> $attributes
-     * @param string $key
+     * @param string              $key
+     *
      * @return bool
      */
     private function notSet($attributes, $key)
     {
-        return !isset($attributes[$key]) || strval($attributes[$key]) === '';
+        return !isset($attributes[$key]) || '' === strval($attributes[$key]);
     }
 }

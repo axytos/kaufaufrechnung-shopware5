@@ -2,12 +2,15 @@
 
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Information\Refund;
 
+use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\ShippingBasketPosition;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
-use PHPUnit\Framework\Attributes\Before;
 
+/**
+ * @internal
+ */
 class ShippingBasketPositionTest extends TestCase
 {
     /**
@@ -22,6 +25,7 @@ class ShippingBasketPositionTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -35,7 +39,7 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getProductNumber_returnsCorrectValue()
+    public function test_get_product_number_returns_correct_value()
     {
         $result = $this->sut->getProductNumber();
 
@@ -45,11 +49,12 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getNetRefundTotal_returnsCorrectValue()
+    public function test_get_net_refund_total_returns_correct_value()
     {
         $this->order
             ->method('getInvoiceShippingNet')
-            ->willReturn(10.0);
+            ->willReturn(10.0)
+        ;
 
         $result = $this->sut->getNetRefundTotal();
 
@@ -59,11 +64,12 @@ class ShippingBasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getGrossRefundTotal_returnsCorrectValue()
+    public function test_get_gross_refund_total_returns_correct_value()
     {
         $this->order
             ->method('getInvoiceShipping')
-            ->willReturn(11.9);
+            ->willReturn(11.9)
+        ;
 
         $result = $this->sut->getGrossRefundTotal();
 

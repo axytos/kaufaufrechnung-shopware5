@@ -4,7 +4,6 @@ namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Subscriber\PluginConfigurati
 
 use Axytos\ECommerce\Abstractions\ApiHostProviderInterface;
 use Axytos\ECommerce\Abstractions\ApiKeyProviderInterface;
-use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
 use AxytosKaufAufRechnungShopware5\DataAbstractionLayer\DispatchRepository;
 use AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation\PluginConfigurationValidatorDecorator;
 use PHPUnit\Framework\Attributes\Before;
@@ -13,6 +12,9 @@ use PHPUnit\Framework\TestCase;
 use Shopware\Models\Dispatch\Dispatch;
 use Shopware\Models\Payment\Payment;
 
+/**
+ * @internal
+ */
 class PluginConfigurationValidatorDecoratorTest extends TestCase
 {
     /**
@@ -37,6 +39,7 @@ class PluginConfigurationValidatorDecoratorTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -57,15 +60,17 @@ class PluginConfigurationValidatorDecoratorTest extends TestCase
     /**
      * @return void
      */
-    public function test_isInvalid_calls_decorator_isInvalid()
+    public function test_is_invalid_calls_decorator_is_invalid()
     {
         $this->apiKeyProvider
-            ->method("getApiKey")
-            ->willReturn(null);
+            ->method('getApiKey')
+            ->willReturn(null)
+        ;
 
         $this->dispatchRepository
             ->expects($this->never())
-            ->method("findAll");
+            ->method('findAll')
+        ;
 
         $actual = $this->sut->isInvalid();
 
@@ -75,19 +80,22 @@ class PluginConfigurationValidatorDecoratorTest extends TestCase
     /**
      * @return void
      */
-    public function test_isInvalid_checks_database_and_returns_true_if_no_dispatches_exist()
+    public function test_is_invalid_checks_database_and_returns_true_if_no_dispatches_exist()
     {
         $this->apiKeyProvider
-            ->method("getApiKey")
-            ->willReturn('apiKey');
+            ->method('getApiKey')
+            ->willReturn('apiKey')
+        ;
 
         $this->dispatchRepository
-            ->method("findAll")
-            ->willReturn([]);
+            ->method('findAll')
+            ->willReturn([])
+        ;
 
         $this->dispatchRepository
             ->expects($this->once())
-            ->method("findAll");
+            ->method('findAll')
+        ;
 
         $actual = $this->sut->isInvalid();
 
@@ -97,51 +105,59 @@ class PluginConfigurationValidatorDecoratorTest extends TestCase
     /**
      * @return void
      */
-    public function test_isInvalid_checks_database_and_returns_true_if_no_dispatch_references_the_payment()
+    public function test_is_invalid_checks_database_and_returns_true_if_no_dispatch_references_the_payment()
     {
         $this->apiKeyProvider
-            ->method("getApiKey")
-            ->willReturn('apiKey');
+            ->method('getApiKey')
+            ->willReturn('apiKey')
+        ;
 
         /** @var Payment&MockObject */
         $payment1 = $this->createMock(Payment::class);
         $payment1
-            ->method("getName")
-            ->willReturn("payment_method_1");
+            ->method('getName')
+            ->willReturn('payment_method_1')
+        ;
 
         /** @var Payment&MockObject */
         $payment2 = $this->createMock(Payment::class);
         $payment2
-            ->method("getName")
-            ->willReturn("payment_method_2");
+            ->method('getName')
+            ->willReturn('payment_method_2')
+        ;
 
         /** @var Payment&MockObject */
         $payment3 = $this->createMock(Payment::class);
         $payment3
-            ->method("getName")
-            ->willReturn("payment_method_3");
+            ->method('getName')
+            ->willReturn('payment_method_3')
+        ;
 
         /** @var Dispatch&MockObject */
         $dispatch1 = $this->createMock(Dispatch::class);
         $dispatch1
-            ->method("getPayments")
-            ->willReturn([]);
+            ->method('getPayments')
+            ->willReturn([])
+        ;
 
         /** @var Dispatch&MockObject */
         $dispatch2 = $this->createMock(Dispatch::class);
         $dispatch2
-            ->method("getPayments")
-            ->willReturn([$payment1, $payment2]);
+            ->method('getPayments')
+            ->willReturn([$payment1, $payment2])
+        ;
 
         /** @var Dispatch&MockObject */
         $dispatch3 = $this->createMock(Dispatch::class);
         $dispatch3
-            ->method("getPayments")
-            ->willReturn([$payment1, $payment3]);
+            ->method('getPayments')
+            ->willReturn([$payment1, $payment3])
+        ;
 
         $this->dispatchRepository
-            ->method("findAll")
-            ->willReturn([$dispatch1, $dispatch2, $dispatch3]);
+            ->method('findAll')
+            ->willReturn([$dispatch1, $dispatch2, $dispatch3])
+        ;
 
         $actual = $this->sut->isInvalid();
 
@@ -151,51 +167,59 @@ class PluginConfigurationValidatorDecoratorTest extends TestCase
     /**
      * @return void
      */
-    public function test_isInvalid_checks_database_and_returns_false_if_one_dispatch_references_the_payment()
+    public function test_is_invalid_checks_database_and_returns_false_if_one_dispatch_references_the_payment()
     {
         $this->apiKeyProvider
-            ->method("getApiKey")
-            ->willReturn('apiKey');
+            ->method('getApiKey')
+            ->willReturn('apiKey')
+        ;
 
         /** @var Payment&MockObject */
         $payment1 = $this->createMock(Payment::class);
         $payment1
-            ->method("getName")
-            ->willReturn("axytos_kauf_auf_rechnung");
+            ->method('getName')
+            ->willReturn('axytos_kauf_auf_rechnung')
+        ;
 
         /** @var Payment&MockObject */
         $payment2 = $this->createMock(Payment::class);
         $payment2
-            ->method("getName")
-            ->willReturn("payment_method_2");
+            ->method('getName')
+            ->willReturn('payment_method_2')
+        ;
 
         /** @var Payment&MockObject */
         $payment3 = $this->createMock(Payment::class);
         $payment3
-            ->method("getName")
-            ->willReturn("payment_method_3");
+            ->method('getName')
+            ->willReturn('payment_method_3')
+        ;
 
         /** @var Dispatch&MockObject */
         $dispatch1 = $this->createMock(Dispatch::class);
         $dispatch1
-            ->method("getPayments")
-            ->willReturn([]);
+            ->method('getPayments')
+            ->willReturn([])
+        ;
 
         /** @var Dispatch&MockObject */
         $dispatch2 = $this->createMock(Dispatch::class);
         $dispatch2
-            ->method("getPayments")
-            ->willReturn([$payment1, $payment2]);
+            ->method('getPayments')
+            ->willReturn([$payment1, $payment2])
+        ;
 
         /** @var Dispatch&MockObject */
         $dispatch3 = $this->createMock(Dispatch::class);
         $dispatch3
-            ->method("getPayments")
-            ->willReturn([$payment2, $payment3]);
+            ->method('getPayments')
+            ->willReturn([$payment2, $payment3])
+        ;
 
         $this->dispatchRepository
-            ->method("findAll")
-            ->willReturn([$dispatch1, $dispatch2, $dispatch3]);
+            ->method('findAll')
+            ->willReturn([$dispatch1, $dispatch2, $dispatch3])
+        ;
 
         $actual = $this->sut->isInvalid();
 

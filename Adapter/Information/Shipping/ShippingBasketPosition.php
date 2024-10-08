@@ -15,7 +15,7 @@ class ShippingBasketPosition implements BasketPositionInterface
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getQuantity()
     {

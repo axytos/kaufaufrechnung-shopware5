@@ -11,6 +11,7 @@ interface ExpectedGeneratedOrderAttributesInterface
 
     /**
      * @param string $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungOrderState($value);
@@ -22,6 +23,7 @@ interface ExpectedGeneratedOrderAttributesInterface
 
     /**
      * @param string $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungOrderStateData($value);
@@ -33,6 +35,7 @@ interface ExpectedGeneratedOrderAttributesInterface
 
     /**
      * @param bool $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungHasShippingReported($value);
@@ -44,6 +47,7 @@ interface ExpectedGeneratedOrderAttributesInterface
 
     /**
      * @param string $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungPrecheckResponse($value);
@@ -55,6 +59,7 @@ interface ExpectedGeneratedOrderAttributesInterface
 
     /**
      * @param string $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungReportedTrackingCode($value);
@@ -66,6 +71,7 @@ interface ExpectedGeneratedOrderAttributesInterface
 
     /**
      * @param string $value
+     *
      * @return void
      */
     public function setAxytosKaufAufRechnungOrderBasketHash($value);

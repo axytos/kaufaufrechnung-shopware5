@@ -8,23 +8,23 @@ class OrderDocumentType
 {
     /**
      * @var \Shopware\Models\Document\Document
-     *      In Shopware 5.3: \Shopware\Models\Order\Document\Type
+     *                                         In Shopware 5.3: \Shopware\Models\Order\Document\Type
      */
     private $documentType;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\ShopwareModelReflector
+     * @var ShopwareModelReflector
      */
     private $shopwareModelReflector;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Configuration\PluginConfiguration
+     * @var PluginConfiguration
      */
     private $pluginConfiguration;
 
     /**
      * @param \Shopware\Models\Document\Document $document
-     *        In Shopware 5.3: \Shopware\Models\Order\Document\Type
+     *                                                     In Shopware 5.3: \Shopware\Models\Order\Document\Type
      */
     public function __construct(
         $document,
@@ -44,7 +44,7 @@ class OrderDocumentType
         if ($this->shopwareModelReflector->hasMethod($this->documentType, 'getKey')) {
             $key = strval($this->shopwareModelReflector->callMethod($this->documentType, 'getKey'));
 
-            if ($key !== '') {
+            if ('' !== $key) {
                 return $key;
             }
         }
@@ -52,8 +52,6 @@ class OrderDocumentType
         // For Shopware < 5.5
         return $this->inferKeyFromDocumentName();
     }
-
-
 
     /**
      * @return string|null
@@ -64,12 +62,12 @@ class OrderDocumentType
             $this->pluginConfiguration->getInvoiceDocumentKey() => '/^rechnung|invoice/i',
             'credit' => '/gutschrift|credit/i',
             'delivery_note' => '/lieferschein|delivery/i',
-            'cancellation' => '/storno|cancellation/i'
+            'cancellation' => '/storno|cancellation/i',
         ];
 
         $name = $this->documentType->getName();
         foreach ($patterns as $key => $pattern) {
-            if (preg_match($pattern, $name) === 1) {
+            if (1 === preg_match($pattern, $name)) {
                 return $key;
             }
         }
@@ -90,7 +88,7 @@ class OrderDocumentType
      */
     public function isCreditDocument()
     {
-        return $this->getKey() === 'credit';
+        return 'credit' === $this->getKey();
     }
 
     /**
@@ -98,7 +96,7 @@ class OrderDocumentType
      */
     public function isDeliveryNoteDocument()
     {
-        return $this->getKey() === 'delivery_note';
+        return 'delivery_note' === $this->getKey();
     }
 
     /**
@@ -106,6 +104,6 @@ class OrderDocumentType
      */
     public function isCancellationDocument()
     {
-        return $this->getKey() === 'cancellation';
+        return 'cancellation' === $this->getKey();
     }
 }

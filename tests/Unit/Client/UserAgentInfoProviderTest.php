@@ -7,15 +7,19 @@ use AxytosKaufAufRechnungShopware5\Client\UserAgentInfoProvider;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class UserAgentInfoProviderTest extends TestCase
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Client\UserAgentInfoProvider
+     * @var UserAgentInfoProvider
      */
     private $sut;
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -27,7 +31,7 @@ class UserAgentInfoProviderTest extends TestCase
     /**
      * @return void
      */
-    public function test_implements_UserAgentInfoProviderInterface()
+    public function test_implements_user_agent_info_provider_interface()
     {
         $this->assertInstanceOf(UserAgentInfoProviderInterface::class, $this->sut);
     }
@@ -35,17 +39,17 @@ class UserAgentInfoProviderTest extends TestCase
     /**
      * @return void
      */
-    public function test_getPluginName_returns_KaufAufRechnung()
+    public function test_get_plugin_name_returns_kauf_auf_rechnung()
     {
         $pluginName = $this->sut->getPluginName();
 
-        $this->assertEquals("KaufAufRechnung", $pluginName);
+        $this->assertEquals('KaufAufRechnung', $pluginName);
     }
 
     /**
      * @return void
      */
-    public function test_getPluginVersion_returns_version_from_composer()
+    public function test_get_plugin_version_returns_version_from_composer()
     {
         $expected = $this->getComposerPackageVersion();
 
@@ -57,19 +61,19 @@ class UserAgentInfoProviderTest extends TestCase
     /**
      * @return void
      */
-    public function test_getShopSystemName_returns_Shopware()
+    public function test_get_shop_system_name_returns_shopware()
     {
         $shopSystemName = $this->sut->getShopSystemName();
 
-        $this->assertEquals("Shopware", $shopSystemName);
+        $this->assertEquals('Shopware', $shopSystemName);
     }
 
     /**
      * @return void
      */
-    public function test_getShopSystemVersion_returns_version_from_composer()
+    public function test_get_shop_system_version_returns_version_from_composer()
     {
-        $expected = "5.X.X";
+        $expected = '5.X.X';
 
         $actual = $this->sut->getShopSystemVersion();
 

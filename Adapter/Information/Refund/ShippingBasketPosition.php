@@ -8,7 +8,7 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 class ShippingBasketPosition implements BasketPositionInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var Order
      */
     private $order;
 

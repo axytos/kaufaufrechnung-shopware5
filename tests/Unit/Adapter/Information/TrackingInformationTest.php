@@ -3,13 +3,16 @@
 namespace AxytosKaufAufRechnungShopware5\Tests\Unit\Adapter\Information;
 
 use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
-use AxytosKaufAufRechnungShopware5\Adapter\Information\TrackingInformation;
 use AxytosKaufAufRechnungShopware5\Adapter\Information\Tracking\DeliveryAddress;
+use AxytosKaufAufRechnungShopware5\Adapter\Information\TrackingInformation;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Dispatch\Dispatch;
 
+/**
+ * @internal
+ */
 class TrackingInformationTest extends TestCase
 {
     /**
@@ -24,6 +27,7 @@ class TrackingInformationTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -39,11 +43,12 @@ class TrackingInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getOrderNumber_returnsOrderNumber()
+    public function test_get_order_number_returns_order_number()
     {
         $this->order
             ->method('getNumber')
-            ->willReturn('order-123');
+            ->willReturn('order-123')
+        ;
 
         $this->assertEquals('order-123', $this->sut->getOrderNumber());
     }
@@ -51,7 +56,7 @@ class TrackingInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getDeliveryWeight_alwaysReturnsZero()
+    public function test_get_delivery_weight_always_returns_zero()
     {
         $result = $this->sut->getDeliveryWeight();
 
@@ -61,16 +66,18 @@ class TrackingInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getDeliveryMethod_returnsNameOfDispatch()
+    public function test_get_delivery_method_returns_name_of_dispatch()
     {
         /** @var Dispatch&MockObject */
         $dispatch = $this->createMock(Dispatch::class);
         $this->order
             ->method('getDispatch')
-            ->willReturn($dispatch);
+            ->willReturn($dispatch)
+        ;
         $dispatch
             ->method('getName')
-            ->willReturn('Logistikunternehmen');
+            ->willReturn('Logistikunternehmen')
+        ;
 
         $result = $this->sut->getDeliveryMethod();
 
@@ -80,7 +87,7 @@ class TrackingInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getDeliveryAddress_returnsDeliveryAdressAdapter()
+    public function test_get_delivery_address_returns_delivery_adress_adapter()
     {
         $result = $this->sut->getDeliveryAddress();
 
@@ -90,11 +97,12 @@ class TrackingInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getTrackingIds_returnsArrayWithSingleTrackingId()
+    public function test_get_tracking_ids_returns_array_with_single_tracking_id()
     {
         $this->order
             ->method('getTrackingCode')
-            ->willReturn('tracking-code');
+            ->willReturn('tracking-code')
+        ;
 
         $result = $this->sut->getTrackingIds();
 
@@ -105,11 +113,12 @@ class TrackingInformationTest extends TestCase
     /**
      * @return void
      */
-    public function test_getTrackingIds_returnsEmptyArrayIfNoTrackingIdIsAvailable()
+    public function test_get_tracking_ids_returns_empty_array_if_no_tracking_id_is_available()
     {
         $this->order
             ->method('getTrackingCode')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $result = $this->sut->getTrackingIds();
 

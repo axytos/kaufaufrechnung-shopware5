@@ -9,6 +9,7 @@ class TaxGroupFactory
 {
     /**
      * @param \Shopware\Models\Order\Detail $invoiceItem
+     *
      * @return InvoiceTaxGroupInterface&RefundTaxGroupInterface
      */
     public function create($invoiceItem)
@@ -19,7 +20,8 @@ class TaxGroupFactory
     }
 
     /**
-     * @param \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order $order
+     * @param UnifiedShopwareModel\Order $order
+     *
      * @return InvoiceTaxGroupInterface&RefundTaxGroupInterface
      */
     public function createShipping($order)
@@ -31,6 +33,7 @@ class TaxGroupFactory
 
     /**
      * @param \Shopware\Models\Order\Detail[] $invoiceItems
+     *
      * @return array<InvoiceTaxGroupInterface&RefundTaxGroupInterface>
      */
     public function createMany($invoiceItems)
@@ -40,6 +43,7 @@ class TaxGroupFactory
 
     /**
      * @param array<InvoiceTaxGroupInterface&RefundTaxGroupInterface> $taxGroups
+     *
      * @return array<InvoiceTaxGroupInterface&RefundTaxGroupInterface>
      */
     public function combineTaxGroups($taxGroups)
@@ -49,16 +53,17 @@ class TaxGroupFactory
             $taxGroups,
             function ($agg, $cur) {
                 /**
-                 * @var array<string, CombinedTaxGroup> $agg
+                 * @var array<string, CombinedTaxGroup>                  $agg
                  * @var InvoiceTaxGroupInterface&RefundTaxGroupInterface $cur
                  */
                 $taxPercent = $cur->getTaxPercent();
-                $taxPercentKey = "$taxPercent";
+                $taxPercentKey = "{$taxPercent}";
                 if (array_key_exists($taxPercentKey, $agg)) {
                     $agg[$taxPercentKey]->addTaxGroup($cur);
                 } else {
                     $agg[$taxPercentKey] = new CombinedTaxGroup($cur);
                 }
+
                 return $agg;
             },
             []

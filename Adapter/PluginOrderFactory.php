@@ -9,17 +9,17 @@ use AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory as R
 class PluginOrderFactory
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory
+     * @var BasketFactory
      */
     private $basketFactory;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Information\Refund\BasketFactory
+     * @var RefundBasketFactory
      */
     private $refundBasketFactory;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\HashCalculation\HashCalculator
+     * @var HashCalculator
      */
     private $hashCalculator;
 
@@ -34,8 +34,9 @@ class PluginOrderFactory
     }
 
     /**
-     * @param \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order $unifiedShopwareOrder
-     * @return \AxytosKaufAufRechnungShopware5\Adapter\PluginOrder
+     * @param Common\UnifiedShopwareModel\Order $unifiedShopwareOrder
+     *
+     * @return PluginOrder
      */
     public function create($unifiedShopwareOrder)
     {
@@ -49,6 +50,7 @@ class PluginOrderFactory
 
     /**
      * @param \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order[] $orders
+     *
      * @return \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\PluginOrderInterface[]
      */
     public function createMany($orders)

@@ -35,5 +35,11 @@
         "sw5-run-cronjobs": "../../../bin/console sw:cron:run",
         "sw5-run-ordersync-cronjob": "../../../bin/console sw:cron:run --force Shopware_CronJob_Axytos_KaufAufRechnung_OrderSync"
     },
-    "minimum-stability": "alpha"
+    "minimum-stability": "alpha",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
 }

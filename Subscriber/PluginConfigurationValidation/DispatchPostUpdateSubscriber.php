@@ -2,10 +2,10 @@
 
 namespace AxytosKaufAufRechnungShopware5\Subscriber\PluginConfigurationValidation;
 
+use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
-use AxytosKaufAufRechnungShopware5\ErrorReporting\ErrorHandler;
 use Shopware\Models\Dispatch\Dispatch;
 
 class DispatchPostUpdateSubscriber implements EventSubscriber
@@ -24,6 +24,7 @@ class DispatchPostUpdateSubscriber implements EventSubscriber
 
     /**
      * @param LifecycleEventArgs $eventArgs
+     *
      * @return void
      */
     public function postUpdate($eventArgs)

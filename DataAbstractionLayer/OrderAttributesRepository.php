@@ -9,7 +9,7 @@ use Shopware\Bundle\AttributeBundle\Service\CrudService;
 use Shopware\Components\Model\ModelManager;
 
 /**
- * Typedefs for Attribute Definitions
+ * Typedefs for Attribute Definitions.
  *
  * @phpstan-type AttributeUnifiedType 'string'|'text'|'html'|'integer'|'float'|'boolean'|'date'|'datetime'|'combobox'|'single_selection'|'multi_selection'
  * @phpstan-type AttributeDefaultValueType string|int|float|null
@@ -17,7 +17,13 @@ use Shopware\Components\Model\ModelManager;
  *
  * Default value MUST be a supported database type, i.e. int instead of bool
  *
- * see: https://developers.shopware.com/developers-guide/attribute-system/
+ * import types with
+ *   (at)phpstan-import-type AttributeUnifiedType from OrderAttributesRepository
+ *
+ * see:
+ * - https://developers.shopware.com/developers-guide/attribute-system/
+ * - https://phpstan.org/writing-php-code/phpdoc-types#literals-and-constants
+ * - https://phpstan.org/writing-php-code/phpdoc-types#local-type-aliases
  */
 class OrderAttributesRepository
 {
@@ -26,7 +32,7 @@ class OrderAttributesRepository
      */
     public static function create()
     {
-        /** @var \Shopware\Bundle\AttributeBundle\Service\CrudService */
+        /** @var CrudService */
         $crudService = Shopware()->Container()->get('shopware_attribute.crud_service');
 
         /** @var \Shopware\Bundle\AttributeBundle\Service\DataLoader */
@@ -38,7 +44,7 @@ class OrderAttributesRepository
         /** @var \Shopware\Bundle\AttributeBundle\Service\TableMapping */
         $tableMapping = Shopware()->Container()->get('shopware_attribute.table_mapping');
 
-        /** @var \Shopware\Components\Model\ModelManager */
+        /** @var ModelManager */
         $modelManager = Shopware()->Container()->get('models');
 
         $migrationsRepository = new MigrationsRepository();
@@ -80,42 +86,42 @@ class OrderAttributesRepository
         [
             'name' => self::ATTRIBUTE_NAME_ORDER_STATE,
             'type' => 'string',
-            'default' => null
+            'default' => null,
         ],
         [
             'name' => self::ATTRIBUTE_NAME_ORDER_STATE_DATA,
             'type' => 'string',
-            'default' => null
+            'default' => null,
         ],
         [
             'name' => self::ATTRIBUTE_NAME_PRECHECK_RESPONSE,
             'type' => 'string',
-            'default' => null
+            'default' => null,
         ],
         [
             'name' => self::ATTRIBUTE_NAME_ORDER_BASKET_HASH,
             'type' => 'string',
-            'default' => null
+            'default' => null,
         ],
         [
             'name' => self::ATTRIBUTE_NAME_HAS_SHIPPING_REPORTED,
             'type' => 'boolean',
-            'default' => 0
+            'default' => 0,
         ],
         [
             'name' => self::ATTRIBUTE_NAME_REPORTED_TRACKING_CODE,
             'type' => 'string',
-            'default' => null
+            'default' => null,
         ],
     ];
 
     /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\CrudService
+     * @var CrudService
      */
     private $crudService;
 
     /**
-     * @var \Shopware\Components\Model\ModelManager
+     * @var ModelManager
      */
     private $modelManager;
 
@@ -164,15 +170,17 @@ class OrderAttributesRepository
     }
 
     /**
-     * @param string $type
-     * @param string|int|float|null|bool $defaultValue
+     * @param string                     $type
+     * @param string|int|float|bool|null $defaultValue
+     *
      * @return string|int|float|null
      */
     private function parseDefaultValue($type, $defaultValue)
     {
-        if (strtolower($type) === 'boolean' || is_bool($defaultValue)) {
-            return ((bool)$defaultValue) === true ? 1 : 0;
+        if ('boolean' === strtolower($type) || is_bool($defaultValue)) {
+            return ((bool) $defaultValue) === true ? 1 : 0;
         }
+
         return $defaultValue;
     }
 

@@ -9,12 +9,12 @@ use AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order;
 class InvoiceInformation implements InvoiceInformationInterface
 {
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\UnifiedShopwareModel\Order
+     * @var Order
      */
     private $order;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\Adapter\Common\BasketFactory
+     * @var BasketFactory
      */
     private $basketFactory;
 
@@ -40,6 +40,7 @@ class InvoiceInformation implements InvoiceInformationInterface
         if (!is_null($invoice)) {
             return $invoice->getDocumentId();
         }
+
         return '';
     }
 

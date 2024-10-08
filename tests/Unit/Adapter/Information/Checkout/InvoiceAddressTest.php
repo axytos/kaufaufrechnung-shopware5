@@ -10,6 +10,9 @@ use Shopware\Models\Country\Country;
 use Shopware\Models\Country\State;
 use Shopware\Models\Order\Billing;
 
+/**
+ * @internal
+ */
 class InvoiceAddressTest extends TestCase
 {
     /**
@@ -24,6 +27,7 @@ class InvoiceAddressTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -37,11 +41,12 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCompanyName_returnsCorrectValue()
+    public function test_get_company_name_returns_correct_value()
     {
         $this->billing
             ->method('getCompany')
-            ->willReturn('Musterfabrik');
+            ->willReturn('Musterfabrik')
+        ;
 
         $result = $this->sut->getCompanyName();
 
@@ -51,7 +56,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCompanyName_returnsNullAsDefault()
+    public function test_get_company_name_returns_null_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -61,11 +66,12 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getSalutation_returnsCorrectValue()
+    public function test_get_salutation_returns_correct_value()
     {
         $this->billing
             ->method('getSalutation')
-            ->willReturn('Herr');
+            ->willReturn('Herr')
+        ;
 
         $result = $this->sut->getSalutation();
 
@@ -75,7 +81,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getSalutation_returnsNullAsDefault()
+    public function test_get_salutation_returns_null_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -85,11 +91,12 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getFirstName_returnsCorrectValue()
+    public function test_get_first_name_returns_correct_value()
     {
         $this->billing
             ->method('getFirstName')
-            ->willReturn('Max');
+            ->willReturn('Max')
+        ;
 
         $result = $this->sut->getFirstName();
 
@@ -99,7 +106,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getFirstName_returnsNullAsDefault()
+    public function test_get_first_name_returns_null_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -109,11 +116,12 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getLastName_returnsCorrectValue()
+    public function test_get_last_name_returns_correct_value()
     {
         $this->billing
             ->method('getLastName')
-            ->willReturn('Muster');
+            ->willReturn('Muster')
+        ;
 
         $result = $this->sut->getLastName();
 
@@ -123,7 +131,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getLastName_returnsNullAsDefault()
+    public function test_get_last_name_returns_null_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -133,11 +141,12 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getZipCode_returnsCorrectValue()
+    public function test_get_zip_code_returns_correct_value()
     {
         $this->billing
             ->method('getZipCode')
-            ->willReturn('12345');
+            ->willReturn('12345')
+        ;
 
         $result = $this->sut->getZipCode();
 
@@ -147,7 +156,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getZipCode_returnsEmptyStringAsDefault()
+    public function test_get_zip_code_returns_empty_string_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -157,11 +166,12 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCityName_returnsCorrectValue()
+    public function test_get_city_name_returns_correct_value()
     {
         $this->billing
             ->method('getCity')
-            ->willReturn('Musterhausen');
+            ->willReturn('Musterhausen')
+        ;
 
         $result = $this->sut->getCityName();
 
@@ -171,7 +181,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCityName_returnsEmptyStringAsDefault()
+    public function test_get_city_name_returns_empty_string_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -181,16 +191,18 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getRegionName_returnsCorrectValue()
+    public function test_get_region_name_returns_correct_value()
     {
         /** @var State&MockObject */
         $state = $this->createMock(State::class);
         $this->billing
             ->method('getState')
-            ->willReturn($state);
+            ->willReturn($state)
+        ;
         $state
             ->method('getName')
-            ->willReturn('Musterland');
+            ->willReturn('Musterland')
+        ;
 
         $result = $this->sut->getRegionName();
 
@@ -200,11 +212,12 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getRegionName_returnsNullIfStateIsNotSet()
+    public function test_get_region_name_returns_null_if_state_is_not_set()
     {
         $this->billing
             ->method('getState')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $result = $this->sut->getRegionName();
 
@@ -214,7 +227,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getRegionName_returnsNullAsDefault()
+    public function test_get_region_name_returns_null_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -224,16 +237,18 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCountryCode_returnsCorrectValue()
+    public function test_get_country_code_returns_correct_value()
     {
         /** @var Country&MockObject */
         $country = $this->createMock(Country::class);
         $this->billing
             ->method('getCountry')
-            ->willReturn($country);
+            ->willReturn($country)
+        ;
         $country
             ->method('getIso')
-            ->willReturn('DE');
+            ->willReturn('DE')
+        ;
 
         $result = $this->sut->getCountryCode();
 
@@ -243,11 +258,12 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCountryCode_returnsEmptyStringIfCountryIsNotSet()
+    public function test_get_country_code_returns_empty_string_if_country_is_not_set()
     {
         $this->billing
             ->method('getCountry')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $result = $this->sut->getCountryCode();
 
@@ -257,7 +273,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getCountryCode_returnsEmptyStringAsDefault()
+    public function test_get_country_code_returns_empty_string_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -267,7 +283,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getVATId_returnsCorrectValue()
+    public function test_get_vat_id_returns_correct_value()
     {
         $result = $this->sut->getVATId();
 
@@ -277,7 +293,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getVATId_returnsNullAsDefault()
+    public function test_get_vat_id_returns_null_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -287,11 +303,12 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getStreet_returnsCorrectValue()
+    public function test_get_street_returns_correct_value()
     {
         $this->billing
             ->method('getStreet')
-            ->willReturn('Musterstraße 1a');
+            ->willReturn('Musterstraße 1a')
+        ;
 
         $result = $this->sut->getStreet();
 
@@ -301,7 +318,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getStreet_returnsNullAsDefault()
+    public function test_get_street_returns_null_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -311,11 +328,12 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getAdditionalAddressLine2_returnsCorrectValue()
+    public function test_get_additional_address_line2_returns_correct_value()
     {
         $this->billing
             ->method('getAdditionalAddressLine1')
-            ->willReturn('Erster Stock');
+            ->willReturn('Erster Stock')
+        ;
 
         $result = $this->sut->getAdditionalAddressLine2();
 
@@ -325,7 +343,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getAdditionalAddressLine2_returnsNullAsDefault()
+    public function test_get_additional_address_line2_returns_null_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -335,11 +353,12 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getAdditionalAddressLine3_returnsCorrectValue()
+    public function test_get_additional_address_line3_returns_correct_value()
     {
         $this->billing
             ->method('getAdditionalAddressLine2')
-            ->willReturn('Zimmer 404');
+            ->willReturn('Zimmer 404')
+        ;
 
         $result = $this->sut->getAdditionalAddressLine3();
 
@@ -349,7 +368,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getAdditionalAddressLine3_returnsNullAsDefault()
+    public function test_get_additional_address_line3_returns_null_as_default()
     {
         $sut = new InvoiceAddress(null);
 
@@ -359,7 +378,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getAdditionalAddressLine4_returnsCorrectValue()
+    public function test_get_additional_address_line4_returns_correct_value()
     {
         $result = $this->sut->getAdditionalAddressLine4();
 
@@ -369,7 +388,7 @@ class InvoiceAddressTest extends TestCase
     /**
      * @return void
      */
-    public function test_getAdditionalAddressLine4_returnsNullAsDefault()
+    public function test_get_additional_address_line4_returns_null_as_default()
     {
         $sut = new InvoiceAddress(null);
 

@@ -23,32 +23,32 @@ class OrderStateMigration implements MigrationInterface
     const ORDER_ATTRIBUTES_TABLE_NAME = 's_order_attributes';
 
     /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\TableMapping
+     * @var TableMapping
      */
     private $tableMapping;
 
     /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\DataLoader
+     * @var DataLoader
      */
     private $dataLoader;
 
     /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\DataPersister
+     * @var DataPersister
      */
     private $dataPersister;
 
     /**
-     * @var \Shopware\Bundle\AttributeBundle\Service\CrudService
+     * @var CrudService
      */
     private $crudService;
 
     /**
-     * @var \Shopware\Components\Model\ModelManager
+     * @var ModelManager
      */
     private $modelManager;
 
     /**
-     * @var \AxytosKaufAufRechnungShopware5\DataAbstractionLayer\Migrations\MigrationsRepository
+     * @var MigrationsRepository
      */
     private $migrationsRepository;
 
@@ -69,7 +69,7 @@ class OrderStateMigration implements MigrationInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isMigrationNeeded()
     {
@@ -94,7 +94,7 @@ class OrderStateMigration implements MigrationInterface
         foreach ($orderIds as $orderId) {
             /** @var \Shopware\Models\Order\Repository */
             $orderRepository = $this->modelManager->getRepository(Order::class);
-            /** @var \Shopware\Models\Order\Order */
+            /** @var Order */
             $order = $orderRepository->find($orderId);
 
             /** @var array<string,mixed>
@@ -108,8 +108,9 @@ class OrderStateMigration implements MigrationInterface
     }
 
     /**
-     * @param \Shopware\Models\Order\Order $order
+     * @param Order               $order
      * @param array<string,mixed> $attributes
+     *
      * @return string|null
      */
     private function mapAttributesToOrderState($order, $attributes)
@@ -126,17 +127,21 @@ class OrderStateMigration implements MigrationInterface
             case OrderCheckProcessStates::FAILED:
                 return OrderStates::CHECKOUT_FAILED;
             case OrderCheckProcessStates::CONFIRMED:
-                if ($paymentState->getId() === Status::PAYMENT_STATE_COMPLETELY_PAID) {
+                if (Status::PAYMENT_STATE_COMPLETELY_PAID === $paymentState->getId()) {
                     return OrderStates::COMPLETELY_PAID;
-                } else if ($hasRefundReported) {
-                    return OrderStates::COMPLETELY_REFUNDED;
-                } else if ($hasCreateInvoiceReported) {
-                    return OrderStates::INVOICED;
-                } else if ($hasCancelReported) {
-                    return OrderStates::CANCELED;
-                } else {
-                    return OrderStates::CHECKOUT_CONFIRMED;
                 }
+                if ($hasRefundReported) {
+                    return OrderStates::COMPLETELY_REFUNDED;
+                }
+                if ($hasCreateInvoiceReported) {
+                    return OrderStates::INVOICED;
+                }
+                if ($hasCancelReported) {
+                    return OrderStates::CANCELED;
+                }
+
+                return OrderStates::CHECKOUT_CONFIRMED;
+
             case OrderCheckProcessStates::UNCHECKED:
             default:
                 return null;
@@ -145,7 +150,8 @@ class OrderStateMigration implements MigrationInterface
 
     /**
      * @param array<string,mixed> $attributes
-     * @param string $key
+     * @param string              $key
+     *
      * @return mixed|null
      */
     private function getAttribute($attributes, $key)

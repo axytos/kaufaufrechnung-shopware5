@@ -8,7 +8,7 @@ use Shopware\Models\Order\Detail;
 class BasketPosition implements BasketPositionInterface
 {
     /**
-     * @var \Shopware\Models\Order\Detail
+     * @var Detail
      */
     private $orderDetail;
 
@@ -26,7 +26,7 @@ class BasketPosition implements BasketPositionInterface
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getQuantity()
     {

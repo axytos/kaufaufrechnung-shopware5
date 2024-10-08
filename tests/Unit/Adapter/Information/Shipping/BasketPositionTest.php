@@ -8,6 +8,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
 
+/**
+ * @internal
+ */
 class BasketPositionTest extends TestCase
 {
     /**
@@ -22,6 +25,7 @@ class BasketPositionTest extends TestCase
 
     /**
      * @return void
+     *
      * @before
      */
     #[Before]
@@ -35,11 +39,12 @@ class BasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getProductNumber_returnsCorrectValue()
+    public function test_get_product_number_returns_correct_value()
     {
         $this->orderDetail
             ->method('getArticleNumber')
-            ->willReturn('art123');
+            ->willReturn('art123')
+        ;
 
         $result = $this->sut->getProductNumber();
 
@@ -49,11 +54,12 @@ class BasketPositionTest extends TestCase
     /**
      * @return void
      */
-    public function test_getQuantity_returnsCorrectValue()
+    public function test_get_quantity_returns_correct_value()
     {
         $this->orderDetail
             ->method('getQuantity')
-            ->willReturn(3);
+            ->willReturn(3)
+        ;
 
         $result = $this->sut->getQuantity();
 

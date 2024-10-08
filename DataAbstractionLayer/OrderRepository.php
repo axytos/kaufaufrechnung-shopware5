@@ -2,7 +2,6 @@
 
 namespace AxytosKaufAufRechnungShopware5\DataAbstractionLayer;
 
-use Axytos\ECommerce\Order\OrderCheckProcessStates;
 use AxytosKaufAufRechnungShopware5\Paymentmethod\PaymentMethodOptions;
 use Doctrine\ORM\EntityRepository;
 use Shopware\Components\Model\ModelManager;
@@ -15,7 +14,8 @@ class OrderRepository
 {
     /**
      * @param int $orderId
-     * @return \Shopware\Models\Order\Order|null
+     *
+     * @return Order|null
      */
     public function findOrder($orderId)
     {
@@ -25,13 +25,14 @@ class OrderRepository
         /** @var \Shopware\Models\Order\Repository */
         $orderRepository = $modelManager->getRepository(Order::class);
 
-        /** @var \Shopware\Models\Order\Order */
+        /** @var Order */
         return $orderRepository->find($orderId);
     }
 
     /**
-     * @param \Shopware\Models\Order\Order $order
-     * @param int $orderStatusCode
+     * @param Order $order
+     * @param int   $orderStatusCode
+     *
      * @return void
      */
     public function saveOrderStatus($order, $orderStatusCode)
@@ -44,8 +45,9 @@ class OrderRepository
     }
 
     /**
-     * @param \Shopware\Models\Order\Order $order
-     * @param int $paymentStatusCode
+     * @param Order $order
+     * @param int   $paymentStatusCode
+     *
      * @return void
      */
     public function savePaymentStatus($order, $paymentStatusCode)
@@ -58,8 +60,9 @@ class OrderRepository
     }
 
     /**
-     * @param \Shopware\Models\Order\Order $order
+     * @param Order                                                                  $order
      * @param \AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutOrderStatus $afterCheckoutOrderStatus
+     *
      * @return void
      */
     public function saveAfterCheckoutOrderStatus($order, $afterCheckoutOrderStatus)
@@ -68,8 +71,9 @@ class OrderRepository
     }
 
     /**
-     * @param \Shopware\Models\Order\Order $order
+     * @param Order                                                                    $order
      * @param \AxytosKaufAufRechnungShopware5\Configuration\AfterCheckoutPaymentStatus $afterCheckoutPaymentStatus
+     *
      * @return void
      */
     public function saveAfterCheckoutPaymentStatus($order, $afterCheckoutPaymentStatus)
@@ -78,7 +82,8 @@ class OrderRepository
     }
 
     /**
-     * @param \Shopware\Models\Order\Order $order
+     * @param Order $order
+     *
      * @return void
      */
     public function saveOrder($order)
@@ -92,7 +97,8 @@ class OrderRepository
 
     /**
      * @param int $statusCode
-     * @return \Shopware\Models\Order\Status
+     *
+     * @return Status
      */
     private function findStatusModelByCode($statusCode)
     {
@@ -108,9 +114,10 @@ class OrderRepository
     }
 
     /**
-     * @param string[] $orderStates
-     * @param int|null $limit
+     * @param string[]    $orderStates
+     * @param int|null    $limit
      * @param string|null $firstId
+     *
      * @return \Shopware\Models\Order\Order[]
      */
     public function getOrdersByStates($orderStates, $limit = null, $firstId = null)
@@ -128,7 +135,8 @@ class OrderRepository
             ->setParameter('paymentMethod', PaymentMethodOptions::NAME)
             ->setParameter('orderStates', $orderStates)
             ->orderBy('o.number')
-            ->getQuery();
+            ->getQuery()
+        ;
 
         /** @var Order[] */
         $orders = $query->execute();
@@ -146,7 +154,8 @@ class OrderRepository
 
     /**
      * @param string $orderNumber
-     * @return \Shopware\Models\Order\Order|null
+     *
+     * @return Order|null
      */
     public function findOrderByOrderNumber($orderNumber)
     {
@@ -160,9 +169,9 @@ class OrderRepository
         $orders = $orderRepository->findBy(['number' => $orderNumber]);
         if (count($orders) > 0) {
             return $orders[0];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
