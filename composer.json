@@ -13,10 +13,10 @@
     "require": {
         "php": ">=5.6.0",
         "composer/installers": "~1.0 || ~2.0",
-        "axytos/ecommerce-sdk": "1.7.2-alpha",
-        "axytos/kaufaufrechnung-core": "1.7.2-alpha",
-        "axytos/kaufaufrechnung-core-abstractions": "1.7.2-alpha",
-        "axytos/kaufaufrechnung-core-plugin-abstractions": "1.7.2-alpha"
+        "axytos/ecommerce-sdk": "1.7.3-alpha",
+        "axytos/kaufaufrechnung-core": "1.7.3-alpha",
+        "axytos/kaufaufrechnung-core-abstractions": "1.7.3-alpha",
+        "axytos/kaufaufrechnung-core-plugin-abstractions": "1.7.3-alpha"
     },
     "autoload": {
         "psr-4": {
@@ -35,11 +35,27 @@
         "sw5-run-cronjobs": "../../../bin/console sw:cron:run",
         "sw5-run-ordersync-cronjob": "../../../bin/console sw:cron:run --force Shopware_CronJob_Axytos_KaufAufRechnung_OrderSync"
     },
-    "minimum-stability": "alpha",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
         "allow-plugins": {
             "composer/installers": true
+        }
+    },
+    "repositories": {
+        "ecommerce-sdk": {
+            "type": "path",
+            "url": "../../core/ecommerce-sdk",
+            "options": {
+                "symlink": false
+            }
+        },
+        "financial-services-api-sdk": {
+            "type": "path",
+            "url": "../../api/financial-services-api-sdk",
+            "options": {
+                "symlink": false
+            }
         }
     }
 }
