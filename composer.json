@@ -35,27 +35,11 @@
         "sw5-run-cronjobs": "../../../bin/console sw:cron:run",
         "sw5-run-ordersync-cronjob": "../../../bin/console sw:cron:run --force Shopware_CronJob_Axytos_KaufAufRechnung_OrderSync"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "alpha",
     "prefer-stable": true,
     "config": {
         "allow-plugins": {
             "composer/installers": true
-        }
-    },
-    "repositories": {
-        "ecommerce-sdk": {
-            "type": "path",
-            "url": "../../core/ecommerce-sdk",
-            "options": {
-                "symlink": false
-            }
-        },
-        "financial-services-api-sdk": {
-            "type": "path",
-            "url": "../../api/financial-services-api-sdk",
-            "options": {
-                "symlink": false
-            }
         }
     }
 }
