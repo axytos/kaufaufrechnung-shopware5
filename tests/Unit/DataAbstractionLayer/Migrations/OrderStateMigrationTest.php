@@ -120,11 +120,9 @@ class OrderStateMigrationTest extends TestCase
      *
      * @param array<string,mixed> $attributes
      * @param int                 $paymentState
+     * @param string              $expectedOrderStatus
      *
      * @phpstan-param \Shopware\Models\Order\Status::* $paymentState
-     *
-     * @param string $expectedOrderStatus
-     *
      * @phpstan-param \Axytos\KaufAufRechnung\Core\Model\OrderStateMachine\OrderStates::* $expectedOrderStatus
      *
      * @return void
