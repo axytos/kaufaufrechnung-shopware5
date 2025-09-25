@@ -13,9 +13,13 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Shopware\Models\Customer\Customer;
+use Shopware\Models\Dispatch\Dispatch;
 use Shopware\Models\Document\Document as ShopwareDocumentType;
+use Shopware\Models\Order\Billing;
 use Shopware\Models\Order\Document\Document as ShopwareOrderDocument;
 use Shopware\Models\Order\Order as ShopwareOrder;
+use Shopware\Models\Order\Shipping;
 
 /**
  * @internal
@@ -26,6 +30,26 @@ class OrderTest extends TestCase
      * @var ShopwareOrder&MockObject
      */
     private $shopwareOrder;
+
+    /**
+     * @var Dispatch&MockObject
+     */
+    private static $dispatch;
+
+    /**
+     * @var Customer&MockObject
+     */
+    private static $customer;
+
+    /**
+     * @var Billing&MockObject
+     */
+    private static $billing;
+
+    /**
+     * @var Shipping&MockObject
+     */
+    private static $shipping;
 
     /**
      * @var OldOrderRepository&MockObject
@@ -56,6 +80,10 @@ class OrderTest extends TestCase
     public function beforeEach()
     {
         $this->shopwareOrder = $this->createMock(ShopwareOrder::class);
+        self::$dispatch = $this->createMock(Dispatch::class);
+        self::$customer = $this->createMock(Customer::class);
+        self::$billing = $this->createMock(Billing::class);
+        self::$shipping = $this->createMock(Shipping::class);
         $this->orderRepository = $this->createMock(OldOrderRepository::class);
         $this->shopwareModelReflector = $this->createMock(ShopwareModelReflector::class);
         $this->pluginConfiguration = $this->createMock(PluginConfiguration::class);
@@ -123,10 +151,10 @@ class OrderTest extends TestCase
             ['getNumber', null],
             ['getTrackingCode', '55555'],
             ['getDetails', new ArrayCollection()],
-            ['getDispatch', new \Shopware\Models\Dispatch\Dispatch()],
-            ['getCustomer', new \Shopware\Models\Customer\Customer()],
-            ['getBilling', new \Shopware\Models\Order\Billing()],
-            ['getShipping', new \Shopware\Models\Order\Shipping()],
+            ['getDispatch', self::$dispatch],
+            ['getCustomer', self::$customer],
+            ['getBilling', self::$billing],
+            ['getShipping', self::$shipping],
         ];
     }
 

@@ -221,19 +221,6 @@ class OrderAttributesRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     */
-    public function test_update_generates_attribute_models()
-    {
-        $this->modelManager
-            ->expects($this->once())
-            ->method('generateAttributeModels')
-        ;
-
-        $this->sut->update();
-    }
-
-    /**
      * @return mixed[]
      */
     public static function migrationVariants()
@@ -244,5 +231,18 @@ class OrderAttributesRepositoryTest extends TestCase
             'states' => [false, true, 0, 1],
             'all' => [true, true, 1, 1],
         ];
+    }
+
+    /**
+     * @return void
+     */
+    public function test_update_generates_attribute_models()
+    {
+        $this->modelManager
+            ->expects($this->once())
+            ->method('generateAttributeModels')
+        ;
+
+        $this->sut->update();
     }
 }
