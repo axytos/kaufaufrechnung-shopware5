@@ -13,10 +13,10 @@
     "require": {
         "php": ">=5.6.0",
         "composer/installers": "~1.0 || ~2.0",
-        "axytos/ecommerce-sdk": "1.8.0-rc",
-        "axytos/kaufaufrechnung-core": "1.8.0-rc",
-        "axytos/kaufaufrechnung-core-abstractions": "1.8.0-rc",
-        "axytos/kaufaufrechnung-core-plugin-abstractions": "1.8.0-rc"
+        "axytos/ecommerce-sdk": "1.8.0",
+        "axytos/kaufaufrechnung-core": "1.8.0",
+        "axytos/kaufaufrechnung-core-abstractions": "1.8.0",
+        "axytos/kaufaufrechnung-core-plugin-abstractions": "1.8.0"
     },
     "autoload": {
         "psr-4": {
@@ -40,6 +40,22 @@
     "config": {
         "allow-plugins": {
             "composer/installers": true
+        }
+    },
+    "repositories": {
+        "ecommerce-sdk": {
+            "type": "path",
+            "url": "../../core/ecommerce-sdk",
+            "options": {
+                "symlink": false
+            }
+        },
+        "financial-services-api-sdk": {
+            "type": "path",
+            "url": "../../api/financial-services-api-sdk",
+            "options": {
+                "symlink": false
+            }
         }
     }
 }
